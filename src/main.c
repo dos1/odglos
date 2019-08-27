@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 	}
 #endif
 	game->data->lowmem = strtol(GetConfigOptionDefault(game, LIBSUPERDERPY_GAMENAME, "lowmem", game->data->lowmem ? "1" : "0"), NULL, 10);
-	game->data->lowmem = true;
+
 	static struct option long_options[] =
 		{
 			{"lowmem", no_argument, 0, 'l'},
