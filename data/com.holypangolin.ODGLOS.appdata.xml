@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2018 Sebastian Krzyszkowiak <dos@dosowisko.net> -->
+<component type="desktop-application">
+  <id>com.holypangolin.ODGLOS</id>
+  <metadata_license>FSFAP</metadata_license>
+  <name>ODGLOS</name>
+  <summary>A weird game about taking off and making sounds.</summary>
+
+  <description>
+    <p>
+    </p>
+  </description>
+
+  <launchable type="desktop-id">odglos.desktop</launchable>
+
+  <developer_name>Holy Pangolin</developer_name>
+
+  <update_contact>dos_AT_dosowisko.net</update_contact>
+
+  <provides>
+    <binary>odglos</binary>
+  </provides>
+
+</component>
