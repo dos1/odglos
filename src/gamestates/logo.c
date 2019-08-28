@@ -28,17 +28,25 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	// Draw everything to the screen here.
 
 	if (data->counter < 320) {
-		al_draw_bitmap(data->chodnik, 0, 0, 0);
+		al_draw_scaled_bitmap(data->chodnik,
+			0, 0, al_get_bitmap_width(data->chodnik), al_get_bitmap_height(data->chodnik),
+			0, 0, game->viewport.width, game->viewport.height, 0);
 
 		if ((data->counter > 60) && (data->counter < 65)) {
-			al_draw_tinted_bitmap(data->logo, al_map_rgba(100, 100, 100, 100), 200, -200, 0);
+			al_draw_tinted_scaled_bitmap(data->logo, al_map_rgba(100, 100, 100, 100),
+				0, 0, al_get_bitmap_width(data->logo), al_get_bitmap_height(data->logo),
+				200, -200, game->viewport.width, game->viewport.height, 0);
 		}
 
 		if ((data->counter > 140) && (data->counter < 155)) {
-			al_draw_tinted_bitmap(data->logo, al_map_rgba(50, 50, 50, 50), -500, 300, 0);
+			al_draw_tinted_scaled_bitmap(data->logo, al_map_rgba(50, 50, 50, 50),
+				0, 0, al_get_bitmap_width(data->logo), al_get_bitmap_height(data->logo),
+				-500, 300, game->viewport.width, game->viewport.height, 0);
 		}
 
-		al_draw_tinted_bitmap(data->logo, al_map_rgba(200, 200, 200, 200), 0, 0, 0);
+		al_draw_tinted_scaled_bitmap(data->logo, al_map_rgba(200, 200, 200, 200),
+			0, 0, al_get_bitmap_width(data->logo), al_get_bitmap_height(data->logo),
+			0, 0, game->viewport.width, game->viewport.height, 0);
 
 		if (data->counter > 180) {
 			al_draw_tinted_scaled_rotated_bitmap(data->by, al_map_rgba(222, 222, 222, 222),
@@ -47,7 +55,9 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 				0.5, 0.5, 0.0, 0);
 		}
 
-		al_draw_bitmap(data->gradient, 0, 0, 0);
+		al_draw_scaled_bitmap(data->gradient,
+			0, 0, al_get_bitmap_width(data->gradient), al_get_bitmap_height(data->gradient),
+			0, 0, game->viewport.width, game->viewport.height, 0);
 	}
 }
 
