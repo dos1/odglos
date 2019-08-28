@@ -25,7 +25,7 @@ struct GamestateResources {
 	struct Character* character;
 };
 
-int Gamestate_ProgressCount = 41;
+int Gamestate_ProgressCount = 20;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	AnimateCharacter(game, data->character, delta, 1.0);
@@ -44,12 +44,10 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
-	data->character = CreateCharacter(game, "samochod_kominek");
+	data->character = CreateCharacter(game, "schodki_i_sowka");
 	data->character->detailedProgress = true;
 	RegisterSpritesheet(game, data->character, "anim");
-	RegisterSpritesheet(game, data->character, "anim2");
 	LoadSpritesheets(game, data->character, progress);
-	SelectSpritesheet(game, data->character, "anim");
 	return data;
 }
 
@@ -59,14 +57,12 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 }
 
 static CHARACTER_CALLBACK(GoForward) {
-	if (!old->successor) {
-		SwitchCurrentGamestate(game, "samochod_lazienka");
-	}
+	SwitchCurrentGamestate(game, "gawron_medrzec");
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	HideMouse(game);
-	SetCharacterPosition(game, data->character, 0, 0, 0);
+	SetCharacterPosition(game, data->character, 0, -200, 0);
 	data->character->callback = GoForward;
 }
 

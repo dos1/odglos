@@ -61,7 +61,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		data->counter += delta;
 	}
 	if (data->counter > 4.0) {
-		SwitchCurrentGamestate(game, "gawron_medrzec");
+		SwitchCurrentGamestate(game, "schodki_i_sowka");
 	}
 }
 
