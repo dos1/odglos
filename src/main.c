@@ -69,8 +69,13 @@ int main(int argc, char** argv) {
 		PrintConsole(game, "Low memory mode enabled");
 	}
 
-	LoadGamestate(game, "example");
-	StartGamestate(game, IS_EMSCRIPTEN ? "start" : "example");
+	LoadGamestate(game, "logo");
+
+	if (!game->data->lowmem) {
+		LoadGamestate(game, "example");
+	}
+
+	StartGamestate(game, IS_EMSCRIPTEN ? "start" : "start");
 
 	al_hide_mouse_cursor(game->display);
 

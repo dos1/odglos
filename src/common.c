@@ -12,7 +12,8 @@ void SwitchScene(struct Game* game, char* name) {
 	if (game->data->lowmem) {
 		UnloadCurrentGamestate(game);
 	}
-	StartGamestate(game, "myszka");
+	StartGamestate(game, name);
+	//StartGamestate(game, "myszka");
 }
 
 void PreLogic(struct Game* game, double delta) {
