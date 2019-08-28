@@ -57,7 +57,7 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 }
 
 static CHARACTER_CALLBACK(GoForward) {
-	SwitchCurrentGamestate(game, "gawron_medrzec");
+	SwitchCurrentGamestate(game, "pergola");
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
