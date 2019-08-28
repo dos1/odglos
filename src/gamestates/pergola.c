@@ -89,6 +89,33 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		// When there are no active gamestates, the engine will quit.
 	}
 
+	if (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) {
+		if (game->data->mouseX < 0.33) {
+			if ((game->data->mouseY > 0.33) && (game->data->mouseY < 0.66)) {
+				ev->type = ALLEGRO_EVENT_KEY_DOWN;
+				ev->keyboard.keycode = ALLEGRO_KEY_LEFT;
+			}
+		}
+		if (game->data->mouseX > 0.66) {
+			if ((game->data->mouseY > 0.33) && (game->data->mouseY < 0.66)) {
+				ev->type = ALLEGRO_EVENT_KEY_DOWN;
+				ev->keyboard.keycode = ALLEGRO_KEY_RIGHT;
+			}
+		}
+		if (game->data->mouseY < 0.33) {
+			if ((game->data->mouseX > 0.33) && (game->data->mouseX < 0.66)) {
+				ev->type = ALLEGRO_EVENT_KEY_DOWN;
+				ev->keyboard.keycode = ALLEGRO_KEY_UP;
+			}
+		}
+		if (game->data->mouseY > 0.66) {
+			if ((game->data->mouseX > 0.33) && (game->data->mouseX < 0.66)) {
+				ev->type = ALLEGRO_EVENT_KEY_DOWN;
+				ev->keyboard.keycode = ALLEGRO_KEY_DOWN;
+			}
+		}
+	}
+
 	if (!data->locked && !IsCompleted(game, data)) {
 		if (ev->type == ALLEGRO_EVENT_KEY_DOWN) {
 			bool changed = false;
