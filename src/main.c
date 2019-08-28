@@ -70,12 +70,7 @@ int main(int argc, char** argv) {
 	}
 
 	LoadGamestate(game, "logo");
-
-	if (!game->data->lowmem) {
-		LoadGamestate(game, "example");
-	}
-
-	StartGamestate(game, IS_EMSCRIPTEN ? "start" : "start");
+	StartGamestate(game, IS_EMSCRIPTEN ? "start" : "logo");
 
 	al_hide_mouse_cursor(game->display);
 
