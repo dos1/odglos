@@ -1,4 +1,5 @@
 #include "common.h"
+#include "defines.h"
 #include <libsuperderpy.h>
 
 void SwitchScene(struct Game* game, char* name) {
@@ -93,6 +94,19 @@ void Compositor(struct Game* game) {
 	if (game->data->cursor) {
 		al_draw_scaled_rotated_bitmap(game->data->hover ? game->data->cursorhover : game->data->cursorbmp, 130, 165, game->data->mouseX * game->clip_rect.w + game->clip_rect.x, game->data->mouseY * game->clip_rect.h + game->clip_rect.y, game->clip_rect.w / (double)game->viewport.width * 0.1, game->clip_rect.h / (double)game->viewport.height * 0.1, 0, 0);
 	}
+}
+
+void DrawBuildInfo(struct Game* game) {
+	SUPPRESS_WARNING("-Wdeprecated-declarations")
+	int x, y, w, h;
+	al_get_clipping_rectangle(&x, &y, &w, &h);
+	al_hold_bitmap_drawing(true);
+	DrawTextWithShadow(game->_priv.font_console, al_map_rgb(255, 255, 255), w - 10, h * 0.935, ALLEGRO_ALIGN_RIGHT, "ODGŁOS PREALPHA");
+	char revs[255];
+	snprintf(revs, 255, "%s-%s", LIBSUPERDERPY_GAME_GIT_REV, LIBSUPERDERPY_GIT_REV);
+	DrawTextWithShadow(game->_priv.font_console, al_map_rgb(255, 255, 255), w - 10, h * 0.965, ALLEGRO_ALIGN_RIGHT, revs);
+	al_hold_bitmap_drawing(false);
+	SUPPRESS_END
 }
 
 bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {

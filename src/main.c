@@ -28,6 +28,7 @@ int main(int argc, char** argv) {
 				.destroy = DestroyGameData,
 				.prelogic = PreLogic,
 				.compositor = Compositor,
+				.postdraw = DrawBuildInfo,
 			},
 		});
 

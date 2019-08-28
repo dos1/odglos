@@ -19,6 +19,7 @@ struct CommonResources {
 	bool lowmem;
 };
 
+void DrawBuildInfo(struct Game* game);
 void SwitchScene(struct Game* game, char* name);
 void PreLogic(struct Game* game, double delta);
 void CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap);
