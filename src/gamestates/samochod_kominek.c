@@ -22,30 +22,21 @@
 #include <libsuperderpy.h>
 
 struct GamestateResources {
-	ALLEGRO_FONT* font;
-	int blink_counter;
+	struct Character* character;
 };
 
-int Gamestate_ProgressCount = 1;
+int Gamestate_ProgressCount = 23;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
-	data->blink_counter++;
-	if (data->blink_counter >= 60) {
-		data->blink_counter = 0;
-	}
+	AnimateCharacter(game, data->character, delta, 1.0);
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
-	if (data->blink_counter < 50) {
-		al_draw_text(data->font, al_map_rgb(255, 255, 255), game->viewport.width / 2.0, game->viewport.height / 2.0,
-			ALLEGRO_ALIGN_CENTRE, "That's all folks.");
-	}
+	DrawCharacter(game, data->character);
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
-	if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) ||
-		(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) ||
-		(ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
+	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) {
 		UnloadCurrentGamestate(game); // mark this gamestate to be stopped and unloaded
 		// When there are no active gamestates, the engine will quit.
 	}
@@ -53,22 +44,26 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
-	int flags = al_get_new_bitmap_flags();
-	al_set_new_bitmap_flags(flags & ~ALLEGRO_MAG_LINEAR); // disable linear scaling for pixelarty appearance
-	data->font = al_create_builtin_font();
-	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
-	al_set_new_bitmap_flags(flags);
+	data->character = CreateCharacter(game, "samochod_kominek");
+	data->character->detailedProgress = true;
+	RegisterSpritesheet(game, data->character, "anim");
+	LoadSpritesheets(game, data->character, progress);
 	return data;
 }
 
 void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
-	al_destroy_font(data->font);
+	DestroyCharacter(game, data->character);
 	free(data);
 }
 
+static CHARACTER_CALLBACK(GoForward) {
+	SwitchCurrentGamestate(game, "samochod_lazienka");
+}
+
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
-	data->blink_counter = 0;
-	ShowMouse(game);
+	HideMouse(game);
+	SetCharacterPosition(game, data->character, 0, 0, 0);
+	data->character->callback = GoForward;
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
