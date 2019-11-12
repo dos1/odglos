@@ -20,8 +20,8 @@ int main(int argc, char** argv) {
 
 	struct Game* game = libsuperderpy_init(argc, argv, LIBSUPERDERPY_GAMENAME,
 		(struct Params){
-			1920,
-			1080,
+			1280,
+			720,
 			.show_loading_on_launch = true,
 			.handlers = (struct Handlers){
 				.event = GlobalEventHandler,
@@ -70,8 +70,8 @@ int main(int argc, char** argv) {
 		PrintConsole(game, "Low memory mode enabled");
 	}
 
-	LoadGamestate(game, "logo");
-	StartGamestate(game, IS_EMSCRIPTEN ? "start" : "logo");
+	LoadGamestate(game, "anim");
+	StartGamestate(game, IS_EMSCRIPTEN ? "start" : "anim");
 
 	al_hide_mouse_cursor(game->display);
 

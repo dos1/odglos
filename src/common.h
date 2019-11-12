@@ -17,7 +17,17 @@ struct CommonResources {
 	double start_time;
 	ALLEGRO_BITMAP *cursorbmp, *cursorhover;
 	bool lowmem;
+
+	int animationid;
+	char* animation;
 };
+
+void Dispatch(struct Game* game);
+
+struct AnimationDecoder* CreateAnimation(const char* filename);
+bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp);
+void DestroyAnimation(struct AnimationDecoder* anim);
+ALLEGRO_BITMAP* GetAnimationFrame(struct AnimationDecoder* anim);
 
 void DrawBuildInfo(struct Game* game);
 void SwitchScene(struct Game* game, char* name);

@@ -31,7 +31,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	// Here you can handle user input, expiring timers etc.
 	if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN || ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) {
 		StopCurrentGamestate(game);
-		StartGamestate(game, "logo");
+		StartGamestate(game, "anim");
 	}
 }
 
