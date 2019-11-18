@@ -11,12 +11,13 @@
 
 struct AnimationDecoder {
 	WebPData data;
-	int timestamp, position;
+	int timestamp, position, duration, swap_duration, old_timestamp;
 	WebPAnimDecoder* decoder;
 	ALLEGRO_BITMAP *bitmap, *swap;
 	int fd;
 	uint8_t* buf;
 	bool mmaped, shouldload;
+	int frame;
 };
 
 struct AnimationDecoder* CreateAnimation(const char* filename) {
@@ -27,6 +28,7 @@ struct AnimationDecoder* CreateAnimation(const char* filename) {
 	anim->fd = open(filename, O_RDONLY | O_CLOEXEC);
 
 	if (!anim->fd) {
+		free(anim);
 		return NULL;
 	}
 
@@ -45,6 +47,7 @@ struct AnimationDecoder* CreateAnimation(const char* filename) {
 		if (read(anim->fd, anim->buf, anim->data.size) != (ssize_t)anim->data.size) {
 			free(anim->buf);
 			close(anim->fd);
+			free(anim);
 			return NULL;
 		}
 		close(anim->fd);
@@ -53,6 +56,8 @@ struct AnimationDecoder* CreateAnimation(const char* filename) {
 		anim->mmaped = true;
 	}
 	anim->data.bytes = anim->buf;
+
+	// TODO: handle invalid file path
 
 	WebPAnimDecoderOptions dec_options;
 	WebPAnimDecoderOptionsInit(&dec_options);
@@ -66,6 +71,19 @@ struct AnimationDecoder* CreateAnimation(const char* filename) {
 	anim->bitmap = al_create_bitmap(anim_info.canvas_width, anim_info.canvas_height);
 	anim->swap = al_create_bitmap(anim_info.canvas_width, anim_info.canvas_height);
 
+	anim->position = -1;
+	anim->frame = -1;
+	ResetAnimation(anim);
+
+	return anim;
+}
+
+void ResetAnimation(struct AnimationDecoder* anim) {
+	if (anim->position == 0) {
+		return;
+	}
+	WebPAnimDecoderReset(anim->decoder);
+
 	ALLEGRO_LOCKED_REGION* lock = al_lock_bitmap(anim->bitmap, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
 	uint8_t* buf;
 	WebPAnimDecoderGetNext(anim->decoder, &buf, &anim->timestamp);
@@ -75,19 +93,17 @@ struct AnimationDecoder* CreateAnimation(const char* filename) {
 	}
 	al_unlock_bitmap(anim->bitmap);
 
-	lock = al_lock_bitmap(anim->swap, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
-	WebPAnimDecoderGetNext(anim->decoder, &buf, &anim->timestamp);
-	for (int i = 0; i < al_get_bitmap_height(anim->swap); i++) {
-		memcpy(lock->data + i * lock->pitch, buf + i * al_get_bitmap_width(anim->swap) * al_get_pixel_size(lock->format),
-			al_get_bitmap_width(anim->swap) * lock->pixel_size);
-	}
-	al_unlock_bitmap(anim->swap);
+	anim->duration = anim->timestamp;
+	anim->old_timestamp = anim->timestamp;
 
-	return anim;
+	anim->shouldload = true;
+
+	anim->position = 0;
+	anim->frame = 0;
 }
 
 bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
-	anim->position += timestamp * 1000 * 1.25;
+	anim->position += timestamp * 1000;
 	ALLEGRO_LOCKED_REGION* lock = NULL;
 
 	if (anim->shouldload) {
@@ -95,22 +111,30 @@ bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 		if (!WebPAnimDecoderHasMoreFrames(anim->decoder)) {
 			return false;
 		}
-		lock = al_lock_bitmap(anim->swap, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
 		uint8_t* buf;
 		if (WebPAnimDecoderGetNext(anim->decoder, &buf, &anim->timestamp)) {
+			lock = al_lock_bitmap(anim->swap, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
 			for (int i = 0; i < al_get_bitmap_height(anim->swap); i++) {
 				memcpy(lock->data + i * lock->pitch, buf + i * al_get_bitmap_width(anim->swap) * al_get_pixel_size(lock->format),
 					al_get_bitmap_width(anim->swap) * lock->pixel_size);
 			}
+			al_unlock_bitmap(anim->swap);
+			anim->swap_duration = anim->timestamp - anim->old_timestamp;
 		}
-		al_unlock_bitmap(anim->swap);
 	}
 
-	if (anim->position > anim->timestamp) {
+	if (anim->position >= anim->old_timestamp) {
 		ALLEGRO_BITMAP* bmp = anim->bitmap;
 		anim->bitmap = anim->swap;
 		anim->swap = bmp;
 		anim->shouldload = true;
+		anim->old_timestamp = anim->timestamp;
+		anim->frame++;
+
+		anim->duration = anim->swap_duration;
+		if (!WebPAnimDecoderHasMoreFrames(anim->decoder)) {
+			return false;
+		}
 	}
 
 	return true;
@@ -118,6 +142,14 @@ bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 
 ALLEGRO_BITMAP* GetAnimationFrame(struct AnimationDecoder* anim) {
 	return anim->bitmap;
+}
+
+int GetAnimationFrameNo(struct AnimationDecoder* anim) {
+	return anim->frame;
+}
+
+float GetAnimationFrameDuration(struct AnimationDecoder* anim) {
+	return (float)anim->duration / 1000.0;
 }
 
 void DestroyAnimation(struct AnimationDecoder* anim) {
@@ -132,6 +164,7 @@ void DestroyAnimation(struct AnimationDecoder* anim) {
 	WebPAnimDecoderDelete(anim->decoder);
 	al_destroy_bitmap(anim->swap);
 	al_destroy_bitmap(anim->bitmap);
+	free(anim);
 }
 
 void SwitchScene(struct Game* game, char* name) {
@@ -246,7 +279,7 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 		ToggleMute(game);
 	}
 
-	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_F) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)) {
+	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_F)) { // || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)) {
 		ToggleFullscreen(game);
 	}
 
@@ -278,7 +311,6 @@ void HideMouse(struct Game* game) {
 }
 
 static char* ANIMATIONS[] = {
-
 	"001_sowka_na_kocyku/sowka_na_kocyku",
 	"002_wedrowka_rodzinki_po_trawce/wedrowka_rodzinki_po_trawce",
 	"003_rodzinka_jak_wiewiorki/rodzinka_jak_wiewiorki",
@@ -293,7 +325,7 @@ static char* ANIMATIONS[] = {
 	"013_wrzosy_kuzyn_i_sowka/wrzosy_kuzyn_i_sowka2",
 	"014_samochody_w_lesie/samochody_w_lesie",
 	"015_ciemna_trawa_samochod_sowka/ciemna_trawa_samochod_sowka",
-	"016_pudelka_od_cioci_tmp/anim",
+	"pudelka",
 	"017_ciemna_trawa_waz/ciemna_trawa_waz",
 	"018_wiklinowe_kolo/wiklinowe_kolo",
 	"019_aksamitki/aksamitki",
@@ -342,34 +374,28 @@ static char* ANIMATIONS[] = {
 	"031_058_donice_dom/058_donice_dom2",
 	"024_026_028_032_037_040_042_059_donice_w_ogrodzie/059_donice_w_ogrodzie8",
 	"060_magnetofon/magnetofon2_bez_myszek",
-
-	//"061_finale/001_sowka_wchodzi_do_studia/sowka_wchodzi_do_studia1",
 	"061_finale/001_sowka_wchodzi_do_studia/sowka_wchodzi_do_studia2_TAK",
 	"061_finale/002_sowki_zamieniaja_sie_krzeslami/sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK",
-	//"061_finale/002_sowki_zamieniaja_sie_krzeslami/sowki_zamieniaja_sie_krzeslami_po_dwa_i_znikaja",
 	"061_finale/003_sowka1_wlacza_konsole_z_daleka2/sowka1_wlacza_konsole_z_daleka2",
 	"061_finale/004_okna_sie_otwieraja_z_sowka2/okna_sie_otwieraja_z_sowka2",
 	"061_finale/005_sowka1_wlacza_konsole_z_bliska1/sowka1_wlacza_konsole_z_bliska1",
 	"061_finale/006_drzwi_zamykaja_sie_same/drzwi_zamykaja_sie_same",
 	"061_finale/007_sowka1_wchodzi_na_stol_z_bliska/sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK",
-	//"061_finale/007_sowka1_wchodzi_na_stol_z_bliska/sowka1_wchodzi_na_stol_z_bliska_znika",
 	"061_finale/008_sowka2_zaluzje/sowka2_zaluzje_nie_znika_TAK",
-	//"061_finale/008_sowka2_zaluzje/sowka2_zaluzje_pojawia_sie",
 	"061_finale/009_sowka2_klika_konsole/sowka2_klika_konsole_nie_znika_TAK",
-	//"061_finale/009_sowka2_klika_konsole/sowka2_klika_konsole_znika",
 	"061_finale/010_sowka1_zaluzje/sowka1_zaluzje",
 	"061_finale/011_animacja_koncowa/animacja_koncowa",
-
 };
 
-void Dispatch(struct Game* game) {
+bool Dispatch(struct Game* game) {
 	do {
 		game->data->animationid++;
 		if (game->data->animationid == sizeof(ANIMATIONS) / sizeof(char*)) {
-			game->data->animationid = 0;
+			return false;
 		}
 	} while (!ANIMATIONS[game->data->animationid]);
 	game->data->animation = ANIMATIONS[game->data->animationid];
+	return true;
 }
 
 struct CommonResources* CreateGameData(struct Game* game) {

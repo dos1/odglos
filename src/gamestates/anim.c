@@ -29,11 +29,18 @@ int Gamestate_ProgressCount = 1;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	if (!UpdateAnimation(data->anim, delta)) {
-		DestroyAnimation(data->anim);
-		Dispatch(game);
+		if (!Dispatch(game)) {
+			SwitchCurrentGamestate(game, "end");
+		}
 		char path[255] = {0};
-		snprintf(path, 255, "sprites/%s.awebp", game->data->animation);
-		data->anim = CreateAnimation(GetDataFilePath(game, path));
+		snprintf(path, 255, "animations/%s.awebp", game->data->animation);
+		const char* file = FindDataFilePath(game, path);
+		if (file) {
+			DestroyAnimation(data->anim);
+			data->anim = CreateAnimation(file);
+		} else {
+			ChangeCurrentGamestate(game, game->data->animation);
+		}
 	}
 }
 
@@ -53,7 +60,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
 	Dispatch(game);
 	char path[255] = {0};
-	snprintf(path, 255, "sprites/%s.awebp", game->data->animation);
+	snprintf(path, 255, "animations/%s.awebp", game->data->animation);
 	data->anim = CreateAnimation(GetDataFilePath(game, path));
 
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar

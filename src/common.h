@@ -22,12 +22,15 @@ struct CommonResources {
 	char* animation;
 };
 
-void Dispatch(struct Game* game);
+bool Dispatch(struct Game* game);
 
 struct AnimationDecoder* CreateAnimation(const char* filename);
 bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp);
 void DestroyAnimation(struct AnimationDecoder* anim);
 ALLEGRO_BITMAP* GetAnimationFrame(struct AnimationDecoder* anim);
+float GetAnimationFrameDuration(struct AnimationDecoder* anim);
+int GetAnimationFrameNo(struct AnimationDecoder* anim);
+void ResetAnimation(struct AnimationDecoder* anim);
 
 void DrawBuildInfo(struct Game* game);
 void SwitchScene(struct Game* game, char* name);

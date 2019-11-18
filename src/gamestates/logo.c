@@ -20,7 +20,7 @@ void Gamestate_Tick(struct Game* game, struct GamestateResources* data) {
 	// Here you should do all your game logic as if <delta> seconds have passed.
 	data->counter++;
 	if (data->counter > 460) {
-		SwitchScene(game, "miska");
+		SwitchScene(game, "anim");
 	}
 }
 
@@ -51,8 +51,8 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 		if (data->counter > 180) {
 			al_draw_tinted_scaled_rotated_bitmap(data->by, al_map_rgba(222, 222, 222, 222),
 				al_get_bitmap_width(data->by) / 2.0, al_get_bitmap_height(data->by) / 2.0,
-				game->viewport.width / 2.0, game->viewport.height - al_get_bitmap_height(data->by),
-				0.5, 0.5, 0.0, 0);
+				game->viewport.width / 2.0, game->viewport.height - al_get_bitmap_height(data->by) * 0.66666 / LIBSUPERDERPY_IMAGE_SCALE,
+				0.33333 / LIBSUPERDERPY_IMAGE_SCALE, 0.33333 / LIBSUPERDERPY_IMAGE_SCALE, 0.0, 0);
 		}
 
 		al_draw_scaled_bitmap(data->gradient,

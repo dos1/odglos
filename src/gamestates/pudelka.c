@@ -34,29 +34,47 @@ struct GamestateResources {
 		struct Character* character;
 	} left, center, right;
 
-	struct Character* character;
-
 	enum BallType stack[3];
 	int stackpos;
+	bool frames;
+	bool won;
 };
 
-int Gamestate_ProgressCount = 160;
+int Gamestate_ProgressCount = 24;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
-	AnimateCharacter(game, data->left.character, delta, 1.0);
-	AnimateCharacter(game, data->center.character, delta, 1.0);
-	AnimateCharacter(game, data->right.character, delta, 1.0);
+	if (data->frames) {
+		AnimateCharacter(game, data->left.character, delta, 1.0);
+		AnimateCharacter(game, data->center.character, delta, 1.0);
+		AnimateCharacter(game, data->right.character, delta, 1.0);
+	} else {
+		AnimateCharacter(game, data->center.character, delta, 1.0);
+	}
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
-	SetClippingRectangle(0, 0, game->viewport.width / 3.0 - 20, game->viewport.height);
-	DrawCharacter(game, data->left.character);
+	int twenty = game->viewport.width * 0.015625; // 20px
+	if (data->frames) {
+		SetClippingRectangle(0, 0, game->viewport.width / 3.0 - twenty, game->viewport.height);
+		SetCharacterPosition(game, data->left.character, 0, 0, 0);
+		DrawCharacter(game, data->left.character);
 
-	SetClippingRectangle(game->viewport.width / 3.0, 0, game->viewport.width / 3.0 - 20, game->viewport.height);
-	DrawCharacter(game, data->center.character);
+		SetClippingRectangle(game->viewport.width / 3.0, 0, game->viewport.width / 3.0 - twenty, game->viewport.height);
+		SetCharacterPosition(game, data->center.character, game->viewport.width * 0.328125, 0, 0);
+		DrawCharacter(game, data->center.character);
 
-	SetClippingRectangle(2 * game->viewport.width / 3.0, 0, game->viewport.width / 3.0 - 20, game->viewport.height);
-	DrawCharacter(game, data->right.character);
+		SetClippingRectangle(2 * game->viewport.width / 3.0, 0, game->viewport.width / 3.0, game->viewport.height);
+		SetCharacterPosition(game, data->right.character, game->viewport.width * 0.65625, 0, 0);
+		DrawCharacter(game, data->right.character);
+	} else {
+		SetCharacterPosition(game, data->center.character, 0, 0, 0);
+		DrawCharacter(game, data->center.character);
+
+		if (!data->won) {
+			al_draw_filled_rectangle(game->viewport.width / 3.0 - twenty, 0, game->viewport.width / 3.0, game->viewport.height, al_map_rgb(0, 0, 0));
+			al_draw_filled_rectangle(game->viewport.width * 0.65104166666666666667, 0, game->viewport.width * 0.65104166666666666667 + twenty, game->viewport.height, al_map_rgb(0, 0, 0));
+		}
+	}
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
@@ -65,20 +83,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		// When there are no active gamestates, the engine will quit.
 	}
 
-	if (ev->type == ALLEGRO_EVENT_KEY_DOWN && ev->keyboard.keycode == ALLEGRO_KEY_SPACE) {
-		SelectSpritesheet(game, data->left.character, "pudelko_1_czer");
-		SelectSpritesheet(game, data->center.character, "pudelko_2_pom");
-		SelectSpritesheet(game, data->right.character, "pudelko_3_zolte");
-		data->left.character->delta = 0;
-		data->center.character->delta = 0;
-		data->right.character->delta = 0;
-
-		EnqueueSpritesheet(game, data->left.character, "pudelka_tancowanie");
-		EnqueueSpritesheet(game, data->center.character, "pudelka_tancowanie");
-		EnqueueSpritesheet(game, data->right.character, "pudelka_tancowanie");
-	}
-
-	if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+	if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN || ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) {
 		if (!game->data->cursor) {
 			return;
 		}
@@ -86,16 +91,18 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			if (data->left.type == BALL_TYPE_NONE) {
 				switch (data->stack[--data->stackpos]) {
 					case BALL_TYPE_RED:
-						SelectSpritesheet(game, data->left.character, "-pudelko_1_czer");
+						SelectSpritesheet(game, data->left.character, "pudelko_1_czer_r");
 						data->left.type = BALL_TYPE_RED;
 						break;
 					case BALL_TYPE_YELLOW:
-						SelectSpritesheet(game, data->left.character, "-pudelko_1_zolte");
+						SelectSpritesheet(game, data->left.character, "pudelko_1_zolte_r");
 						data->left.type = BALL_TYPE_YELLOW;
 						break;
 					case BALL_TYPE_ORANGE:
-						SelectSpritesheet(game, data->left.character, "-pudelko_1_pom");
+						SelectSpritesheet(game, data->left.character, "pudelko_1_pom_r");
 						data->left.type = BALL_TYPE_ORANGE;
+						break;
+					case BALL_TYPE_NONE:
 						break;
 				}
 			} else {
@@ -109,6 +116,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 					case BALL_TYPE_ORANGE:
 						SelectSpritesheet(game, data->left.character, "pudelko_1_pom");
 						break;
+					case BALL_TYPE_NONE:
+						break;
 				}
 				EnqueueSpritesheet(game, data->left.character, "pudelko_1_memlanie");
 				HideMouse(game);
@@ -119,16 +128,18 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			if (data->center.type == BALL_TYPE_NONE) {
 				switch (data->stack[--data->stackpos]) {
 					case BALL_TYPE_RED:
-						SelectSpritesheet(game, data->center.character, "-pudelko_2_czer");
+						SelectSpritesheet(game, data->center.character, "pudelko_2_czer_r");
 						data->center.type = BALL_TYPE_RED;
 						break;
 					case BALL_TYPE_YELLOW:
-						SelectSpritesheet(game, data->center.character, "-pudelko_2_zolte");
+						SelectSpritesheet(game, data->center.character, "pudelko_2_zolte_r");
 						data->center.type = BALL_TYPE_YELLOW;
 						break;
 					case BALL_TYPE_ORANGE:
-						SelectSpritesheet(game, data->center.character, "-pudelko_2_pom");
+						SelectSpritesheet(game, data->center.character, "pudelko_2_pom_r");
 						data->center.type = BALL_TYPE_ORANGE;
+						break;
+					case BALL_TYPE_NONE:
 						break;
 				}
 			} else {
@@ -142,6 +153,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 					case BALL_TYPE_ORANGE:
 						SelectSpritesheet(game, data->center.character, "pudelko_2_pom");
 						break;
+					case BALL_TYPE_NONE:
+						break;
 				}
 				EnqueueSpritesheet(game, data->center.character, "pudelko_2_memlanie");
 				HideMouse(game);
@@ -152,16 +165,18 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			if (data->right.type == BALL_TYPE_NONE) {
 				switch (data->stack[--data->stackpos]) {
 					case BALL_TYPE_RED:
-						SelectSpritesheet(game, data->right.character, "-pudelko_3_czer");
+						SelectSpritesheet(game, data->right.character, "pudelko_3_czer_r");
 						data->right.type = BALL_TYPE_RED;
 						break;
 					case BALL_TYPE_YELLOW:
-						SelectSpritesheet(game, data->right.character, "-pudelko_3_zolte");
+						SelectSpritesheet(game, data->right.character, "pudelko_3_zolte_r");
 						data->right.type = BALL_TYPE_YELLOW;
 						break;
 					case BALL_TYPE_ORANGE:
-						SelectSpritesheet(game, data->right.character, "-pudelko_3_pom");
+						SelectSpritesheet(game, data->right.character, "pudelko_3_pom_r");
 						data->right.type = BALL_TYPE_ORANGE;
+						break;
+					case BALL_TYPE_NONE:
 						break;
 				}
 			} else {
@@ -175,6 +190,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 					case BALL_TYPE_ORANGE:
 						SelectSpritesheet(game, data->right.character, "pudelko_3_pom");
 						break;
+					case BALL_TYPE_NONE:
+						break;
 				}
 				EnqueueSpritesheet(game, data->right.character, "pudelko_3_memlanie");
 				HideMouse(game);
@@ -183,27 +200,77 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	}
 }
 
+static SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream) {
+	DestroyAnimation(data);
+}
+
+static SPRITESHEET_STREAM(AnimationStream) {
+	bool complete = !UpdateAnimation(data, delta);
+	ALLEGRO_BITMAP* bitmap = al_clone_bitmap(GetAnimationFrame(data));
+	double duration = GetAnimationFrameDuration(data);
+	int frame = GetAnimationFrameNo(data);
+	//PrintConsole(game, "STREAM: frame %d duration %f delta %f", frame, GetAnimationFrameDuration(data), delta);
+	if (complete) {
+		ResetAnimation(data);
+	}
+	return (struct SpritesheetFrame){
+		.bitmap = bitmap,
+		.duration = duration * 1000,
+		.tint = al_map_rgb(255, 255, 255),
+		.row = 1,
+		.col = 1,
+		.x = 0,
+		.y = 0,
+		.sx = 0,
+		.sy = 0,
+		.sw = al_get_bitmap_width(bitmap),
+		.sh = al_get_bitmap_height(bitmap),
+		.flipX = false,
+		.flipY = false,
+		.start = frame == 0,
+		.end = complete,
+		.shared = false,
+	};
+}
+
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
 	data->left.character = CreateCharacter(game, "pudelka");
-	data->left.character->detailedProgress = true;
+	data->left.character->detailed_progress = true;
 
-	RegisterSpritesheet(game, data->left.character, "pudelka_poczatek");
-	RegisterSpritesheet(game, data->left.character, "pudelka_tancowanie");
-	RegisterSpritesheet(game, data->left.character, "pudelka_waz");
-	RegisterSpritesheet(game, data->left.character, "pudelko_1_czer");
-	RegisterSpritesheet(game, data->left.character, "pudelko_1_memlanie");
-	RegisterSpritesheet(game, data->left.character, "pudelko_1_pom");
-	RegisterSpritesheet(game, data->left.character, "pudelko_1_zolte");
-	RegisterSpritesheet(game, data->left.character, "pudelko_2_czer");
-	RegisterSpritesheet(game, data->left.character, "pudelko_2_memlanie");
-	RegisterSpritesheet(game, data->left.character, "pudelko_2_pom");
-	RegisterSpritesheet(game, data->left.character, "pudelko_2_zolte");
-	RegisterSpritesheet(game, data->left.character, "pudelko_3_czer");
-	RegisterSpritesheet(game, data->left.character, "pudelko_3_memlanie");
-	RegisterSpritesheet(game, data->left.character, "pudelko_3_pom");
-	RegisterSpritesheet(game, data->left.character, "pudelko_3_zolte");
-	LoadSpritesheets(game, data->left.character, progress);
+	char* anims[] = {
+		"pudelka_poczatek",
+		"pudelka_tancowanie",
+		"pudelka_waz",
+		"pudelko_1_memlanie",
+		"pudelko_2_memlanie",
+		"pudelko_3_memlanie",
+		"pudelko_1_czer",
+		"pudelko_1_pom",
+		"pudelko_1_zolte",
+		"pudelko_2_czer",
+		"pudelko_2_pom",
+		"pudelko_2_zolte",
+		"pudelko_3_czer",
+		"pudelko_3_pom",
+		"pudelko_3_zolte",
+		"pudelko_1_czer_r",
+		"pudelko_1_pom_r",
+		"pudelko_1_zolte_r",
+		"pudelko_2_czer_r",
+		"pudelko_2_pom_r",
+		"pudelko_2_zolte_r",
+		"pudelko_3_czer_r",
+		"pudelko_3_pom_r",
+		"pudelko_3_zolte_r",
+	};
+
+	for (size_t i = 0; i < sizeof(anims) / sizeof(anims[0]); i++) {
+		char path[255] = {};
+		snprintf(path, 255, "sprites/pudelka/%s.awebp", anims[i]);
+		RegisterStreamedSpritesheet(game, data->left.character, anims[i], AnimationStream, DestroyStream, CreateAnimation(GetDataFilePath(game, path)));
+		progress(game);
+	}
 
 	data->center.character = CreateCharacter(game, "pudelka");
 	data->center.character->shared = true;
@@ -222,8 +289,22 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	free(data);
 }
 
-static CHARACTER_CALLBACK(GoForward) {
-	//SwitchCurrentGamestate(game, "samochod_kominek");
+static void CheckWin(struct Game* game, struct GamestateResources* data) {
+	if (data->won) {
+		return;
+	}
+	if (data->left.type == BALL_TYPE_RED && data->center.type == BALL_TYPE_ORANGE && data->right.type == BALL_TYPE_YELLOW) {
+		data->won = true;
+		HideMouse(game);
+		SelectSpritesheet(game, data->left.character, "pudelko_1_czer");
+		SelectSpritesheet(game, data->center.character, "pudelko_2_pom");
+		SelectSpritesheet(game, data->right.character, "pudelko_3_zolte");
+		data->left.character->delta = 0;
+		data->center.character->delta = 0;
+		data->right.character->delta = 0;
+
+		EnqueueSpritesheet(game, data->center.character, "pudelka_tancowanie");
+	}
 }
 
 static CHARACTER_CALLBACK(HandleLeft) {
@@ -236,6 +317,9 @@ static CHARACTER_CALLBACK(HandleLeft) {
 			ShowMouse(game);
 		}
 	}
+	if (old && strcmp("pudelko_1_czer_r", old->name) == 0 && !new) {
+		CheckWin(game, data);
+	}
 }
 
 static CHARACTER_CALLBACK(HandleCenter) {
@@ -247,6 +331,23 @@ static CHARACTER_CALLBACK(HandleCenter) {
 			PrintConsole(game, "memlam srodkowe");
 			ShowMouse(game);
 		}
+		if (strcmp("pudelka_poczatek", old->name) == 0 && old != new) {
+			ShowMouse(game);
+			d->frames = true;
+			SelectSpritesheet(game, d->left.character, "pudelko_1_zolte_r");
+			SelectSpritesheet(game, d->center.character, "pudelko_2_czer_r");
+			SelectSpritesheet(game, d->right.character, "pudelko_3_pom_r");
+		}
+		if (strcmp("pudelka_tancowanie", new->name) == 0) {
+			d->frames = false;
+		}
+	}
+	if (old && strcmp("pudelko_2_pom_r", old->name) == 0 && !new) {
+		PrintConsole(game, "checkwin");
+		CheckWin(game, data);
+	}
+	if (old && strcmp("pudelka_waz", old->name) == 0) {
+		SwitchCurrentGamestate(game, "anim");
 	}
 }
 
@@ -260,22 +361,23 @@ static CHARACTER_CALLBACK(HandleRight) {
 			ShowMouse(game);
 		}
 	}
+	if (old && strcmp("pudelko_3_zolte_r", old->name) == 0 && !new) {
+		CheckWin(game, data);
+	}
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	SetCharacterPosition(game, data->left.character, 0, 0, 0);
 	SetCharacterPosition(game, data->center.character, 0, 0, 0);
 	SetCharacterPosition(game, data->right.character, 0, 0, 0);
-	SelectSpritesheet(game, data->left.character, "pudelka_poczatek");
+	//SelectSpritesheet(game, data->left.character, "pudelka_poczatek");
 	SelectSpritesheet(game, data->center.character, "pudelka_poczatek");
-	SelectSpritesheet(game, data->right.character, "pudelka_poczatek");
-	EnqueueSpritesheet(game, data->left.character, "-pudelko_1_zolte");
-	EnqueueSpritesheet(game, data->center.character, "-pudelko_2_czer");
-	EnqueueSpritesheet(game, data->right.character, "-pudelko_3_pom");
-	data->left.character->pos = 1;
-	data->left.character->delta = 120;
-	data->right.character->pos = 2;
-	data->right.character->delta = 33;
+	//SelectSpritesheet(game, data->right.character, "pudelka_poczatek");
+	EnqueueSpritesheet(game, data->center.character, "pudelko_2_czer_r");
+	//data->left.character->pos = 1;
+	//data->left.character->delta = 120;
+	//data->right.character->pos = 2;
+	//data->right.character->delta = 33;
 
 	data->left.character->callback = HandleLeft;
 	data->left.character->callback_data = data;
@@ -293,7 +395,9 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->stack[1] = BALL_TYPE_NONE;
 	data->stack[2] = BALL_TYPE_NONE;
 
-	ShowMouse(game);
+	data->frames = false;
+
+	HideMouse(game);
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
