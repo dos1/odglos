@@ -31,6 +31,7 @@ ALLEGRO_BITMAP* GetAnimationFrame(struct AnimationDecoder* anim);
 float GetAnimationFrameDuration(struct AnimationDecoder* anim);
 int GetAnimationFrameNo(struct AnimationDecoder* anim);
 void ResetAnimation(struct AnimationDecoder* anim);
+bool IsAnimationComplete(struct AnimationDecoder* anim);
 
 void DrawBuildInfo(struct Game* game);
 void SwitchScene(struct Game* game, char* name);
@@ -43,3 +44,6 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev);
 void Compositor(struct Game* game);
 void ShowMouse(struct Game* game);
 void HideMouse(struct Game* game);
+
+SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream);
+SPRITESHEET_STREAM(AnimationStream);

@@ -22,7 +22,7 @@
 #include <libsuperderpy.h>
 
 struct PergolaCharacter {
-	ALLEGRO_BITMAP* bitmaps[4][4];
+	struct AnimationDecoder* animations[4][4];
 	int i;
 	int j;
 };
@@ -35,13 +35,19 @@ struct GamestateResources {
 	bool mode;
 	bool locked;
 	struct Timeline* timeline;
+	int changed;
 };
 
-int Gamestate_ProgressCount = 34;
+int Gamestate_ProgressCount = 33;
 
 static TM_ACTION(Switch) {
 	TM_RunningOnly;
 	data->mode = !data->mode;
+	if (data->mode) {
+		ResetAnimation(data->right.animations[data->right.j][data->right.i]);
+	} else {
+		ResetAnimation(data->left.animations[data->left.j][data->left.i]);
+	}
 	return TM_END;
 }
 
@@ -57,24 +63,25 @@ static bool IsCompleted(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	TM_Process(data->timeline, delta);
-	if (!data->locked && IsCompleted(game, data)) {
-		data->counter += delta;
+	data->counter += delta;
+	if (data->locked) {
+		if (data->mode) {
+			UpdateAnimation(data->right.animations[data->right.j][data->right.i], delta);
+		} else {
+			UpdateAnimation(data->left.animations[data->left.j][data->left.i], delta);
+		}
 	}
-	if (data->counter > 4.0) {
-		SwitchCurrentGamestate(game, "schodki_i_sowka");
+	if (!data->locked && IsCompleted(game, data)) {
+		SwitchCurrentGamestate(game, "anim");
 	}
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	ALLEGRO_BITMAP* bmp = NULL;
-	if (!data->locked && IsCompleted(game, data)) {
-		bmp = data->anim[(int)floor(fmod(data->counter * 4.0, 2))];
+	if (data->mode) {
+		bmp = GetAnimationFrame(data->right.animations[data->right.j][data->right.i]);
 	} else {
-		if (data->mode) {
-			bmp = data->right.bitmaps[data->right.j][data->right.i];
-		} else {
-			bmp = data->left.bitmaps[data->left.j][data->left.i];
-		}
+		bmp = GetAnimationFrame(data->left.animations[data->left.j][data->left.i]);
 	}
 
 	al_draw_scaled_bitmap(bmp, 0, 0, al_get_bitmap_width(bmp), al_get_bitmap_height(bmp),
@@ -118,46 +125,46 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 	if (!data->locked && !IsCompleted(game, data)) {
 		if (ev->type == ALLEGRO_EVENT_KEY_DOWN) {
-			bool changed = false;
 			struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
 			if (ev->keyboard.keycode == ALLEGRO_KEY_UP) {
 				c->j -= 1;
-				changed = true;
 				if (c->j < 0) {
 					c->j = 0;
 					return;
 				}
+				data->changed++;
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_DOWN) {
 				c->j += 1;
-				changed = true;
 				if (c->j > 3) {
 					c->j = 3;
 					return;
 				}
+				data->changed++;
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_LEFT) {
 				c->i -= 1;
-				changed = true;
 				if (c->i < 0) {
 					c->i = 0;
 					return;
 				}
+				data->changed++;
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_RIGHT) {
 				c->i += 1;
-				changed = true;
 				if (c->i > 3) {
 					c->i = 3;
 					return;
 				}
+				data->changed++;
 			}
 
-			if (changed) {
+			if (data->changed == 3) {
 				data->locked = true;
+				data->changed = 0;
 				TM_AddDelay(data->timeline, 0.5);
-				TM_AddAction(data->timeline, Switch, NULL);
 				TM_AddAction(data->timeline, Unlock, NULL);
+				TM_AddAction(data->timeline, Switch, NULL);
 			}
 		}
 	}
@@ -174,34 +181,21 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 	al_set_new_bitmap_flags(flags);
 
-	int x = 0;
 	char filename[255] = {};
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (x == 9) {
-				x = 10;
-			}
-			snprintf(filename, 255, "pergola/pergola__%04d_sowka1_rzad%d_kolumna%d.webp", x, i + 1, j + 1);
-			x++;
-			data->left.bitmaps[i][j] = al_load_bitmap(GetDataFilePath(game, filename));
+			snprintf(filename, 255, "pergola/sowka_1/rzad_%d_kolumna_%d/anim.awebp", i + 1, j + 1);
+			data->left.animations[i][j] = CreateAnimation(GetDataFilePath(game, filename));
 			progress(game);
 		}
 	}
-	x = 21;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (x == 22) {
-				x = 27;
-			}
-			snprintf(filename, 255, "pergola/pergola__%04d_sowka2_rzad%d_kolumna%d.webp", x, i + 1, j + 1);
-			x++;
-			data->right.bitmaps[i][j] = al_load_bitmap(GetDataFilePath(game, filename));
+			snprintf(filename, 255, "pergola/sowka_2/rzad_%d_kolumna_%d/anim.awebp", i + 1, j + 1);
+			data->right.animations[i][j] = CreateAnimation(GetDataFilePath(game, filename));
 			progress(game);
 		}
 	}
-	data->anim[0] = al_load_bitmap(GetDataFilePath(game, "pergola/pergola__0042_obie_sowki1.webp"));
-	progress(game);
-	data->anim[1] = al_load_bitmap(GetDataFilePath(game, "pergola/pergola__0043_obie_sowki2.webp"));
 
 	return data;
 }
@@ -210,12 +204,9 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	al_destroy_font(data->font);
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			al_destroy_bitmap(data->left.bitmaps[i][j]);
-			al_destroy_bitmap(data->right.bitmaps[i][j]);
+			DestroyAnimation(data->right.animations[i][j]);
 		}
 	}
-	al_destroy_bitmap(data->anim[0]);
-	al_destroy_bitmap(data->anim[1]);
 	TM_Destroy(data->timeline);
 	free(data);
 }
@@ -229,6 +220,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->mode = false;
 	data->locked = false;
 	data->counter = 0;
+	data->changed = 0;
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}

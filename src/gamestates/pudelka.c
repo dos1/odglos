@@ -200,39 +200,6 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	}
 }
 
-static SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream) {
-	DestroyAnimation(data);
-}
-
-static SPRITESHEET_STREAM(AnimationStream) {
-	bool complete = !UpdateAnimation(data, delta);
-	ALLEGRO_BITMAP* bitmap = al_clone_bitmap(GetAnimationFrame(data));
-	double duration = GetAnimationFrameDuration(data);
-	int frame = GetAnimationFrameNo(data);
-	//PrintConsole(game, "STREAM: frame %d duration %f delta %f", frame, GetAnimationFrameDuration(data), delta);
-	if (complete) {
-		ResetAnimation(data);
-	}
-	return (struct SpritesheetFrame){
-		.bitmap = bitmap,
-		.duration = duration * 1000,
-		.tint = al_map_rgb(255, 255, 255),
-		.row = 1,
-		.col = 1,
-		.x = 0,
-		.y = 0,
-		.sx = 0,
-		.sy = 0,
-		.sw = al_get_bitmap_width(bitmap),
-		.sh = al_get_bitmap_height(bitmap),
-		.flipX = false,
-		.flipY = false,
-		.start = frame == 0,
-		.end = complete,
-		.shared = false,
-	};
-}
-
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
 	data->left.character = CreateCharacter(game, "pudelka");

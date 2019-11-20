@@ -71,7 +71,10 @@ int main(int argc, char** argv) {
 	} else {
 		LoadGamestate(game, "logo");
 		LoadGamestate(game, "anim");
+		LoadGamestate(game, "end");
+		LoadGamestate(game, "lawka");
 		LoadGamestate(game, "pudelka");
+		LoadGamestate(game, "pergola");
 	}
 
 	StartGamestate(game, IS_EMSCRIPTEN ? "start" : "logo");

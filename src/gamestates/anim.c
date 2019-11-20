@@ -28,7 +28,7 @@ struct GamestateResources {
 int Gamestate_ProgressCount = 1;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
-	if (!UpdateAnimation(data->anim, delta)) {
+	if (!UpdateAnimation(data->anim, delta * 1.25)) {
 		if (!Dispatch(game)) {
 			SwitchCurrentGamestate(game, "end");
 		}

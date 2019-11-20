@@ -18,6 +18,9 @@ struct AnimationDecoder {
 	uint8_t* buf;
 	bool mmaped, shouldload;
 	int frame;
+	bool done;
+	bool initialized;
+	int width, height;
 };
 
 struct AnimationDecoder* CreateAnimation(const char* filename) {
@@ -68,12 +71,13 @@ struct AnimationDecoder* CreateAnimation(const char* filename) {
 
 	WebPAnimInfo anim_info;
 	WebPAnimDecoderGetInfo(anim->decoder, &anim_info);
-	anim->bitmap = al_create_bitmap(anim_info.canvas_width, anim_info.canvas_height);
-	anim->swap = al_create_bitmap(anim_info.canvas_width, anim_info.canvas_height);
 
 	anim->position = -1;
 	anim->frame = -1;
-	ResetAnimation(anim);
+	anim->initialized = false;
+
+	anim->width = anim_info.canvas_width;
+	anim->height = anim_info.canvas_height;
 
 	return anim;
 }
@@ -81,6 +85,10 @@ struct AnimationDecoder* CreateAnimation(const char* filename) {
 void ResetAnimation(struct AnimationDecoder* anim) {
 	if (anim->position == 0) {
 		return;
+	}
+	if (!anim->initialized) {
+		anim->bitmap = al_create_bitmap(anim->width, anim->height);
+		anim->swap = al_create_bitmap(anim->width, anim->height);
 	}
 	WebPAnimDecoderReset(anim->decoder);
 
@@ -100,15 +108,22 @@ void ResetAnimation(struct AnimationDecoder* anim) {
 
 	anim->position = 0;
 	anim->frame = 0;
+	anim->done = false;
+	anim->initialized = true;
 }
 
 bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
+	if (!anim->initialized) {
+		ResetAnimation(anim);
+	}
+
 	anim->position += timestamp * 1000;
 	ALLEGRO_LOCKED_REGION* lock = NULL;
 
 	if (anim->shouldload) {
 		anim->shouldload = false;
 		if (!WebPAnimDecoderHasMoreFrames(anim->decoder)) {
+			anim->done = true;
 			return false;
 		}
 		uint8_t* buf;
@@ -124,14 +139,16 @@ bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 	}
 
 	if (anim->position >= anim->old_timestamp) {
-		ALLEGRO_BITMAP* bmp = anim->bitmap;
-		anim->bitmap = anim->swap;
-		anim->swap = bmp;
-		anim->shouldload = true;
-		anim->old_timestamp = anim->timestamp;
-		anim->frame++;
+		if (!anim->done) {
+			ALLEGRO_BITMAP* bmp = anim->bitmap;
+			anim->bitmap = anim->swap;
+			anim->swap = bmp;
+			anim->shouldload = true;
+			anim->old_timestamp = anim->timestamp;
+			anim->frame++;
+			anim->duration = anim->swap_duration;
+		}
 
-		anim->duration = anim->swap_duration;
 		if (!WebPAnimDecoderHasMoreFrames(anim->decoder)) {
 			return false;
 		}
@@ -141,6 +158,9 @@ bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 }
 
 ALLEGRO_BITMAP* GetAnimationFrame(struct AnimationDecoder* anim) {
+	if (!anim->initialized) {
+		ResetAnimation(anim);
+	}
 	return anim->bitmap;
 }
 
@@ -149,7 +169,14 @@ int GetAnimationFrameNo(struct AnimationDecoder* anim) {
 }
 
 float GetAnimationFrameDuration(struct AnimationDecoder* anim) {
+	if (!anim->initialized) {
+		ResetAnimation(anim);
+	}
 	return (float)anim->duration / 1000.0;
+}
+
+bool IsAnimationComplete(struct AnimationDecoder* anim) {
+	return anim->done;
 }
 
 void DestroyAnimation(struct AnimationDecoder* anim) {
@@ -162,8 +189,10 @@ void DestroyAnimation(struct AnimationDecoder* anim) {
 #endif
 	WebPDataClear(&anim->data);
 	WebPAnimDecoderDelete(anim->decoder);
-	al_destroy_bitmap(anim->swap);
-	al_destroy_bitmap(anim->bitmap);
+	if (!anim->initialized) {
+		al_destroy_bitmap(anim->swap);
+		al_destroy_bitmap(anim->bitmap);
+	}
 	free(anim);
 }
 
@@ -317,6 +346,7 @@ static char* ANIMATIONS[] = {
 	"004_sowka_wchodzi_na_drzewo/sowka_wchodzi_na_drzewo",
 	"005_sowka_pokazuje_mordke_i_wraca/sowka_pokazuje_mordke_i_wraca",
 	"006_dzwonki_w_lesie/anim",
+	"new/kamienny_ludzik2_EWENTUALNIE/kamienny_ludzik",
 	"008_kuzyn_w_lesie/kuzyn_w_lesie",
 	"009_sowka_idzie_w_lesie/sowka_idzie_w_lesie",
 	"010_sowka_na_trawie/sowka_na_trawie",
@@ -325,7 +355,10 @@ static char* ANIMATIONS[] = {
 	"013_wrzosy_kuzyn_i_sowka/wrzosy_kuzyn_i_sowka2",
 	"014_samochody_w_lesie/samochody_w_lesie",
 	"015_ciemna_trawa_samochod_sowka/ciemna_trawa_samochod_sowka",
+	//
 	"pudelka",
+	//
+	"new/waz_zmienia_sie_w_kostke_PO_016_PUDELKACH_OD_CIOCI/waz_zmienia_sie_w_kostke",
 	"017_ciemna_trawa_waz/ciemna_trawa_waz",
 	"018_wiklinowe_kolo/wiklinowe_kolo",
 	"019_aksamitki/aksamitki",
@@ -343,37 +376,74 @@ static char* ANIMATIONS[] = {
 	"031_058_donice_dom/031_donice_dom1",
 	"024_026_028_032_037_040_042_059_donice_w_ogrodzie/032_donice_w_ogrodzie4",
 	"033_gawron_i_drewniany_medrzec/gawron_i_drewniany_medrzec",
-	"034_plansza_do_sudoku_pionki/plansza_do_sudoku_pionki",
-	"035_038_donice_na_tarasie/035_donice_na_tarasie1",
-	"036_039_048_donica_w_hortensjach/036_donica_w_hortensjach1",
+	//"034_plansza_do_sudoku_pionki/plansza_do_sudoku_pionki",
+	"new/stwory_na_dachu_EWENTUALNIE/stwory_na_dachu_1_wieza",
+	"new/stwory_na_dachu_EWENTUALNIE/stwory_na_dachu_2_calosc",
+	"new/stwory_na_dachu_EWENTUALNIE/stwory_na_dachu_3_zblizenie_srednie",
+	"new/twarze_pga_EWENTUALNIE/twarze_pga2_chipmunk",
+	"new/twarze_pga_EWENTUALNIE/twarze_pga1_zamieniaja_sie",
+	//"035_038_donice_na_tarasie/035_donice_na_tarasie1",
+	//"036_039_048_donica_w_hortensjach/036_donica_w_hortensjach1",
 	"024_026_028_032_037_040_042_059_donice_w_ogrodzie/037_donice_w_ogrodzie5",
-	"035_038_donice_na_tarasie/038_donice_na_tarasie2",
-	"036_039_048_donica_w_hortensjach/039_donica_w_hortensjach2",
+	//"035_038_donice_na_tarasie/038_donice_na_tarasie2",
+	//"036_039_048_donica_w_hortensjach/039_donica_w_hortensjach2",
+	//
+	"lawka",
+	//
 	"024_026_028_032_037_040_042_059_donice_w_ogrodzie/040_donice_w_ogrodzie6",
-	"041_049_duza_donica/041_duza_donica1",
+	//"041_049_duza_donica/041_duza_donica1",
 	"024_026_028_032_037_040_042_059_donice_w_ogrodzie/042_donice_w_ogrodzie7",
-	"043_sowka_transformuje_w_wiklinie/anim",
+	//"043_sowka_transformuje_w_wiklinie/anim",
 	"044_sowka_wchodzi_do_miski_ciemniejsze/anim",
-	NULL, /* 045_pergola */
-	"045_pergola/pergola_animacja_koncowa/animacja_koncowa2",
-	"045_pergola/pergola_animacja_koncowa/animacja_koncowa6",
+	//
+	"pergola",
+	//
+	"045_pergola/animacja_koncowa2",
+	"045_pergola/animacja_koncowa6",
 	"046_pudelko_w_ogrodzie/pudelko_w_ogrodzie",
+	"new/swiecznik_GDZIES_W_SRODKU_MOZE_PO_046_PUDELKU_W_OGRODZIE/swiecznik3_TAK",
 	"047_portal_ze_stolika_bialego/portal_ze_stolika_bialego",
-	"036_039_048_donica_w_hortensjach/048_donica_w_hortensjach3",
-	"041_049_duza_donica/049_duza_donica2",
+	//"036_039_048_donica_w_hortensjach/048_donica_w_hortensjach3",
+	//"041_049_duza_donica/049_duza_donica2",
 	"050_sowki_waz_w_lisciach_przy_domu/sowki_waz_w_lisciach_przy_domu",
 	"050a_kuzyn_zaglada_z_duzej_donicy/kuzyn_zaglada_z_duzej_donicy",
 	"051_sowka_i_male_fortepiany/sowka_mini_lego_fortepiany",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/ul_duzy_OK/ul_duzy_TAK",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/duza_sowka_na_drewnianym_kole_OK/duza_sowka_na_drewnianym_kole",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/myszkowanie_w_wiklinie_OK/myszkowanie_w_wiklinie",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/wiklinowy_cyrk_OK/wiklinowy_cyrk_po_dwa_z_myszka_TAK",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/drzewko_kolorowe1_maskotki_OK/drzewko_kolorowe1_maskotki_podwojne_moze_lepsze_TAK",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/siatka_na_drzewie_myszka_OK/siatka_na_drzewie_myszka",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/ule_jesienne_CHYBA_OK/ule_jesienne",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/winorosle_OK/winorosle3_zolty_TAK",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/winorosle_OK/winorosle2_jasnoniebieski_bez_samych_lisciTAK",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/winorosle_OK/winorosle1_ciemnoniebieski_TAK",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/buzia_CHYBA_OK/buzia",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/altanka_samochod_OK/altanka_samochod",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/czerwona_sciana_z_winorosli_OK/czerwona_sciana_z_winorosli",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/kuzyn_na_galeziach_OK_podwojne/kuzyn_na_galeziach_podwojne",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/zamiana_myszki_w_bramie_OK/zamiana_myszki_w_bramie",
+	"new/WIKLINA_ITP_POZNAN__moze_po_makiecie_lub_pomiedzy/wiklina_stare_rzeczy_wchodza_do_tipi_i_inne/wiklina_rzeczy_wchodza_do_tipi_TAK",
+	"024_026_028_032_037_040_042_059_donice_w_ogrodzie/059_donice_w_ogrodzie8",
 	"051_z_regal_08_gora_bok/regal_anim1",
 	"052_turkusowe_cos/turkusowe_cos",
 	"053_male_dziwne_cos/male_dziwne_cos",
 	"054_lira_korbowa/lira_korbowa",
+	//
+	// "skrzypce",
+	//
 	"055_skrzypce2/skrzypce2",
-	"056_swiecznik_test/anim",
+	//	"056_swiecznik_test/anim",
 	"057_szczypczyki_testowe/anim",
-	"031_058_donice_dom/058_donice_dom2",
-	"024_026_028_032_037_040_042_059_donice_w_ogrodzie/059_donice_w_ogrodzie8",
+	"new/statki_szyszki_tasmy_PO_057_PUDELKO_SZCZYPCZYKI/statki_szyszki_tasmy2_TAK",
+	//"031_058_donice_dom/058_donice_dom2",
 	"060_magnetofon/magnetofon2_bez_myszek",
+	"new/duch_portalu_animacja_PO_061_MAGNETOFONIE/duch_portalu_animacja2_zlozona_TAK",
+	//
+	// "armata",
+	//
+	"new/podniebny_generator_z_kosmosem_PO_ARMACIE/podniebny_generator_z_kosmosem",
+	"new/makieta_w_kosmosie_z_tlem/makieta_w_kosmosie_z_tlem",
 	"061_finale/001_sowka_wchodzi_do_studia/sowka_wchodzi_do_studia2_TAK",
 	"061_finale/002_sowki_zamieniaja_sie_krzeslami/sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK",
 	"061_finale/003_sowka1_wlacza_konsole_z_daleka2/sowka1_wlacza_konsole_z_daleka2",
@@ -385,6 +455,7 @@ static char* ANIMATIONS[] = {
 	"061_finale/009_sowka2_klika_konsole/sowka2_klika_konsole_nie_znika_TAK",
 	"061_finale/010_sowka1_zaluzje/sowka1_zaluzje",
 	"061_finale/011_animacja_koncowa/animacja_koncowa",
+	"new/animacje_koncowe_rodzinki_NA_KONIEC/animacje_koncowe_rodzinki",
 };
 
 bool Dispatch(struct Game* game) {
@@ -420,4 +491,37 @@ void DestroyGameData(struct Game* game) {
 	al_destroy_bitmap(game->data->cursorbmp);
 	al_destroy_bitmap(game->data->cursorhover);
 	free(game->data);
+}
+
+SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream) {
+	DestroyAnimation(data);
+}
+
+SPRITESHEET_STREAM(AnimationStream) {
+	bool complete = !UpdateAnimation(data, delta);
+	ALLEGRO_BITMAP* bitmap = al_clone_bitmap(GetAnimationFrame(data));
+	double duration = GetAnimationFrameDuration(data);
+	int frame = GetAnimationFrameNo(data);
+	//PrintConsole(game, "STREAM: frame %d duration %f delta %f", frame, GetAnimationFrameDuration(data), delta);
+	if (complete) {
+		ResetAnimation(data);
+	}
+	return (struct SpritesheetFrame){
+		.bitmap = bitmap,
+		.duration = duration * 1000,
+		.tint = al_map_rgb(255, 255, 255),
+		.row = 1,
+		.col = 1,
+		.x = 0,
+		.y = 0,
+		.sx = 0,
+		.sy = 0,
+		.sw = al_get_bitmap_width(bitmap),
+		.sh = al_get_bitmap_height(bitmap),
+		.flipX = false,
+		.flipY = false,
+		.start = frame == 0,
+		.end = complete,
+		.shared = false,
+	};
 }
