@@ -37,6 +37,11 @@ static CHARACTER_CALLBACK(GoForwardCb) {
 	SwitchCurrentGamestate(game, "anim");
 }
 
+static CHARACTER_CALLBACK(OutroCb) {
+	SelectSpritesheet(game, character, "naparstki_10b_KONCOWKA_chodaki_owce");
+	character->callback = GoForwardCb;
+}
+
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	AnimateCharacter(game, data->bg, delta, 1.0);
 	ALLEGRO_COLOR color = CheckMask(game, data->mask);
@@ -69,14 +74,11 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			if (data->step == 1) {
 				SelectSpritesheet(game, data->bg, "naparstki_10a_latarnia_pusta_sowka_piana_czesc2");
 			}
-			if (data->step == 2) {
-				SelectSpritesheet(game, data->bg, "naparstki_10a_latarnia_pusta_sowka_piana_czesc3");
-			}
 			HideMouse(game);
 			data->bg->callback = ShowMouseCb;
-			if (data->step == 3) {
-				SelectSpritesheet(game, data->bg, "naparstki_10b_KONCOWKA_chodaki_owce");
-				data->bg->callback = GoForwardCb;
+			if (data->step == 2) {
+				SelectSpritesheet(game, data->bg, "naparstki_10a_latarnia_pusta_sowka_piana_czesc3");
+				data->bg->callback = OutroCb;
 			}
 			data->step++;
 		}
