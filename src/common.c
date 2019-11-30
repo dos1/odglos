@@ -21,6 +21,7 @@ struct AnimationDecoder {
 	bool done;
 	bool initialized;
 	int width, height;
+	char* name;
 };
 
 struct AnimationDecoder* CreateAnimation(const char* filename) {
@@ -64,7 +65,7 @@ struct AnimationDecoder* CreateAnimation(const char* filename) {
 
 	WebPAnimDecoderOptions dec_options;
 	WebPAnimDecoderOptionsInit(&dec_options);
-	dec_options.color_mode = MODE_RGBA;
+	dec_options.color_mode = MODE_rgbA;
 	dec_options.use_threads = !IS_EMSCRIPTEN;
 
 	anim->decoder = WebPAnimDecoderNew(&anim->data, &dec_options);
@@ -78,6 +79,10 @@ struct AnimationDecoder* CreateAnimation(const char* filename) {
 
 	anim->width = anim_info.canvas_width;
 	anim->height = anim_info.canvas_height;
+
+	ALLEGRO_PATH* path = al_create_path(filename);
+	anim->name = strdup(al_get_path_basename(path));
+	al_destroy_path(path);
 
 	return anim;
 }
@@ -168,6 +173,10 @@ int GetAnimationFrameNo(struct AnimationDecoder* anim) {
 	return anim->frame;
 }
 
+const char* GetAnimationName(struct AnimationDecoder* anim) {
+	return anim->name;
+}
+
 float GetAnimationFrameDuration(struct AnimationDecoder* anim) {
 	if (!anim->initialized) {
 		ResetAnimation(anim);
@@ -193,6 +202,7 @@ void DestroyAnimation(struct AnimationDecoder* anim) {
 		al_destroy_bitmap(anim->swap);
 		al_destroy_bitmap(anim->bitmap);
 	}
+	free(anim->name);
 	free(anim);
 }
 
@@ -215,9 +225,11 @@ void PreLogic(struct Game* game, double delta) {
 	game->data->hover = false;
 }
 
-void CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap) {
+ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap) {
+	// TODO: apply distortion coming from compositor
 	ALLEGRO_COLOR color = al_get_pixel(bitmap, (int)(game->data->mouseX * game->viewport.width), (int)(game->data->mouseY * game->viewport.height));
 	game->data->hover = color.r < 1.0;
+	return color;
 }
 
 void DrawTexturedRectangle(float x1, float y1, float x2, float y2, ALLEGRO_COLOR color) {
@@ -435,12 +447,15 @@ static char* ANIMATIONS[] = {
 	"055_skrzypce2/skrzypce2",
 	//	"056_swiecznik_test/anim",
 	"057_szczypczyki_testowe/anim",
+	//
+	"naparstki",
+	//
 	"new/statki_szyszki_tasmy_PO_057_PUDELKO_SZCZYPCZYKI/statki_szyszki_tasmy2_TAK",
 	//"031_058_donice_dom/058_donice_dom2",
 	"060_magnetofon/magnetofon2_bez_myszek",
 	"new/duch_portalu_animacja_PO_061_MAGNETOFONIE/duch_portalu_animacja2_zlozona_TAK",
 	//
-	// "armata",
+	"armata",
 	//
 	"new/podniebny_generator_z_kosmosem_PO_ARMACIE/podniebny_generator_z_kosmosem",
 	"new/makieta_w_kosmosie_z_tlem/makieta_w_kosmosie_z_tlem",
@@ -466,6 +481,7 @@ bool Dispatch(struct Game* game) {
 		}
 	} while (!ANIMATIONS[game->data->animationid]);
 	game->data->animation = ANIMATIONS[game->data->animationid];
+	PrintConsole(game, "Dispatch: %s", game->data->animation);
 	return true;
 }
 
@@ -504,6 +520,7 @@ SPRITESHEET_STREAM(AnimationStream) {
 	int frame = GetAnimationFrameNo(data);
 	//PrintConsole(game, "STREAM: frame %d duration %f delta %f", frame, GetAnimationFrameDuration(data), delta);
 	if (complete) {
+		PrintConsole(game, "[AnimationStream] %s: complete", GetAnimationName(data));
 		ResetAnimation(data);
 	}
 	return (struct SpritesheetFrame){

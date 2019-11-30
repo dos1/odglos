@@ -78,11 +78,6 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
-	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) {
-		UnloadCurrentGamestate(game); // mark this gamestate to be stopped and unloaded
-		// When there are no active gamestates, the engine will quit.
-	}
-
 	if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN || ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) {
 		if (!game->data->cursor) {
 			return;

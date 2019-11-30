@@ -30,13 +30,14 @@ void DestroyAnimation(struct AnimationDecoder* anim);
 ALLEGRO_BITMAP* GetAnimationFrame(struct AnimationDecoder* anim);
 float GetAnimationFrameDuration(struct AnimationDecoder* anim);
 int GetAnimationFrameNo(struct AnimationDecoder* anim);
+const char* GetAnimationName(struct AnimationDecoder* anim);
 void ResetAnimation(struct AnimationDecoder* anim);
 bool IsAnimationComplete(struct AnimationDecoder* anim);
 
 void DrawBuildInfo(struct Game* game);
 void SwitchScene(struct Game* game, char* name);
 void PreLogic(struct Game* game, double delta);
-void CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap);
+ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap);
 void DrawTexturedRectangle(float x1, float y1, float x2, float y2, ALLEGRO_COLOR color);
 struct CommonResources* CreateGameData(struct Game* game);
 void DestroyGameData(struct Game* game);
