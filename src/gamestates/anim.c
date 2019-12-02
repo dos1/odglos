@@ -32,14 +32,13 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		if (!Dispatch(game)) {
 			SwitchCurrentGamestate(game, "end");
 		}
-		char path[255] = {0};
-		snprintf(path, 255, "animations/%s.awebp", game->data->animation);
-		const char* file = FindDataFilePath(game, path);
-		if (file) {
-			DestroyAnimation(data->anim);
-			data->anim = CreateAnimation(file);
+		if (game->data->animation[0] == '>') {
+			ChangeCurrentGamestate(game, game->data->animation + 1);
 		} else {
-			ChangeCurrentGamestate(game, game->data->animation);
+			char path[255] = {0};
+			snprintf(path, 255, "animations/%s.awebp", game->data->animation);
+			DestroyAnimation(data->anim);
+			data->anim = CreateAnimation(GetDataFilePath(game, path));
 		}
 	}
 }

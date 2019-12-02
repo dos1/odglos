@@ -80,8 +80,6 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
-	char path[255] = {0};
-	snprintf(path, 255, "animations/%s.awebp", game->data->animation);
 	data->anim = CreateAnimation(GetDataFilePath(game, "armata/armata_strzela.awebp"));
 	progress(game);
 
