@@ -371,7 +371,7 @@ void PreLogic(struct Game* game, double delta) {
 ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap) {
 	// TODO: apply distortion coming from compositor
 	ALLEGRO_COLOR color = al_get_pixel(bitmap, (int)(game->data->mouseX * al_get_bitmap_width(bitmap)), (int)(game->data->mouseY * al_get_bitmap_height(bitmap)));
-	game->data->hover = color.r < 1.0;
+	game->data->hover = color.r < 0.9;
 	return color;
 }
 
