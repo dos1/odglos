@@ -13,7 +13,12 @@ struct SceneDefinition {
 	char* fg;
 	float speed;
 	int repeats;
-	int x, y;
+	void (*callback)(struct Game*, int, int*, int*, struct Character*);
+	struct {
+		char* name;
+		char* spritesheet;
+		bool preload;
+	} character;
 };
 
 struct CommonResources {

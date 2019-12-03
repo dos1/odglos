@@ -61,6 +61,8 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	if (data->counter > 4.0) {
 		SwitchCurrentGamestate(game, "anim");
 	}
+
+	game->data->hover = true; // TODO
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {

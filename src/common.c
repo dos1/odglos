@@ -369,6 +369,17 @@ void HideMouse(struct Game* game) {
 	game->data->cursor = false;
 }
 
+static void Generator(struct Game* game, int frame, int* x, int* y, struct Character* character) {
+	*x = 142;
+	*y = 136;
+}
+
+static void Regal(struct Game* game, int frame, int* x, int* y, struct Character* character) {
+	*x = 550;
+	*y = 60 - cos(frame / 4.0) * 10;
+	SetCharacterPosition(game, character, frame * 30 - 400, 68, 0);
+}
+
 static struct SceneDefinition SCENES[] = {
 	{"sucha_trawa_aksamitki_waz_stary"},
 	{"wedrowka_rodzinki_po_trawce"},
@@ -383,12 +394,11 @@ static struct SceneDefinition SCENES[] = {
 	{"samochod_kominek"},
 	{"samochody_w_lesie"},
 	{"buty_drewniane"},
-	{"dmuchawa_ptaszor_sam"}, // bg
-	{"regal_animacja_sam"}, // bg
+	{"regal_animacja_sam", .bg = "regal_dmuchawa_100_9254_tlo_przyciete.png", .callback = Regal, .character = {"dmuchawa", "dmuchawa_ptaszor_sam", true}},
 	{"aksamitki_samochod_sowka"},
 	{"ciemna_trawa_samochod_sowka"},
 	{"wchodzenie_po_schodach_samochod_sowka"},
-	{"generator_animacja_wstepna"}, // bg
+	{"generator_animacja_wstepna", .callback = Generator, .bg = "generator_tlo_liscie_przyciete.png"},
 	{"donice_01_samochod_duzy_jedzie_w_prawo"},
 	{"donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej"},
 	{"donice_08_mala_sowka_z_samochodem_wyjezdza_w_przod"},
@@ -399,7 +409,7 @@ static struct SceneDefinition SCENES[] = {
 	{"aksamitki_waz_r"},
 	{"donica_w_hortensjach_06_waz"},
 	//{">dzwonki"},
-	{"stolik_animacja"}, // bg
+	{"stolik_animacja", .bg = "stolik_tlo.png"},
 	{"animacja_silacz1"},
 	{"donice_02_samochod_duzy_jedzie_w_lewo"},
 	{"donice_03_samochod_duzy_wjezdza_do_donicy_z_lewej"},
@@ -460,57 +470,17 @@ static struct SceneDefinition SCENES[] = {
 	{"06statki_szyszki_tasmy_animacja5"},
 	{">armata"},
 	{"podniebny_generator_z_kosmosem"},
-	{"makieta_w_kosmosie_bez_tla"}, // bg
+	{"makieta_w_kosmosie_bez_tla", .bg = "kosmos.png"},
 	{"makieta_rozne_bez_sowek"},
 	{"magnetofon2_bez_myszek"},
 	//{">duch_portalu"},
+	{"duch_portalu_animacja_oczu_osobno_lewe_TAK_DO_GRY"},
+	{"duch_portalu_animacja_oczu_osobno_prawe_TAK_DO_GRY"},
 	{"duch_portalu_animacja2_zlozona_TAK"},
 	{"krzeslo_w_lesie_czesc1"},
 	{"krzeslo_w_lesie_czesc2"},
-	{"sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK"},
-	{"sowka2_zaluzje_pojawia_sie2_TAK"},
-	{"sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK"},
-	{"sowka1_wlacza_konsole_z_daleka2"},
-	{"sowka1_wlacza_konsole_z_bliska1"},
-	{"sowka1_zaluzje"},
-	{"sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK"},
-	{"drzwi_zamykaja_sie_same"},
-	{"sowka2_klika_konsole_nie_znika_TAK"},
-	{"sowka2_zaluzje_nie_znika_TAK"},
-	{"okna_sie_otwieraja_z_sowka2"},
-	{"pudelko_w_ogrodzie"},
-	{"buzia"},
-	{"zamiana_myszki_w_bramie"},
-	{"altanka_samochod"},
-	{"wiklinowy_cyrk_po_dwa_bez_myszki"},
-	{"wiklinowy_cyrk_sama_myszka"},
-	{"myszkowanie_w_wiklinie"},
-	{"wiklinowe_kolo"},
-	{"animacja_koncowa"},
-	{"animacje_koncowe_rodzinki"},
-	{"donice_13_tasma"},
-	{"czerwona_sciana_z_winorosli"},
-	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK"},
-	{">naparstki"},
-	{"01statki_szyszki_tasmy_animacja1"},
-	{"02statki_szyszki_tasmy_animacja2"},
-	{"03statki_szyszki_tasmy_animacja3"},
-	{"04statki_szyszki_tasmy_gra_dzwiek1"},
-	{"04statki_szyszki_tasmy_gra_dzwiek2"},
-	{"04statki_szyszki_tasmy_gra_dzwiek3"},
-	{"05statki_szyszki_tasmy_animacja4"},
-	{"06statki_szyszki_tasmy_animacja5"},
-	{">armata"},
-	{"podniebny_generator_z_kosmosem"},
-	{"makieta_w_kosmosie_bez_tla", .bg = "kosmos.png"}, // bg
-	{"makieta_rozne_bez_sowek"},
-	{"magnetofon2_bez_myszek"},
-	//{">duch_portalu"},
-	{"duch_portalu_animacja2_zlozona_TAK"},
-	{"krzeslo_w_lesie_czesc1"},
-	{"krzeslo_w_lesie_czesc2"},
-	{"sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK"}, // fade
-	{"sowka2_zaluzje_pojawia_sie2_TAK"}, // fade
+	{"sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK"}, // fade?
+	{"sowka2_zaluzje_pojawia_sie2_TAK", .speed = 0.15}, // fade?
 	{"sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK"},
 	{"sowka1_wlacza_konsole_z_daleka2"},
 	{"sowka1_wlacza_konsole_z_bliska1"},

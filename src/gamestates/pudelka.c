@@ -50,6 +50,8 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	} else {
 		AnimateCharacter(game, data->center.character, delta, 1.0);
 	}
+
+	game->data->hover = true; // TODO
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {

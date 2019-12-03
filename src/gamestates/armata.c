@@ -26,11 +26,18 @@ struct GamestateResources {
 	ALLEGRO_BITMAP *bg, *dol, *drzewo, *maska;
 	struct Character* makieta;
 	bool clicked, finished;
+	double angle, counter;
 };
 
 int Gamestate_ProgressCount = 7;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
+	data->counter -= delta;
+	if (data->counter < 0) {
+		data->angle = sin(game->time / 2.0) / 16.0;
+		data->counter = 0.1;
+	}
+
 	if (data->clicked) {
 		if (!UpdateAnimation(data->anim, delta * 1.0)) {
 			//ResetAnimation(data->anim);
@@ -51,6 +58,9 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 			SwitchCurrentGamestate(game, "anim");
 		}
 	}
+
+	ALLEGRO_COLOR color = CheckMask(game, GetAnimationFrame(data->anim));
+	game->data->hover = color.a > 0.9;
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
@@ -58,11 +68,11 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	al_draw_scaled_bitmap(data->dol, 0, 0, al_get_bitmap_width(data->dol), al_get_bitmap_height(data->dol), 0, 0, game->viewport.width, game->viewport.height, 0);
 
 	ALLEGRO_BITMAP* bitmap = GetAnimationFrame(data->anim);
-	al_draw_scaled_rotated_bitmap(bitmap, 888, 269, 888, 269, game->viewport.width / (float)al_get_bitmap_width(bitmap), game->viewport.height / (float)al_get_bitmap_height(bitmap), sin(game->time / 2.0) / 16.0, 0);
+	al_draw_scaled_rotated_bitmap(bitmap, 888, 269, 888, 269, game->viewport.width / (float)al_get_bitmap_width(bitmap), game->viewport.height / (float)al_get_bitmap_height(bitmap), data->angle, 0);
 
 	if (data->finished) {
 		DrawCharacter(game, data->makieta);
-		al_draw_scaled_rotated_bitmap(data->maska, 888, 269, 888, 269, game->viewport.width / (float)al_get_bitmap_width(data->maska), game->viewport.height / (float)al_get_bitmap_height(data->maska), sin(game->time / 2.0) / 16.0, 0);
+		al_draw_scaled_rotated_bitmap(data->maska, 888, 269, 888, 269, game->viewport.width / (float)al_get_bitmap_width(data->maska), game->viewport.height / (float)al_get_bitmap_height(data->maska), data->angle, 0);
 		//al_draw_scaled_bitmap(data->maska, 0, 0, al_get_bitmap_width(data->maska), al_get_bitmap_height(data->maska), 0, 0, game->viewport.width, game->viewport.height, 0);
 	}
 
@@ -70,9 +80,7 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
-	if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) ||
-		(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) ||
-		(ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
+	if (game->data->hover && (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
 		data->clicked = true;
 		HideMouse(game);
 	}
@@ -83,7 +91,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->anim = CreateAnimation(GetDataFilePath(game, "armata/armata_strzela.awebp"));
 	progress(game);
 
-	data->bg = al_load_bitmap(GetDataFilePath(game, "armata/armata_zszopowane_tlo_UZYC.jpg"));
+	data->bg = al_load_bitmap(GetDataFilePath(game, "armata/armata_zszopowane_tlo_UZYC.png"));
 	progress(game);
 	data->drzewo = al_load_bitmap(GetDataFilePath(game, "armata/armata_drzewo.png"));
 	progress(game);
@@ -112,6 +120,8 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	SetCharacterPosition(game, data->makieta, 685, 235, 0);
 	data->makieta->scaleX = 0.333;
 	data->makieta->scaleY = 0.333;
+	data->angle = sin(game->time / 2.0) / 16.0;
+	data->counter = 0.1;
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
