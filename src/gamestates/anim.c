@@ -23,22 +23,35 @@
 
 struct GamestateResources {
 	struct AnimationDecoder* anim;
+	double delay;
 };
 
-int Gamestate_ProgressCount = 1;
+int Gamestate_ProgressCount = 2;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
-	if (!UpdateAnimation(data->anim, delta * 1.25)) {
-		if (!Dispatch(game)) {
-			SwitchCurrentGamestate(game, "end");
+	float modifier = 1.25;
+
+	if (data->delay > 0) {
+		data->delay -= delta * modifier;
+		if (data->delay <= 0) {
+			data->delay = 0;
+			if (!Dispatch(game)) {
+				SwitchCurrentGamestate(game, "end");
+				return;
+			}
+			if (game->data->animation[0] == '>') {
+				ChangeCurrentGamestate(game, game->data->animation + 1);
+			} else {
+				char path[255] = {0};
+				snprintf(path, 255, "animations/%s.awebp", game->data->animation);
+				DestroyAnimation(data->anim);
+				data->anim = CreateAnimation(GetDataFilePath(game, path));
+				ResetAnimation(data->anim);
+			}
 		}
-		if (game->data->animation[0] == '>') {
-			ChangeCurrentGamestate(game, game->data->animation + 1);
-		} else {
-			char path[255] = {0};
-			snprintf(path, 255, "animations/%s.awebp", game->data->animation);
-			DestroyAnimation(data->anim);
-			data->anim = CreateAnimation(GetDataFilePath(game, path));
+	} else {
+		if (!UpdateAnimation(data->anim, delta * modifier)) {
+			data->delay = GetAnimationFrameDuration(data->anim);
 		}
 	}
 }
@@ -56,6 +69,8 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	char path[255] = {0};
 	snprintf(path, 255, "animations/%s.awebp", game->data->animation);
 	data->anim = CreateAnimation(GetDataFilePath(game, path));
+	progress(game);
+	ResetAnimation(data->anim);
 
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 	return data;
@@ -68,6 +83,7 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	HideMouse(game);
+	data->delay = 0;
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
