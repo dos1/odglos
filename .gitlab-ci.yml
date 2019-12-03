@@ -1,4 +1,303 @@
-include:
-  - project: dosowisko.net/libsuperderpy-utils
-    ref: 8286255c592a78596ca4047bcc49015cc11e1699
-    file: /gitlab-ci.template.yml
+stages:
+  - build
+  - deploy
+  - notify
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+.build:
+  image: docker
+  stage: build
+  retry: 1
+  services:
+    - docker:dind
+  artifacts:
+    name: "$CI_PROJECT_NAME-$CI_JOB_NAME-$CI_COMMIT_SHA"
+    paths:
+      - utils/output/
+    expire_in: 300 minutes
+  cache:
+    key: $CI_JOB_NAME
+    paths:
+      - .assetcache/
+      - .flatpak-builder/
+  dependencies: []
+  variables:
+    LIBSUPERDERPY_ANDROID_KEYSTORE_BASE64: $ANDROID_KEYSTORE_BASE64
+    LIBSUPERDERPY_ANDROID_KEYSTORE_PASSWORD: $ANDROID_KEYSTORE_PASSWORD
+
+meta:
+  stage: build
+  image: debian
+  artifacts:
+    name: "$CI_PROJECT_NAME-$CI_JOB_NAME-$CI_COMMIT_SHA"
+    paths:
+      - .meta/
+    expire_in: 600 minutes
+  dependencies: []
+  script:
+    - mkdir .meta
+    - cd utils
+    - build-scripts/read_cmake_var.sh LIBSUPERDERPY_GAMENAME > ../.meta/gamename
+    - build-scripts/read_cmake_var.sh LIBSUPERDERPY_GAMENAME_PRETTY > ../.meta/gamename_pretty
+    - build-scripts/read_cmake_var.sh LIBSUPERDERPY_APPID > ../.meta/appid
+
+build:html5:
+  extends: .build
+  script:
+    - cd utils
+    - ./package_html5.sh
+
+build:wasm:
+  extends: .build
+  script:
+    - cd utils
+    - ./package_wasm.sh
+
+build:linux-i686:
+  extends: .build
+  script:
+    - cd utils
+    - ./package_linux_i686.sh
+
+build:linux-flatpak-amd64:
+  extends: .build
+  script:
+    - cd utils
+    - ./package_linux_flatpak_amd64.sh
+
+build:linux-flatpak-arm64:
+  extends: .build
+  script:
+    - cd utils
+    - ./package_linux_flatpak_arm64.sh
+
+build:linux-flatpak-armv7:
+  extends: .build
+  only:
+    variables:
+      - $ENABLE_32BIT_FLATPAK
+  script:
+    - cd utils
+    - ./package_linux_flatpak_armv7.sh
+
+build:linux-flatpak-i686:
+  extends: .build
+  only:
+    variables:
+      - $ENABLE_32BIT_FLATPAK
+  script:
+    - cd utils
+    - ./package_linux_flatpak_i686.sh
+
+build:steamlink:
+  extends: .build
+  script:
+    - cd utils
+    - ./package_steamlink.sh
+
+build:pocketchip:
+  extends: .build
+  script:
+    - cd utils
+    - ./package_pocketchip.sh
+
+build:raspberrypi:
+  extends: .build
+  script:
+    - cd utils
+    - ./package_raspberrypi.sh
+
+build:switch:
+  extends: .build
+  script:
+    - cd utils
+    - ./package_switch.sh
+
+.butler-deploy:
+  stage: deploy
+  image: dosowisko/butler
+  when: on_success
+  retry: 2
+  only:
+    refs:
+      - master
+    variables:
+      - $BUTLER_TARGET
+  environment:
+    name: itch-$CI_JOB_NAME
+    url: $ITCH_URL
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - butler push utils/output/`cat .meta/gamename`$DEPLOY_FILENAME_SUFFIX $BUTLER_TARGET:$DEPLOY_TARGET --userversion `echo $CI_COMMIT_SHA | cut -c1-7`
+
+deploy:itch:linux-i686:
+  extends: .butler-deploy
+  environment:
+    name: itch-linux-steamrt-i686
+  dependencies:
+    - meta
+    - build:linux-i686
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -linux-i686.tar.gz
+    DEPLOY_TARGET: ci-linux-steamrt-i686
+
+deploy:itch:linux-flatpak-amd64:
+  extends: .butler-deploy
+  environment:
+    name: itch-linux-flatpak-amd64
+  dependencies:
+    - meta
+    - build:linux-flatpak-amd64
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -linux-amd64.flatpak
+    DEPLOY_TARGET: ci-linux-flatpak-amd64
+
+deploy:itch:linux-flatpak-arm64:
+  extends: .butler-deploy
+  environment:
+    name: itch-linux-flatpak-arm64
+  dependencies:
+    - meta
+    - build:linux-flatpak-arm64
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -linux-arm64.flatpak
+    DEPLOY_TARGET: ci-linux-flatpak-arm64
+
+deploy:itch:linux-flatpak-armv7:
+  extends: .butler-deploy
+  only:
+    variables:
+      - $ENABLE_32BIT_FLATPAK
+  environment:
+    name: itch-linux-flatpak-armv7
+  dependencies:
+    - meta
+    - build:linux-flatpak-armv7
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -linux-armv7.flatpak
+    DEPLOY_TARGET: ci-linux-flatpak-armv7
+
+deploy:itch:linux-flatpak-i686:
+  extends: .butler-deploy
+  only:
+    variables:
+      - $ENABLE_32BIT_FLATPAK
+  environment:
+    name: itch-linux-flatpak-i686
+  dependencies:
+    - meta
+    - build:linux-flatpak-i686
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -linux-i686.flatpak
+    DEPLOY_TARGET: ci-linux-flatpak-i686
+
+deploy:itch:html5:
+  extends: .butler-deploy
+  environment:
+    name: itch-html5
+  dependencies:
+    - meta
+    - build:html5
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -html5.zip
+    DEPLOY_TARGET: ci-html5
+
+deploy:itch:wasm:
+  extends: .butler-deploy
+  environment:
+    name: itch-wasm
+  dependencies:
+    - meta
+    - build:wasm
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -wasm.zip
+    DEPLOY_TARGET: ci-wasm
+
+deploy:itch:steamlink:
+  extends: .butler-deploy
+  environment:
+    name: itch-steamlink
+  dependencies:
+    - meta
+    - build:steamlink
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -steamlink.zip
+    DEPLOY_TARGET: ci-steamlink
+
+deploy:itch:pocketchip:
+  extends: .butler-deploy
+  environment:
+    name: itch-pocketchip
+  dependencies:
+    - meta
+    - build:pocketchip
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -pocketchip.zip
+    DEPLOY_TARGET: ci-pocketchip
+
+deploy:itch:raspberrypi:
+  extends: .butler-deploy
+  environment:
+    name: itch-raspberrypi
+  dependencies:
+    - meta
+    - build:raspberrypi
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -raspberrypi.zip
+    DEPLOY_TARGET: ci-raspberrypi
+
+deploy:itch:switch:
+  extends: .butler-deploy
+  environment:
+    name: itch-switch
+  dependencies:
+    - meta
+    - build:switch
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -switch.zip
+    DEPLOY_TARGET: ci-switch
+
+.fdroid-deploy:
+  stage: deploy
+  image: dosowisko/curl
+  when: on_success
+  retry: 2
+  only:
+    refs:
+      - master
+    variables:
+      - $FDROID_DEPLOY
+  environment:
+    name: fdroid-$CI_JOB_NAME
+    url: $FDROID_URL
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - curl -f -F "secret=$FDROID_SECRET" -F "file=@utils/output/`cat .meta/gamename`$DEPLOY_FILENAME_SUFFIX" -F "suite=$FDROID_SUITE" $FDROID_UPLOAD_URL
+
+.xmpp-notify:
+  image: dosowisko/xmpp-muc-send
+  stage: notify
+  retry: 2
+  when: on_success
+  only:
+    variables:
+      - $XMPP_ROOM
+  variables:
+    GIT_STRATEGY: none
+  dependencies: []
+
+notify:success:
+  extends: .xmpp-notify
+  when: on_success
+  script:
+    - 'xmpp-muc-send -j "$XMPP_JID" -n "$XMPP_NICK" -p "$XMPP_PASSWORD" -r "$XMPP_ROOM" "New builds ($CI_PROJECT_NAME): [`echo $CI_COMMIT_SHA | cut -c1-7` | $CI_COMMIT_REF_NAME] $CI_COMMIT_TITLE"'
+
+notify:failure:
+  extends: .xmpp-notify
+  when: on_failure
+  script:
+    - 'xmpp-muc-send -j "$XMPP_JID" -n "$XMPP_NICK" -p "$XMPP_PASSWORD" -r "$XMPP_ROOM" "FAILURE ($CI_PROJECT_NAME): [`echo $CI_COMMIT_SHA | cut -c1-7` | $CI_COMMIT_REF_NAME] $CI_COMMIT_TITLE $CI_PIPELINE_URL"'
