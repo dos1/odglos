@@ -7,6 +7,7 @@ varying vec2 varying_texcoord;
 varying vec4 varying_color;
 
 uniform float time;
+uniform bool desaturate;
 
 // Feel free to steal this :^)
 // Consider it MIT licensed, you can link to this page if you want to.
@@ -86,6 +87,12 @@ void main() {
     color = pow(color, vec4(1.0 / 2.2));
     #endif
     #endif
+
+    if (desaturate) {
+        float val = 0.299 * color.r + 0.587 * color.g + 0.114 * color.b;
+        color = mix(color, vec4(vec3(val), 1.0), 0.8);
+        color.rgb *= 0.5;
+    }
 
     gl_FragColor = color;
 }

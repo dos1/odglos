@@ -125,10 +125,12 @@ void Gamestate_PostLoad(struct Game* game, struct GamestateResources* data) {
 void Gamestate_Pause(struct Game* game, struct GamestateResources* data) {
 	// Called when gamestate gets paused (so only Draw is being called, no Logic nor ProcessEvent)
 	// Pause your timers and/or sounds here.
+	al_set_audio_stream_playing(data->music, false);
 }
 
 void Gamestate_Resume(struct Game* game, struct GamestateResources* data) {
 	// Called when gamestate gets resumed. Resume your timers and/or sounds here.
+	al_set_audio_stream_playing(data->music, true);
 }
 
 void Gamestate_Reload(struct Game* game, struct GamestateResources* data) {

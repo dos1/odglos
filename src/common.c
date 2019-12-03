@@ -267,6 +267,7 @@ void Compositor(struct Game* game) {
 
 	al_use_shader(game->data->grain);
 	al_set_shader_float("time", al_get_time() - game->data->start_time);
+	al_set_shader_bool("desaturate", game->data->pause);
 
 	if (game->loading.shown) {
 		al_draw_bitmap(GetGamestateFramebuffer(game, GetGamestate(game, NULL)), game->clip_rect.x, game->clip_rect.y, 0);
@@ -297,6 +298,14 @@ void Compositor(struct Game* game) {
 	}
 	al_use_shader(NULL);
 
+	if (game->data->pause) {
+		al_draw_tinted_scaled_bitmap(game->data->gradient, al_map_rgba_f(0.5, 0.5, 0.5, 0.5),
+			0, 0, al_get_bitmap_width(game->data->gradient), al_get_bitmap_height(game->data->gradient),
+			game->clip_rect.x, game->clip_rect.y, game->clip_rect.w, game->clip_rect.h, 0);
+
+		al_draw_text(game->data->font, al_map_rgb(255, 255, 255), game->clip_rect.x + game->clip_rect.w / 2.0, game->clip_rect.y + game->clip_rect.h / 2.0, ALLEGRO_ALIGN_CENTER, "PAUSED");
+	}
+
 	if (game->data->cursor) {
 		al_draw_scaled_rotated_bitmap(game->data->hover ? game->data->cursorhover : game->data->cursorbmp, 9, 4, game->data->mouseX * game->clip_rect.w + game->clip_rect.x, game->data->mouseY * game->clip_rect.h + game->clip_rect.y, game->clip_rect.w / (double)game->viewport.width * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, game->clip_rect.h / (double)game->viewport.height * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, 0, 0);
 	}
@@ -322,6 +331,15 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 
 	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_F)) { // || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)) {
 		ToggleFullscreen(game);
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_SPACE || ev->keyboard.keycode == ALLEGRO_KEY_P)) {
+		if (!game->data->pause) {
+			PauseAllGamestates(game);
+		} else {
+			ResumeAllGamestates(game);
+		}
+		game->data->pause = !game->data->pause;
 	}
 
 	if (ev->type == ALLEGRO_EVENT_MOUSE_AXES) {
@@ -504,6 +522,9 @@ struct CommonResources* CreateGameData(struct Game* game) {
 	data->start_time = al_get_time();
 	data->lowmem = false;
 	data->animationid = -1;
+	data->pause = false;
+	data->font = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 42, 0);
+	data->gradient = al_load_bitmap(GetDataFilePath(game, "gradient.webp"));
 	return data;
 }
 
@@ -514,6 +535,8 @@ void DestroyGameData(struct Game* game) {
 	DestroyShader(game, game->data->grain);
 	al_destroy_bitmap(game->data->cursorbmp);
 	al_destroy_bitmap(game->data->cursorhover);
+	al_destroy_bitmap(game->data->gradient);
+	al_destroy_font(game->data->font);
 	free(game->data);
 }
 
