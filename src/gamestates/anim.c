@@ -27,6 +27,7 @@ struct GamestateResources {
 	double delay;
 	int repeats;
 	int x, y;
+	bool finished;
 	void (*callback)(struct Game*, int, int*, int*, struct Character*);
 	struct Character* character;
 };
@@ -82,8 +83,23 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	ResetAnimation(data->anim);
 }
 
+static void HandleDispatch(struct Game* game, struct GamestateResources* data, void (*progress)(struct Game*)) {
+	if (!Dispatch(game)) {
+		SwitchCurrentGamestate(game, "end");
+	} else {
+		if (game->data->scene->name[0] == '>') {
+			ChangeCurrentGamestate(game, game->data->scene->name + 1);
+		} else {
+			LoadAnimation(game, data, progress);
+			data->finished = false;
+		}
+	}
+}
+
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	float modifier = 1.25 * ((game->data->scene->speed == 0.0) ? 1.0 : game->data->scene->speed);
+
+	game->data->debuginfo = GetAnimationFrameNo(data->anim);
 
 	if (data->character) {
 		AnimateCharacter(game, data->character, delta, modifier);
@@ -94,15 +110,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		if (data->delay <= 0) {
 			data->delay = 0;
 			if (!data->repeats) {
-				if (!Dispatch(game)) {
-					SwitchCurrentGamestate(game, "end");
-					return;
-				}
-				if (game->data->scene->name[0] == '>') {
-					ChangeCurrentGamestate(game, game->data->scene->name + 1);
-				} else {
-					LoadAnimation(game, data, NULL);
-				}
+				HandleDispatch(game, data, NULL);
 			} else {
 				ResetAnimation(data->anim);
 				data->repeats--;
@@ -111,6 +119,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	} else {
 		if (!UpdateAnimation(data->anim, delta * modifier)) {
 			data->delay = GetAnimationFrameDuration(data->anim) / modifier;
+			data->finished = true;
 		}
 	}
 
@@ -141,12 +150,24 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	}
 }
 
-void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {}
+void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
+	if (game->_priv.showconsole && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
+		data->delay = 0.01;
+		data->finished = true;
+	}
+	if (game->_priv.showconsole && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
+		data->delay = 0.01;
+		data->finished = true;
+		game->data->sceneid--;
+		if (game->data->sceneid < -1) {
+			game->data->sceneid = -1;
+		}
+	}
+}
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
-	Dispatch(game);
-	LoadAnimation(game, data, progress);
+	HandleDispatch(game, data, progress);
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 	return data;
 }
@@ -159,11 +180,17 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	if (data->fg) {
 		al_destroy_bitmap(data->fg);
 	}
+	if (data->character) {
+		DestroyCharacter(game, data->character);
+	}
 	free(data);
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	HideMouse(game);
+	if (data->finished) {
+		HandleDispatch(game, data, NULL);
+	}
 	data->delay = 0;
 }
 

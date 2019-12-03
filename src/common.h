@@ -32,6 +32,7 @@ struct CommonResources {
 	ALLEGRO_BITMAP *cursorbmp, *cursorhover, *gradient;
 	bool lowmem;
 	bool pause;
+	int debuginfo;
 
 	int sceneid;
 	struct SceneDefinition* scene;
