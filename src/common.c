@@ -64,7 +64,7 @@ static struct SceneDefinition SCENES[] = {
 	{"aksamitki_waz_r"},
 	{"donica_w_hortensjach_06_waz"},
 	//{">dzwonki"},
-	{"stolik_animacja", .bg = "stolik_tlo.png"},
+	{"stolik_animacja", .bg = "stolik_tlo.png", .fg = "stolik_drzewa_na_przedzie.png"},
 	{"animacja_silacz1"},
 	{"donice_02_samochod_duzy_jedzie_w_lewo"},
 	{"donice_03_samochod_duzy_wjezdza_do_donicy_z_lewej"},
@@ -163,6 +163,8 @@ static struct SceneDefinition SCENES[] = {
 	{"winorosle2_jasnoniebieski_bez_samych_lisciTAK"},
 	{"winorosle3_zolty_TAK"},
 	{"portal_ze_stolika_bialego"},
+	//{">skrzypce"},
+	//{">byk"},
 };
 
 struct AnimationDecoder* CreateAnimation(const char* filename) {
