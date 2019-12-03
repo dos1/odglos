@@ -45,6 +45,9 @@ meta:
 
 build:html5:
   extends: .build
+  only:
+    variables:
+      - $ALL_BUILDS
   script:
     - cd utils
     - ./package_html5.sh
@@ -57,18 +60,27 @@ build:wasm:
 
 build:linux-i686:
   extends: .build
+  only:
+    variables:
+      - $ALL_BUILDS
   script:
     - cd utils
     - ./package_linux_i686.sh
 
 build:linux-flatpak-amd64:
   extends: .build
+  only:
+    variables:
+      - $ALL_BUILDS
   script:
     - cd utils
     - ./package_linux_flatpak_amd64.sh
 
 build:linux-flatpak-arm64:
   extends: .build
+  only:
+    variables:
+      - $ALL_BUILDS
   script:
     - cd utils
     - ./package_linux_flatpak_arm64.sh
@@ -93,24 +105,36 @@ build:linux-flatpak-i686:
 
 build:steamlink:
   extends: .build
+  only:
+    variables:
+      - $ALL_BUILDS
   script:
     - cd utils
     - ./package_steamlink.sh
 
 build:pocketchip:
   extends: .build
+  only:
+    variables:
+      - $ALL_BUILDS
   script:
     - cd utils
     - ./package_pocketchip.sh
 
 build:raspberrypi:
   extends: .build
+  only:
+    variables:
+      - $ALL_BUILDS
   script:
     - cd utils
     - ./package_raspberrypi.sh
 
 build:switch:
   extends: .build
+  only:
+    variables:
+      - $ALL_BUILDS
   script:
     - cd utils
     - ./package_switch.sh
@@ -135,6 +159,9 @@ build:switch:
 
 deploy:itch:linux-i686:
   extends: .butler-deploy
+  only:
+    variables:
+      - $ALL_BUILDS
   environment:
     name: itch-linux-steamrt-i686
   dependencies:
@@ -146,6 +173,9 @@ deploy:itch:linux-i686:
 
 deploy:itch:linux-flatpak-amd64:
   extends: .butler-deploy
+  only:
+    variables:
+      - $ALL_BUILDS
   environment:
     name: itch-linux-flatpak-amd64
   dependencies:
@@ -157,6 +187,9 @@ deploy:itch:linux-flatpak-amd64:
 
 deploy:itch:linux-flatpak-arm64:
   extends: .butler-deploy
+  only:
+    variables:
+      - $ALL_BUILDS
   environment:
     name: itch-linux-flatpak-arm64
   dependencies:
@@ -196,6 +229,9 @@ deploy:itch:linux-flatpak-i686:
 
 deploy:itch:html5:
   extends: .butler-deploy
+  only:
+    variables:
+      - $ALL_BUILDS
   environment:
     name: itch-html5
   dependencies:
@@ -218,6 +254,9 @@ deploy:itch:wasm:
 
 deploy:itch:steamlink:
   extends: .butler-deploy
+  only:
+    variables:
+      - $ALL_BUILDS
   environment:
     name: itch-steamlink
   dependencies:
@@ -229,6 +268,9 @@ deploy:itch:steamlink:
 
 deploy:itch:pocketchip:
   extends: .butler-deploy
+  only:
+    variables:
+      - $ALL_BUILDS
   environment:
     name: itch-pocketchip
   dependencies:
@@ -240,6 +282,9 @@ deploy:itch:pocketchip:
 
 deploy:itch:raspberrypi:
   extends: .butler-deploy
+  only:
+    variables:
+      - $ALL_BUILDS
   environment:
     name: itch-raspberrypi
   dependencies:
@@ -251,6 +296,9 @@ deploy:itch:raspberrypi:
 
 deploy:itch:switch:
   extends: .butler-deploy
+  only:
+    variables:
+      - $ALL_BUILDS
   environment:
     name: itch-switch
   dependencies:
