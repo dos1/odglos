@@ -23,30 +23,64 @@
 
 struct GamestateResources {
 	struct AnimationDecoder* anim;
+	ALLEGRO_BITMAP *bg, *fg;
 	double delay;
+	int repeats;
+	int x, y;
 };
 
 int Gamestate_ProgressCount = 2;
 
+static void LoadAnimation(struct Game* game, struct GamestateResources* data, void (*progress)(struct Game*)) {
+	char path[255] = {0};
+	snprintf(path, 255, "animations/%s.awebp", game->data->scene->name);
+	if (data->anim) {
+		DestroyAnimation(data->anim);
+	}
+	if (data->bg) {
+		al_destroy_bitmap(data->bg);
+		data->bg = NULL;
+	}
+	if (data->fg) {
+		al_destroy_bitmap(data->fg);
+		data->fg = NULL;
+	}
+	data->anim = CreateAnimation(GetDataFilePath(game, path));
+	if (progress) {
+		progress(game);
+	}
+	if (game->data->scene->bg) {
+		data->bg = al_load_bitmap(GetDataFilePath(game, game->data->scene->bg));
+	}
+	if (game->data->scene->fg) {
+		data->fg = al_load_bitmap(GetDataFilePath(game, game->data->scene->fg));
+	}
+	data->repeats = game->data->scene->repeats;
+	data->x = game->data->scene->x;
+	data->y = game->data->scene->y;
+	ResetAnimation(data->anim);
+}
+
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
-	float modifier = 1.25;
+	float modifier = 1.25 * ((game->data->scene->speed == 0.0) ? 1.0 : game->data->scene->speed);
 
 	if (data->delay > 0) {
 		data->delay -= delta * modifier;
 		if (data->delay <= 0) {
 			data->delay = 0;
-			if (!Dispatch(game)) {
-				SwitchCurrentGamestate(game, "end");
-				return;
-			}
-			if (game->data->animation[0] == '>') {
-				ChangeCurrentGamestate(game, game->data->animation + 1);
+			if (!data->repeats) {
+				if (!Dispatch(game)) {
+					SwitchCurrentGamestate(game, "end");
+					return;
+				}
+				if (game->data->scene->name[0] == '>') {
+					ChangeCurrentGamestate(game, game->data->scene->name + 1);
+				} else {
+					LoadAnimation(game, data, NULL);
+				}
 			} else {
-				char path[255] = {0};
-				snprintf(path, 255, "animations/%s.awebp", game->data->animation);
-				DestroyAnimation(data->anim);
-				data->anim = CreateAnimation(GetDataFilePath(game, path));
 				ResetAnimation(data->anim);
+				data->repeats--;
 			}
 		}
 	} else {
@@ -57,8 +91,17 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
-	ALLEGRO_BITMAP* bitmap = GetAnimationFrame(data->anim);
-	al_draw_scaled_bitmap(bitmap, 0, 0, al_get_bitmap_width(bitmap), al_get_bitmap_height(bitmap), 0, 0, game->viewport.width, game->viewport.height, 0);
+	ALLEGRO_BITMAP* bitmap;
+	if (data->bg) {
+		bitmap = data->bg;
+		al_draw_scaled_bitmap(bitmap, 0, 0, al_get_bitmap_width(bitmap), al_get_bitmap_height(bitmap), 0, 0, game->viewport.width, game->viewport.height, 0);
+	}
+	bitmap = GetAnimationFrame(data->anim);
+	al_draw_scaled_bitmap(bitmap, 0, 0, al_get_bitmap_width(bitmap), al_get_bitmap_height(bitmap), data->x, data->y, game->viewport.width, game->viewport.height, 0);
+	if (data->fg) {
+		bitmap = data->fg;
+		al_draw_scaled_bitmap(bitmap, 0, 0, al_get_bitmap_width(bitmap), al_get_bitmap_height(bitmap), 0, 0, game->viewport.width, game->viewport.height, 0);
+	}
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {}
@@ -66,18 +109,19 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
 	Dispatch(game);
-	char path[255] = {0};
-	snprintf(path, 255, "animations/%s.awebp", game->data->animation);
-	data->anim = CreateAnimation(GetDataFilePath(game, path));
-	progress(game);
-	ResetAnimation(data->anim);
-
+	LoadAnimation(game, data, progress);
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 	return data;
 }
 
 void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	DestroyAnimation(data->anim);
+	if (data->bg) {
+		al_destroy_bitmap(data->bg);
+	}
+	if (data->fg) {
+		al_destroy_bitmap(data->fg);
+	}
 	free(data);
 }
 

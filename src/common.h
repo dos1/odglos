@@ -7,6 +7,15 @@
 #define IS_EMSCRIPTEN 0
 #endif
 
+struct SceneDefinition {
+	char* name;
+	char* bg;
+	char* fg;
+	float speed;
+	int repeats;
+	int x, y;
+};
+
 struct CommonResources {
 	// Fill in with common data accessible from all gamestates.
 	ALLEGRO_SHADER* grain;
@@ -19,8 +28,8 @@ struct CommonResources {
 	bool lowmem;
 	bool pause;
 
-	int animationid;
-	char* animation;
+	int sceneid;
+	struct SceneDefinition* scene;
 
 	ALLEGRO_FONT* font;
 };
