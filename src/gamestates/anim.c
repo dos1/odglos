@@ -30,6 +30,10 @@ struct GamestateResources {
 	bool finished;
 	void (*callback)(struct Game*, int, int*, int*, struct Character*);
 	struct Character* character;
+
+	int freezeno;
+	ALLEGRO_BITMAP* mask;
+	bool frozen;
 };
 
 int Gamestate_ProgressCount = 2;
@@ -47,6 +51,10 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	if (data->fg) {
 		al_destroy_bitmap(data->fg);
 		data->fg = NULL;
+	}
+	if (data->mask) {
+		al_destroy_bitmap(data->mask);
+		data->mask = NULL;
 	}
 	if (data->character) {
 		DestroyCharacter(game, data->character);
@@ -77,10 +85,12 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	}
 	data->x = 0;
 	data->y = 0;
+	data->freezeno = 0;
 	if (data->callback) {
 		data->callback(game, 0, &data->x, &data->y, data->character);
 	}
 	ResetAnimation(data->anim);
+	PrintConsole(game, "Loaded: %s", path);
 }
 
 static void HandleDispatch(struct Game* game, struct GamestateResources* data, void (*progress)(struct Game*)) {
@@ -100,6 +110,20 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	float modifier = 1.25 * ((game->data->scene->speed == 0.0) ? 1.0 : game->data->scene->speed);
 
 	game->data->debuginfo = GetAnimationFrameNo(data->anim);
+
+	if (!data->frozen && game->data->scene->freezes[data->freezeno].mask && game->data->scene->freezes[data->freezeno].frame == GetAnimationFrameNo(data->anim)) {
+		data->frozen = true;
+		ShowMouse(game);
+		if (!data->mask) {
+			data->mask = al_load_bitmap(GetDataFilePath(game, game->data->scene->freezes[data->freezeno].mask));
+		}
+		PrintConsole(game, "Freeze: [%d] %s (frame: %d)", data->freezeno, game->data->scene->freezes[data->freezeno].mask, GetAnimationFrameNo(data->anim));
+	}
+
+	if (data->frozen) {
+		CheckMask(game, data->mask);
+		return;
+	}
 
 	if (data->character) {
 		AnimateCharacter(game, data->character, delta, modifier);
@@ -151,6 +175,17 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
+	if (game->data->hover && (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
+		if (data->frozen) {
+			data->freezeno++;
+			al_destroy_bitmap(data->mask);
+			data->mask = NULL;
+			data->frozen = false;
+			HideMouse(game);
+			PrintConsole(game, "Unfreeze!");
+		}
+	}
+
 	if (game->_priv.showconsole && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
 		data->delay = 0.01;
 		data->finished = true;
@@ -179,6 +214,9 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	}
 	if (data->fg) {
 		al_destroy_bitmap(data->fg);
+	}
+	if (data->mask) {
+		al_destroy_bitmap(data->mask);
 	}
 	if (data->character) {
 		DestroyCharacter(game, data->character);

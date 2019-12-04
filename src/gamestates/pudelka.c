@@ -38,6 +38,7 @@ struct GamestateResources {
 	int stackpos;
 	bool frames;
 	bool won;
+	ALLEGRO_BITMAP* mask;
 };
 
 int Gamestate_ProgressCount = 24;
@@ -51,7 +52,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		AnimateCharacter(game, data->center.character, delta, 1.0);
 	}
 
-	game->data->hover = true; // TODO
+	CheckMask(game, data->mask);
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
@@ -81,7 +82,7 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN || ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) {
-		if (!game->data->cursor) {
+		if (!game->data->cursor || !game->data->hover) {
 			return;
 		}
 		if (game->data->mouseX < 0.333) {
@@ -243,6 +244,9 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->right.character = CreateCharacter(game, "pudelka");
 	data->right.character->shared = true;
 	data->right.character->spritesheets = data->left.character->spritesheets;
+
+	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/pudelka_od_cioci_maska.png"));
+
 	return data;
 }
 
@@ -250,6 +254,7 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	DestroyCharacter(game, data->right.character);
 	DestroyCharacter(game, data->center.character);
 	DestroyCharacter(game, data->left.character);
+	al_destroy_bitmap(data->mask);
 	free(data);
 }
 

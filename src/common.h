@@ -7,6 +7,11 @@
 #define IS_EMSCRIPTEN 0
 #endif
 
+struct FreezeFrame {
+	int frame;
+	char* mask;
+};
+
 struct SceneDefinition {
 	char* name;
 	char* bg;
@@ -19,6 +24,7 @@ struct SceneDefinition {
 		char* spritesheet;
 		bool preload;
 	} character;
+	struct FreezeFrame freezes[16];
 };
 
 struct CommonResources {
