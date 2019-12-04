@@ -189,6 +189,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	if (game->_priv.showconsole && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
 		data->delay = 0.01;
 		data->finished = true;
+		data->frozen = false;
+		data->freezeno++;
 	}
 	if (game->_priv.showconsole && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
 		data->delay = 0.01;
@@ -197,6 +199,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		if (game->data->sceneid < -1) {
 			game->data->sceneid = -1;
 		}
+		data->frozen = false;
+		data->freezeno++;
 	}
 }
 
