@@ -144,7 +144,7 @@ static struct SceneDefinition SCENES[] = {
 	{"sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK"}, // fade?
 	{"sowka2_zaluzje_pojawia_sie2_TAK", .speed = 0.15}, // fade?
 	{"sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK"},
-	{"sowka1_wlacza_konsole_z_daleka2"},
+	{"sowka1_wlacza_konsole_z_daleka2", .bg = "kosmos.png"},
 	{"sowka1_wlacza_konsole_z_bliska1"},
 	{"sowka1_zaluzje"},
 	{"sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK"},
@@ -160,7 +160,7 @@ static struct SceneDefinition SCENES[] = {
 	{"wiklinowy_cyrk_sama_myszka"},
 	{"myszkowanie_w_wiklinie"},
 	{"wiklinowe_kolo"},
-	{"animacja_koncowa"},
+	{"animacja_koncowa", .bg = "kosmos.png"},
 	{"animacje_koncowe_rodzinki"},
 	{"donice_13_tasma"},
 	//
