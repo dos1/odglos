@@ -68,7 +68,9 @@ static CHARACTER_CALLBACK(ShowMouseCb) {
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	AnimateCharacter(game, data->bg, delta, 1.0);
-	CheckMask(game, data->mask);
+	ALLEGRO_COLOR color = CheckMask(game, data->mask);
+	int nr = round(((color.r * 255) + (color.g * 255) + (color.b * 255)) / 40.0);
+	game->data->hover = nr < 17;
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
@@ -85,13 +87,13 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		ALLEGRO_COLOR color = CheckMask(game, data->mask);
 		int nr = round(((color.r * 255) + (color.g * 255) + (color.b * 255)) / 40.0);
 		if (nr < 17) {
-			if (nr == 9) {
-				SwitchCurrentGamestate(game, "naparstki2");
-				return;
-			}
 			if (nr > data->enabled) {
 				SelectSpritesheet(game, data->bg, ANIMS_EMPTY[nr]);
 			} else {
+				if (nr == 9) {
+					SwitchCurrentGamestate(game, "naparstki2");
+					return;
+				}
 				SelectSpritesheet(game, data->bg, ANIMS[nr]);
 				if (nr == data->enabled) {
 					data->enabled++;
