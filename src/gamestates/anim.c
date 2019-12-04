@@ -65,10 +65,14 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 		progress(game);
 	}
 	if (game->data->scene->bg) {
-		data->bg = al_load_bitmap(GetDataFilePath(game, game->data->scene->bg));
+		char p[255] = {0};
+		snprintf(p, 255, "%s.png", game->data->scene->bg);
+		data->bg = al_load_bitmap(GetDataFilePath(game, p));
 	}
 	if (game->data->scene->fg) {
-		data->fg = al_load_bitmap(GetDataFilePath(game, game->data->scene->fg));
+		char p[255] = {0};
+		snprintf(p, 255, "%s.png", game->data->scene->fg);
+		data->fg = al_load_bitmap(GetDataFilePath(game, p));
 	}
 	data->repeats = game->data->scene->repeats;
 	data->callback = game->data->scene->callback;
@@ -115,7 +119,9 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		data->frozen = true;
 		ShowMouse(game);
 		if (!data->mask) {
-			data->mask = al_load_bitmap(GetDataFilePath(game, game->data->scene->freezes[data->freezeno].mask));
+			char path[255] = {0};
+			snprintf(path, 255, "masks/%s.png", game->data->scene->freezes[data->freezeno].mask);
+			data->mask = al_load_bitmap(GetDataFilePath(game, path));
 		}
 		PrintConsole(game, "Freeze: [%d] %s (frame: %d)", data->freezeno, game->data->scene->freezes[data->freezeno].mask, GetAnimationFrameNo(data->anim));
 	}
