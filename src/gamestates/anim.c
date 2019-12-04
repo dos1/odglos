@@ -124,7 +124,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	}
 
 	if (data->callback) {
-		data->callback(game, GetAnimationFrameNo(data->anim), &data->x, &data->y, data->character);
+		data->callback(game, GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (game->data->scene->repeats - data->repeats) + 1, &data->x, &data->y, data->character);
 	} else {
 		data->x = 0;
 		data->y = 0;

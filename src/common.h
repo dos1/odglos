@@ -51,6 +51,7 @@ int GetAnimationFrameNo(struct AnimationDecoder* anim);
 const char* GetAnimationName(struct AnimationDecoder* anim);
 void ResetAnimation(struct AnimationDecoder* anim);
 bool IsAnimationComplete(struct AnimationDecoder* anim);
+int GetAnimationFrameCount(struct AnimationDecoder* anim);
 
 void DrawBuildInfo(struct Game* game);
 void SwitchScene(struct Game* game, char* name);

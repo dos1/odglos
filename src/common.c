@@ -21,6 +21,7 @@ struct AnimationDecoder {
 	bool done;
 	bool initialized;
 	int width, height;
+	int frames;
 	char* name;
 };
 
@@ -29,10 +30,15 @@ static void Generator(struct Game* game, int frame, int* x, int* y, struct Chara
 	*y = 136;
 }
 
-static void Regal(struct Game* game, int frame, int* x, int* y, struct Character* character) {
+static void DuchPortalu(struct Game* game, int frame, int* x, int* y, struct Character* character) {
+	*x = 0;
+	*y = -222;
+}
+
+static void RegalDmuchawa(struct Game* game, int frame, int* x, int* y, struct Character* character) {
 	*x = 550;
 	*y = 60 - cos(frame / 4.0) * 10;
-	SetCharacterPosition(game, character, frame * 30 - 400, 68, 0);
+	SetCharacterPosition(game, character, frame * 30 - 800, 68, 0);
 }
 
 static struct SceneDefinition SCENES[] = {
@@ -49,7 +55,7 @@ static struct SceneDefinition SCENES[] = {
 	{"samochod_kominek"},
 	{"samochody_w_lesie"},
 	{"buty_drewniane"},
-	{"regal_animacja_sam", .bg = "regal_dmuchawa_100_9254_tlo_przyciete.png", .callback = Regal, .character = {"dmuchawa", "dmuchawa_ptaszor_sam", true}},
+	{"regal_animacja_sam", .repeats = 1, .bg = "regal_dmuchawa_100_9254_tlo_przyciete.png", .callback = RegalDmuchawa, .character = {"dmuchawa", "dmuchawa_ptaszor_sam", true}},
 	{"aksamitki_samochod_sowka"},
 	{"ciemna_trawa_samochod_sowka"},
 	{"wchodzenie_po_schodach_samochod_sowka"},
@@ -58,6 +64,7 @@ static struct SceneDefinition SCENES[] = {
 	{"donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej"},
 	{"donice_08_mala_sowka_z_samochodem_wyjezdza_w_przod"},
 	{"swiecznik3_TAK"},
+	//{">swiecznik"},
 	{"gawron_i_drewniany_medrzec"},
 	{"schodzenie_ze_schodow_waz"},
 	{"ciemna_trawa_waz_r"},
@@ -129,9 +136,9 @@ static struct SceneDefinition SCENES[] = {
 	{"makieta_rozne_bez_sowek"},
 	{"magnetofon2_bez_myszek"},
 	//{">duch_portalu"},
-	{"duch_portalu_animacja_oczu_osobno_lewe_TAK_DO_GRY"},
-	{"duch_portalu_animacja_oczu_osobno_prawe_TAK_DO_GRY"},
-	{"duch_portalu_animacja2_zlozona_TAK"},
+	{"duch_portalu_animacja_oczu_osobno_lewe_TAK_DO_GRY", .callback = DuchPortalu},
+	{"duch_portalu_animacja_oczu_osobno_prawe_TAK_DO_GRY", .callback = DuchPortalu},
+	{"duch_portalu_animacja2_zlozona_TAK", .callback = DuchPortalu},
 	{"krzeslo_w_lesie_czesc1"},
 	{"krzeslo_w_lesie_czesc2"},
 	{"sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK"}, // fade?
@@ -222,6 +229,8 @@ struct AnimationDecoder* CreateAnimation(const char* filename) {
 
 	anim->width = anim_info.canvas_width;
 	anim->height = anim_info.canvas_height;
+
+	anim->frames = anim_info.frame_count;
 
 	ALLEGRO_PATH* path = al_create_path(filename);
 	anim->name = strdup(al_get_path_basename(path));
@@ -318,6 +327,10 @@ int GetAnimationFrameNo(struct AnimationDecoder* anim) {
 
 const char* GetAnimationName(struct AnimationDecoder* anim) {
 	return anim->name;
+}
+
+int GetAnimationFrameCount(struct AnimationDecoder* anim) {
+	return anim->frames;
 }
 
 float GetAnimationFrameDuration(struct AnimationDecoder* anim) {
