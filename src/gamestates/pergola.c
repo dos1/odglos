@@ -25,24 +25,31 @@ struct PergolaCharacter {
 	struct AnimationDecoder* animations[4][4];
 	int i;
 	int j;
+	ALLEGRO_BITMAP *controls, *hint;
 };
 
 struct GamestateResources {
-	ALLEGRO_FONT* font;
 	struct PergolaCharacter left, right;
 	double counter;
-	ALLEGRO_BITMAP* anim[2];
 	bool mode;
 	bool locked;
 	struct Timeline* timeline;
 	int changed;
+	double hint;
 };
 
-int Gamestate_ProgressCount = 33;
+int Gamestate_ProgressCount = 36;
+
+static bool IsCompleted(struct Game* game, struct GamestateResources* data) {
+	return data->left.i == 3 && data->left.j == 3 && data->right.i == 0 && data->right.j == 0;
+}
 
 static TM_ACTION(Switch) {
 	TM_RunningOnly;
 	data->mode = !data->mode;
+	if (!IsCompleted(game, data)) {
+		data->hint = 255;
+	}
 	if (data->mode) {
 		ResetAnimation(data->right.animations[data->right.j][data->right.i]);
 	} else {
@@ -54,16 +61,17 @@ static TM_ACTION(Switch) {
 static TM_ACTION(Unlock) {
 	TM_RunningOnly;
 	data->locked = false;
+	ShowMouse(game);
 	return TM_END;
-}
-
-static bool IsCompleted(struct Game* game, struct GamestateResources* data) {
-	return data->left.i == 3 && data->left.j == 3 && data->right.i == 0 && data->right.j == 0;
 }
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	TM_Process(data->timeline, delta);
 	data->counter += delta;
+	data->hint -= delta * 100;
+	if (data->hint < 0) {
+		data->hint = 0;
+	}
 	if (data->locked) {
 		if (data->mode) {
 			UpdateAnimation(data->right.animations[data->right.j][data->right.i], delta);
@@ -74,53 +82,68 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	if (!data->locked && IsCompleted(game, data)) {
 		SwitchCurrentGamestate(game, "anim");
 	}
+
+	struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
+	ALLEGRO_COLOR color = CheckMask(game, c->controls);
+	game->data->hover = color.a > 0.9;
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	ALLEGRO_BITMAP* bmp = NULL;
 	if (data->mode) {
 		bmp = GetAnimationFrame(data->right.animations[data->right.j][data->right.i]);
+		al_draw_scaled_rotated_bitmap(bmp, al_get_bitmap_width(bmp) / 2.0, al_get_bitmap_height(bmp) / 2.0,
+			655, 353, 1355.0 / 1280.0, 1355.0 / 1280.0, 0, 0);
 	} else {
 		bmp = GetAnimationFrame(data->left.animations[data->left.j][data->left.i]);
+		al_draw_scaled_bitmap(bmp, 0, 0, al_get_bitmap_width(bmp), al_get_bitmap_height(bmp),
+			0, 0, game->viewport.width, game->viewport.height, 0);
 	}
 
-	al_draw_scaled_bitmap(bmp, 0, 0, al_get_bitmap_width(bmp), al_get_bitmap_height(bmp),
-		0, 0, game->viewport.width, game->viewport.height, 0);
+	float hint = pow(data->hint / 255.0, 0.9);
 
-	DrawTextWithShadow(data->font, al_map_rgb(255, 255, 255), 2, game->viewport.height - 20, ALLEGRO_ALIGN_LEFT, "strzalki na klawiaturze");
+	if (data->mode) {
+		int frame = GetAnimationFrameNo(data->right.animations[data->right.j][data->right.i]) + data->right.j + data->right.i;
+		al_draw_tinted_scaled_bitmap(data->right.controls, al_map_rgba(255 - frame * 4, 255 - frame * 4, 255 - frame * 4, 255),
+			0, 0, al_get_bitmap_width(data->right.controls), al_get_bitmap_height(data->right.controls),
+			0, 0, game->viewport.width, game->viewport.height, 0);
+
+		al_draw_tinted_scaled_rotated_bitmap(data->right.hint, al_map_rgba_f(hint, hint, hint, hint),
+			al_get_bitmap_width(data->right.hint) / 2.0, al_get_bitmap_height(data->right.hint) / 2.0,
+			655, 353, 1355.0 / 1280.0, 1355.0 / 1280.0, 0, 0);
+	} else {
+		int frame = GetAnimationFrameNo(data->left.animations[data->left.j][data->left.i]) + data->left.j + data->left.i;
+		al_draw_tinted_scaled_bitmap(data->left.controls, al_map_rgba(255 - frame * 4, 255 - frame * 4, 255 - frame * 4, 255),
+			0, 0, al_get_bitmap_width(data->left.controls), al_get_bitmap_height(data->left.controls),
+			0, 0, game->viewport.width, game->viewport.height, 0);
+
+		al_draw_tinted_scaled_bitmap(data->left.hint, al_map_rgba_f(hint, hint, hint, hint),
+			0, 0, al_get_bitmap_width(data->left.hint), al_get_bitmap_height(data->left.hint),
+			0, 0, game->viewport.width, game->viewport.height, 0);
+	}
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
-	if (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) {
-		if (game->data->mouseX < 0.33) {
-			if ((game->data->mouseY > 0.33) && (game->data->mouseY < 0.66)) {
-				ev->type = ALLEGRO_EVENT_KEY_DOWN;
+	if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN || ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) {
+		if (!data->locked && game->data->hover) {
+			ev->keyboard.type = ALLEGRO_EVENT_KEY_DOWN;
+			int pos = game->data->mouseY * 720;
+			if (pos > 410) {
 				ev->keyboard.keycode = ALLEGRO_KEY_LEFT;
-			}
-		}
-		if (game->data->mouseX > 0.66) {
-			if ((game->data->mouseY > 0.33) && (game->data->mouseY < 0.66)) {
-				ev->type = ALLEGRO_EVENT_KEY_DOWN;
-				ev->keyboard.keycode = ALLEGRO_KEY_RIGHT;
-			}
-		}
-		if (game->data->mouseY < 0.33) {
-			if ((game->data->mouseX > 0.33) && (game->data->mouseX < 0.66)) {
-				ev->type = ALLEGRO_EVENT_KEY_DOWN;
-				ev->keyboard.keycode = ALLEGRO_KEY_UP;
-			}
-		}
-		if (game->data->mouseY > 0.66) {
-			if ((game->data->mouseX > 0.33) && (game->data->mouseX < 0.66)) {
-				ev->type = ALLEGRO_EVENT_KEY_DOWN;
+			} else if (pos > 305) {
 				ev->keyboard.keycode = ALLEGRO_KEY_DOWN;
+			} else if (pos > 210) {
+				ev->keyboard.keycode = ALLEGRO_KEY_RIGHT;
+			} else {
+				ev->keyboard.keycode = ALLEGRO_KEY_UP;
 			}
 		}
 	}
 
 	if (!data->locked && !IsCompleted(game, data)) {
+		struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
+
 		if (ev->type == ALLEGRO_EVENT_KEY_DOWN) {
-			struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
 			if (ev->keyboard.keycode == ALLEGRO_KEY_UP) {
 				c->j -= 1;
 				if (c->j < 0) {
@@ -156,6 +179,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 			if (data->changed == 3) {
 				data->locked = true;
+				HideMouse(game);
 				data->changed = 0;
 				TM_AddDelay(data->timeline, 0.5);
 				TM_AddAction(data->timeline, Unlock, NULL);
@@ -167,14 +191,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
-	int flags = al_get_new_bitmap_flags();
-	al_set_new_bitmap_flags(flags & ~ALLEGRO_MAG_LINEAR); // disable linear scaling for pixelarty appearance
 
 	data->timeline = TM_Init(game, data, "timeline");
-
-	data->font = al_create_builtin_font();
-	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
-	al_set_new_bitmap_flags(flags);
 
 	char filename[255] = {};
 	for (int i = 0; i < 4; i++) {
@@ -192,27 +210,41 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 		}
 	}
 
+	data->left.controls = al_load_bitmap(GetDataFilePath(game, "pergola/pergola_strzalki_lewe.png"));
+	progress(game);
+	data->right.controls = al_load_bitmap(GetDataFilePath(game, "pergola/pergola_strzalki_prawe.png"));
+	progress(game);
+	data->left.hint = al_load_bitmap(GetDataFilePath(game, "pergola/tasma_lewa.png"));
+	progress(game);
+	data->right.hint = al_load_bitmap(GetDataFilePath(game, "pergola/DSCF7662_tasma_prawa.png"));
+	progress(game);
+
 	return data;
 }
 
 void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
-	al_destroy_font(data->font);
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
+			DestroyAnimation(data->left.animations[i][j]);
 			DestroyAnimation(data->right.animations[i][j]);
 		}
 	}
+	al_destroy_bitmap(data->left.hint);
+	al_destroy_bitmap(data->right.hint);
+	al_destroy_bitmap(data->left.controls);
+	al_destroy_bitmap(data->right.controls);
 	TM_Destroy(data->timeline);
 	free(data);
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
-	HideMouse(game);
+	ShowMouse(game);
 	data->left.i = 0;
 	data->left.j = 0;
 	data->right.i = 3;
 	data->right.j = 3;
 	data->mode = false;
+	data->hint = 255;
 	data->locked = false;
 	data->counter = 0;
 	data->changed = 0;
