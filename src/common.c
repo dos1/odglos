@@ -23,6 +23,8 @@ struct AnimationDecoder {
 	int width, height;
 	int frames;
 	char* name;
+	bool repeat;
+	struct Game* game;
 };
 
 static void Generator(struct Game* game, int frame, int* x, int* y, struct Character* character) {
@@ -44,7 +46,7 @@ static void RegalDmuchawa(struct Game* game, int frame, int* x, int* y, struct C
 static struct SceneDefinition SCENES[] = {
 	//{"sucha_trawa_aksamitki_waz_stary"},
 	{"wedrowka_rodzinki_po_trawce"},
-	{"rodzinka_jak_wiewiorki"},
+	{"rodzinka_jak_wiewiorki", .freezes = {{20, "DSCF8146_maska"}}},
 	{"sowka_wchodzi_na_drzewo"},
 	{"sowka_pokazuje_mordke_i_wraca"},
 	{"sucha_trawa_aksamitki_samochod_stary"},
@@ -55,7 +57,7 @@ static struct SceneDefinition SCENES[] = {
 	{"samochod_kominek"},
 	{"samochody_w_lesie", .freezes = {{0, "DSCF2433_maska"}}},
 	{"buty_drewniane"},
-	{"regal_animacja_sam", .repeats = 1, .bg = "regal_dmuchawa_100_9254_tlo_przyciete", .callback = RegalDmuchawa, .character = {"dmuchawa", "dmuchawa_ptaszor_sam", true}},
+	{"regal_animacja_sam", .repeats = 1, .bg = "regal_dmuchawa_100_9254_tlo_przyciete", .callback = RegalDmuchawa, .character = {"dmuchawa", "dmuchawa_ptaszor_sam"}},
 	{"aksamitki_samochod_sowka"},
 	{"ciemna_trawa_samochod_sowka"},
 	{"wchodzenie_po_schodach_samochod_sowka", .freezes = {{19, "maska_schodek1"}, {23, "maska_schodek2"}, {26, "maska_schodek3"}, {29, "maska_schodek4"}}},
@@ -65,7 +67,7 @@ static struct SceneDefinition SCENES[] = {
 	{"donice_08_mala_sowka_z_samochodem_wyjezdza_w_przod"},
 	{"swiecznik3_TAK", .freezes = {{0, "DSCF2296_maska_caly"}}},
 	//{">swiecznik"},
-	{"gawron_i_drewniany_medrzec", .freezes = {{107, "DSCF2982_maska"}}},
+	{"gawron_i_drewniany_medrzec", .freezes = {{107, "DSCF2982_maska"}, {290, "DSCF3781_maska"}}},
 	{"schodzenie_ze_schodow_waz"},
 	{"ciemna_trawa_waz_r"},
 	{"aksamitki_waz_r"},
@@ -104,7 +106,11 @@ static struct SceneDefinition SCENES[] = {
 	{"donice_12_waz_idzie_w_prawo_i_wchodzi_do_prawej_donicy"},
 	{"donice_21_sowka_rudnik_wychodzi_w_prawo"},
 	{"male_dziwne_cos", .freezes = {{0, "DSCF8646_maska"}}},
-	{"ul_duzy_TAK", .freezes = {{0, "IMG_0053_maska"}}},
+	{"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .freezes = {{0, "IMG_0053_maska"}}},
+	{"ul_duzy_lewo"},
+	{"ul_duzy_gora"},
+	{"ul_duzy_dol"},
+	{"ul_duzy_animacja_koncowa_samochod"},
 	{"duza_sowka_na_drewnianym_kole", .freezes = {{13, "IMG_1010_maska"}}},
 	{">pergola"},
 	{"pergola_animacja_koncowa2"},
@@ -133,27 +139,32 @@ static struct SceneDefinition SCENES[] = {
 	{">armata"},
 	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska"}}},
 	{"makieta_w_kosmosie_bez_tla", .bg = "kosmos"},
-	{"makieta_rozne_bez_sowek"},
+	{"makieta_pusta"},
 	{"magnetofon2_bez_myszek"},
 	//{">duch_portalu"},
 	//{"duch_portalu_animacja_oczu_osobno_lewe_TAK_DO_GRY", .callback = DuchPortalu},
 	//{"duch_portalu_animacja_oczu_osobno_prawe_TAK_DO_GRY", .callback = DuchPortalu},
-	{"duch_portalu_animacja2_zlozona_TAK", .callback = DuchPortalu, .freezes = {{0, "duch_portalu_oczy_osobno00_maska"}}},
-	{"krzeslo_w_lesie_czesc1"},
+	{"duch_portalu_animacja2_zlozona_TAK", .callback = DuchPortalu, .freezes = {{0, "duch_portalu_maska_przycieta"}}},
+	{"krzeslo_w_lesie_czesc1", .freezes = {{12, "krzeslo_w_lesie08_maska"}}},
 	{"krzeslo_w_lesie_czesc2"},
 	{"sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK"}, // fade?
 	{"sowka2_zaluzje_pojawia_sie2_TAK", .speed = 0.15}, // fade?
 	{"sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK", .freezes = {{85, "DSCF0566_maska_obszary"}}},
 	{"sowka1_wlacza_konsole_z_daleka2", .bg = "kosmos"},
-	{"sowka1_wlacza_konsole_z_bliska1", .freezes = {{0, "DSCF0067_maska_ze_stolem"}}},
+	{"sowka1_wlacza_konsole_z_bliska_lewa_konsola", .freezes = {{0, "DSCF0067_maska_ze_stolem"}}},
+	{"sowka1_wlacza_konsole_z_bliska_srodkowa_konsola", .freezes = {{0, "DSCF0067_maska_ze_stolem"}}},
 	{"sowka1_zaluzje"},
 	{"sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK"},
 	{"drzwi_zamykaja_sie_same", .bg = "kosmos"},
-	{"sowka2_klika_konsole_nie_znika_TAK", .freezes = {{0, "DSCF0286_maska"}}},
+	{"sowka2_klika_konsole_prawa", .freezes = {{0, "DSCF0286_maska"}}},
+	{"sowka2_klika_konsole_lewa", .freezes = {{0, "DSCF0286_maska"}}},
 	{"sowka2_zaluzje_nie_znika_TAK"},
 	{"okna_sie_otwieraja_z_sowka2", .bg = "kosmos"},
 	{"pudelko_w_ogrodzie", .freezes = {{22, "pudelko_w_ogrodzie_maska1"}, {56, "pudelko_w_ogrodzie_maska3"}, {93, "pudelko_w_ogrodzie_maska2"}, {119, "pudelko_w_ogrodzie_maska3"}, {157, "pudelko_w_ogrodzie_maska2"}, {183, "pudelko_w_ogrodzie_maska3"}}},
-	{"buzia"},
+	{"buzia_01_bez_niczego"},
+	{"buzia_02_sowa"},
+	{"buzia_03_kuzyn"},
+	{"buzia_04_myszka"},
 	{"zamiana_myszki_w_bramie"},
 	{"altanka_samochod"},
 	{"wiklinowy_cyrk_po_dwa_bez_myszki"},
@@ -172,12 +183,34 @@ static struct SceneDefinition SCENES[] = {
 	{"portal_ze_stolika_bialego"},
 	//{">skrzypce"},
 	//{">byk"},
+
+	{"przyciski_na_kominie_przycisk_1_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	{"przyciski_na_kominie_przycisk_1_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	{"przyciski_na_kominie_przycisk_1_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	{"przyciski_na_kominie_przycisk_2_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	{"przyciski_na_kominie_przycisk_2_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	{"przyciski_na_kominie_przycisk_2_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	{"przyciski_na_kominie_przycisk_3_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	{"przyciski_na_kominie_przycisk_3_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	{"przyciski_na_kominie_przycisk_3_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	{"przyciski_na_stacji_przycisk1", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	{"przyciski_na_stacji_przycisk1_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	{"przyciski_na_stacji_przycisk1_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	{"przyciski_na_stacji_przycisk2", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	{"przyciski_na_stacji_przycisk2_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	{"przyciski_na_stacji_przycisk2_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	{"przyciski_na_stacji_przycisk3", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	{"przyciski_na_stacji_przycisk3_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	{"przyciski_na_stacji_przycisk3_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+
 };
 
-struct AnimationDecoder* CreateAnimation(const char* filename) {
+struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename, bool repeat) {
 	struct AnimationDecoder* anim = calloc(1, sizeof(struct AnimationDecoder));
 
 	WebPDataInit(&anim->data);
+
+	anim->game = game;
 
 	anim->fd = open(filename, O_RDONLY | O_CLOEXEC);
 
@@ -232,9 +265,13 @@ struct AnimationDecoder* CreateAnimation(const char* filename) {
 
 	anim->frames = anim_info.frame_count;
 
+	anim->repeat = repeat;
+
 	ALLEGRO_PATH* path = al_create_path(filename);
 	anim->name = strdup(al_get_path_basename(path));
 	al_destroy_path(path);
+
+	PrintConsole(anim->game, "[AnimationStream] Created: %s", anim->name);
 
 	return anim;
 }
@@ -246,6 +283,7 @@ void ResetAnimation(struct AnimationDecoder* anim) {
 	if (!anim->initialized) {
 		anim->bitmap = al_create_bitmap(anim->width, anim->height);
 		anim->swap = al_create_bitmap(anim->width, anim->height);
+		//PrintConsole(anim->game, "[AnimationStream] Initialized: %s", anim->name);
 	}
 	WebPAnimDecoderReset(anim->decoder);
 
@@ -280,6 +318,10 @@ bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 	if (anim->shouldload) {
 		anim->shouldload = false;
 		if (!WebPAnimDecoderHasMoreFrames(anim->decoder)) {
+			if (anim->repeat) {
+				ResetAnimation(anim);
+				return true;
+			}
 			anim->done = true;
 			return false;
 		}
@@ -306,7 +348,7 @@ bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 			anim->duration = anim->swap_duration;
 		}
 
-		if (!WebPAnimDecoderHasMoreFrames(anim->decoder)) {
+		if (!anim->repeat && !WebPAnimDecoderHasMoreFrames(anim->decoder)) {
 			return false;
 		}
 	}
@@ -345,6 +387,7 @@ bool IsAnimationComplete(struct AnimationDecoder* anim) {
 }
 
 void DestroyAnimation(struct AnimationDecoder* anim) {
+	//PrintConsole(anim->game, "[AnimationStream] Destroying: %s", anim->name);
 #ifndef __SWITCH__
 	if (anim->mmaped) {
 		munmap(anim->buf, anim->data.size);
@@ -354,7 +397,7 @@ void DestroyAnimation(struct AnimationDecoder* anim) {
 #endif
 	WebPDataClear(&anim->data);
 	WebPAnimDecoderDelete(anim->decoder);
-	if (!anim->initialized) {
+	if (anim->initialized) {
 		al_destroy_bitmap(anim->swap);
 		al_destroy_bitmap(anim->bitmap);
 	}

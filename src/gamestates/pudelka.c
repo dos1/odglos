@@ -241,7 +241,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	for (size_t i = 0; i < sizeof(anims) / sizeof(anims[0]); i++) {
 		char path[255] = {};
 		snprintf(path, 255, "sprites/pudelka/%s.awebp", anims[i]);
-		RegisterStreamedSpritesheet(game, data->left.character, anims[i], AnimationStream, DestroyStream, CreateAnimation(GetDataFilePath(game, path)));
+		RegisterStreamedSpritesheet(game, data->left.character, anims[i], AnimationStream, DestroyStream, CreateAnimation(game, GetDataFilePath(game, path), false));
 		progress(game);
 	}
 

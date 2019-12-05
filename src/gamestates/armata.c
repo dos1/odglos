@@ -96,7 +96,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
-	data->anim = CreateAnimation(GetDataFilePath(game, "armata/armata_strzela.awebp"));
+	data->anim = CreateAnimation(game, GetDataFilePath(game, "armata/armata_strzela.awebp"), false);
 	progress(game);
 
 	data->bg = al_load_bitmap(GetDataFilePath(game, "armata/armata_zszopowane_tlo_UZYC.png"));
@@ -109,7 +109,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	progress(game);
 
 	data->makieta = CreateCharacter(game, "makieta");
-	RegisterStreamedSpritesheet(game, data->makieta, "makieta", AnimationStream, DestroyStream, CreateAnimation(GetDataFilePath(game, "sprites/makieta/makieta.awebp")));
+	RegisterStreamedSpritesheet(game, data->makieta, "makieta", AnimationStream, DestroyStream, CreateAnimation(game, GetDataFilePath(game, "sprites/makieta/makieta.awebp"), false));
 
 	//RegisterSpritesheet(game, data->makieta, "makieta");
 	LoadSpritesheets(game, data->makieta, progress);
@@ -120,6 +120,11 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 
 void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	DestroyAnimation(data->anim);
+	DestroyCharacter(game, data->makieta);
+	al_destroy_bitmap(data->bg);
+	al_destroy_bitmap(data->dol);
+	al_destroy_bitmap(data->drzewo);
+	al_destroy_bitmap(data->maska);
 	free(data);
 }
 

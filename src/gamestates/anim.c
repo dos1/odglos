@@ -41,6 +41,7 @@ int Gamestate_ProgressCount = 2;
 static void LoadAnimation(struct Game* game, struct GamestateResources* data, void (*progress)(struct Game*)) {
 	char path[255] = {0};
 	snprintf(path, 255, "animations/%s.awebp", game->data->scene->name);
+
 	if (data->anim) {
 		DestroyAnimation(data->anim);
 	}
@@ -60,7 +61,8 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 		DestroyCharacter(game, data->character);
 		data->character = NULL;
 	}
-	data->anim = CreateAnimation(GetDataFilePath(game, path));
+
+	data->anim = CreateAnimation(game, GetDataFilePath(game, path), false);
 	if (progress) {
 		progress(game);
 	}
@@ -80,7 +82,7 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 		data->character = CreateCharacter(game, game->data->scene->character.name);
 		char p[255] = {};
 		snprintf(p, 255, "sprites/%s/%s.awebp", game->data->scene->character.name, game->data->scene->character.spritesheet);
-		RegisterStreamedSpritesheet(game, data->character, game->data->scene->character.spritesheet, AnimationStream, DestroyStream, CreateAnimation(GetDataFilePath(game, p)));
+		RegisterStreamedSpritesheet(game, data->character, game->data->scene->character.spritesheet, AnimationStream, DestroyStream, CreateAnimation(game, GetDataFilePath(game, p), true));
 		if (game->data->scene->character.preload) {
 			PreloadStreamedSpritesheet(game, data->character, game->data->scene->character.spritesheet);
 		}
@@ -94,7 +96,7 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 		data->callback(game, 0, &data->x, &data->y, data->character);
 	}
 	ResetAnimation(data->anim);
-	PrintConsole(game, "Loaded: %s", path);
+	//PrintConsole(game, "Loaded: %s", path);
 }
 
 static void HandleDispatch(struct Game* game, struct GamestateResources* data, void (*progress)(struct Game*)) {

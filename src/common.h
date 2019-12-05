@@ -48,7 +48,7 @@ struct CommonResources {
 
 bool Dispatch(struct Game* game);
 
-struct AnimationDecoder* CreateAnimation(const char* filename);
+struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename, bool repeat);
 bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp);
 void DestroyAnimation(struct AnimationDecoder* anim);
 ALLEGRO_BITMAP* GetAnimationFrame(struct AnimationDecoder* anim);

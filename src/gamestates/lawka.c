@@ -97,7 +97,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
 
-	data->animation = CreateAnimation(GetDataFilePath(game, "lawka_w_parku/lawka.awebp"));
+	data->animation = CreateAnimation(game, GetDataFilePath(game, "lawka_w_parku/lawka.awebp"), false);
 	data->bmps[0] = al_clone_bitmap(GetAnimationFrame(data->animation));
 
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar

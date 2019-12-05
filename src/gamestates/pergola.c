@@ -206,14 +206,14 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			snprintf(filename, 255, "pergola/sowka_1/rzad_%d_kolumna_%d/anim.awebp", i + 1, j + 1);
-			data->left.animations[i][j] = CreateAnimation(GetDataFilePath(game, filename));
+			data->left.animations[i][j] = CreateAnimation(game, GetDataFilePath(game, filename), false);
 			progress(game);
 		}
 	}
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			snprintf(filename, 255, "pergola/sowka_2/rzad_%d_kolumna_%d/anim.awebp", i + 1, j + 1);
-			data->right.animations[i][j] = CreateAnimation(GetDataFilePath(game, filename));
+			data->right.animations[i][j] = CreateAnimation(game, GetDataFilePath(game, filename), false);
 			progress(game);
 		}
 	}
