@@ -609,7 +609,7 @@ struct CommonResources* CreateGameData(struct Game* game) {
 	data->sceneid = -1;
 	data->pause = false;
 	data->font = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 42, 0);
-	data->gradient = al_load_bitmap(GetDataFilePath(game, "gradient.webp"));
+	data->gradient = al_load_bitmap(GetDataFilePath(game, "gradient.png"));
 	return data;
 }
 
