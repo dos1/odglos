@@ -57,11 +57,11 @@ static struct SceneDefinition SCENES[] = {
 	{"samochod_kominek"},
 	{"samochody_w_lesie", .freezes = {{0, "DSCF2433_maska"}}},
 	{"buty_drewniane"},
-	{"regal_animacja_sam", .repeats = 1, .bg = "regal_dmuchawa_100_9254_tlo_przyciete", .callback = RegalDmuchawa, .character = {"dmuchawa", "dmuchawa_ptaszor_sam"}},
+	{"regal_animacja_sam", .freezes = {{0, ""}}, .repeats = 1, .bg = "regal_dmuchawa_100_9254_tlo_przyciete", .callback = RegalDmuchawa, .character = {"dmuchawa", "dmuchawa_ptaszor_sam"}},
 	{"aksamitki_samochod_sowka"},
 	{"ciemna_trawa_samochod_sowka"},
 	{"wchodzenie_po_schodach_samochod_sowka", .freezes = {{19, "maska_schodek1"}, {23, "maska_schodek2"}, {26, "maska_schodek3"}, {29, "maska_schodek4"}}},
-	{"generator_animacja_wstepna", .callback = Generator, .bg = "generator_tlo_liscie_przyciete"},
+	{"generator_animacja_wstepna", .freezes = {{0, ""}}, .callback = Generator, .bg = "generator_tlo_liscie_przyciete"},
 	{"donice_01_samochod_duzy_jedzie_w_prawo"},
 	{"donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej"},
 	{"donice_08_mala_sowka_z_samochodem_wyjezdza_w_przod"},
@@ -73,7 +73,7 @@ static struct SceneDefinition SCENES[] = {
 	{"aksamitki_waz_r"},
 	{"donica_w_hortensjach_06_waz"},
 	//{">dzwonki"},
-	{"stolik_animacja", .bg = "stolik_tlo", .fg = "stolik_drzewa_na_przedzie"},
+	{"stolik_animacja", .freezes = {{0, ""}}, .bg = "stolik_tlo", .fg = "stolik_drzewa_na_przedzie"},
 	{"animacja_silacz1", .freezes = {{0, "silacz_maska"}, {22, "silacz_maska"}, {46, "silacz_maska"}}},
 	{"donice_02_samochod_duzy_jedzie_w_lewo"},
 	{"donice_03_samochod_duzy_wjezdza_do_donicy_z_lewej"},
@@ -83,7 +83,7 @@ static struct SceneDefinition SCENES[] = {
 	{"donice_05_samochod_maly_bez_sowki_wyjezdza_w_przod"},
 	{"donice_04_samochod_maly_z_sowka_wyjezdza_w_prawo"},
 	{"donice_18_samochod_duzy_wyjezdza_w_prawo"},
-	{"silacz3_maly_samochod_sam", .freezes = {{0, "silacz_maska"}}},
+	{"silacz3_maly_samochod_sam"}, //.freezes = {{0, "silacz_maska"}}},
 	{"lira_korbowa", .freezes = {{0, "DSCF8976_maska"}}},
 	{"siatka_na_drzewie_myszka"},
 	{"rzezby_w_lazience_2_wyciszenie_sznureczka"},
@@ -140,7 +140,7 @@ static struct SceneDefinition SCENES[] = {
 	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska"}}},
 	{"makieta_w_kosmosie_bez_tla", .bg = "kosmos"},
 	{"makieta_pusta"},
-	{"magnetofon2_bez_myszek"},
+	{"magnetofon2_bez_myszek", .freezes = {{0, "DSCF9467_maska_magnetofon"}}},
 	//{">duch_portalu"},
 	//{"duch_portalu_animacja_oczu_osobno_lewe_TAK_DO_GRY", .callback = DuchPortalu},
 	//{"duch_portalu_animacja_oczu_osobno_prawe_TAK_DO_GRY", .callback = DuchPortalu},
@@ -170,7 +170,9 @@ static struct SceneDefinition SCENES[] = {
 	{"wiklinowy_cyrk_po_dwa_bez_myszki"},
 	{"wiklinowy_cyrk_sama_myszka"},
 	//{"myszkowanie_w_wiklinie"},
-	{"wiklinowe_kolo"},
+	{"wiklinowe_kolo1_samochod"},
+	{"wiklinowe_kolo2_pilka"},
+	{"wiklinowe_kolo3_myszka"},
 	{"animacja_koncowa", .bg = "kosmos"},
 	{"animacje_koncowe_rodzinki"},
 	{"donice_13_tasma"},
@@ -427,7 +429,7 @@ void PreLogic(struct Game* game, double delta) {
 ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap) {
 	// TODO: apply distortion coming from compositor
 	ALLEGRO_COLOR color = al_get_pixel(bitmap, (int)(game->data->mouseX * al_get_bitmap_width(bitmap)), (int)(game->data->mouseY * al_get_bitmap_height(bitmap)));
-	game->data->hover = color.r < 0.9;
+	game->data->hover = (color.r < 0.5) || (color.g < 0.5) || (color.b < 0.5);
 	return color;
 }
 

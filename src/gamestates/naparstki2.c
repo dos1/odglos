@@ -53,7 +53,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	} else if (data->step == 3) {
 		val = color.g;
 	}
-	game->data->hover = val > 0.9;
+	game->data->hover = val > 0.5;
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {

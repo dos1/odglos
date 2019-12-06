@@ -85,7 +85,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 
 	struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
 	ALLEGRO_COLOR color = CheckMask(game, c->controls);
-	game->data->hover = color.a > 0.9;
+	game->data->hover = color.a > 0.5;
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {

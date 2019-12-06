@@ -121,15 +121,28 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		data->frozen = true;
 		ShowMouse(game);
 		if (!data->mask) {
-			char path[255] = {0};
-			snprintf(path, 255, "masks/%s.png", game->data->scene->freezes[data->freezeno].mask);
-			data->mask = al_load_bitmap(GetDataFilePath(game, path));
+			if (game->data->scene->freezes[data->freezeno].mask && game->data->scene->freezes[data->freezeno].mask[0] != 0) {
+				char path[255] = {0};
+				snprintf(path, 255, "masks/%s.png", game->data->scene->freezes[data->freezeno].mask);
+				data->mask = al_load_bitmap(GetDataFilePath(game, path));
+			}
 		}
 		PrintConsole(game, "Freeze: [%d] %s (frame: %d)", data->freezeno, game->data->scene->freezes[data->freezeno].mask, GetAnimationFrameNo(data->anim));
 	}
 
 	if (data->frozen) {
-		CheckMask(game, data->mask);
+		if (data->mask) {
+			CheckMask(game, data->mask);
+		} else {
+			ALLEGRO_BITMAP* bitmap = GetAnimationFrame(data->anim);
+			int x = game->data->mouseX * game->viewport.width;
+			int y = game->data->mouseY * game->viewport.height;
+			x -= data->x;
+			y -= data->y;
+
+			ALLEGRO_COLOR color = al_get_pixel(bitmap, x, y);
+			game->data->hover = (color.a > 0.5);
+		}
 		return;
 	}
 
