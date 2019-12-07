@@ -74,7 +74,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 				data->position = 0;
 			} else if (data->position < 4) {
 				HideMouse(game);
-				data->delay = 0.3;
+				data->delay = 0.4;
 				data->play = data->sequence[data->position++];
 			} else if (data->position == 4) {
 				data->delay = 6.0;
@@ -113,6 +113,9 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 			int pos = round(color.r * 255 / 10.0);
 			PrintConsole(game, "%d", pos);
+			if (pos > 15) {
+				return;
+			}
 			data->play = 15 - pos;
 			data->delay = 0.2;
 			data->pressed = true;
