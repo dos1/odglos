@@ -7,9 +7,15 @@
 #define IS_EMSCRIPTEN 0
 #endif
 
+struct FreezeLink {
+	ALLEGRO_COLOR color;
+	char* name;
+};
+
 struct FreezeFrame {
 	int frame;
 	char* mask;
+	struct FreezeLink links[8];
 };
 
 struct SceneDefinition {
@@ -18,12 +24,15 @@ struct SceneDefinition {
 	char* fg;
 	float speed;
 	int repeats;
-	void (*callback)(struct Game*, int, int*, int*, struct Character*);
+	bool (*callback)(struct Game*, int, int*, int*, struct Character*, void**);
 	struct {
 		char* name;
-		char* spritesheet;
+		char* spritesheets[8];
 		bool preload;
+		bool hidden;
+		bool repeat;
 	} character;
+	bool stay;
 	struct FreezeFrame freezes[16];
 };
 
@@ -41,12 +50,15 @@ struct CommonResources {
 	int debuginfo;
 
 	int sceneid;
-	struct SceneDefinition* scene;
+	struct SceneDefinition scene;
+	struct SceneDefinition queue[16];
+	int queue_pos;
 
 	ALLEGRO_FONT* font;
 };
 
 bool Dispatch(struct Game* game);
+void Enqueue(struct Game* game, struct SceneDefinition scene);
 
 struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename, bool repeat);
 bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp);

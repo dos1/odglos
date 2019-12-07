@@ -23,16 +23,25 @@
 
 struct GamestateResources {
 	struct AnimationDecoder* animation;
-	ALLEGRO_BITMAP* bmps[17];
+	ALLEGRO_BITMAP *bmps[17], *mask;
 	int current;
 
 	bool playing;
+	bool buffered;
 	int play;
 	double delay;
 	double counter;
+
+	double timeout;
+	int sequence[4];
+	bool success;
+	int position;
+	bool pressed;
+
+	int user;
 };
 
-int Gamestate_ProgressCount = 1;
+int Gamestate_ProgressCount = 3;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	if (delta > GetAnimationFrameDuration(data->animation)) {
@@ -47,22 +56,42 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		data->bmps[data->current] = al_clone_bitmap(GetAnimationFrame(data->animation));
 	}
 
-	if (IsAnimationComplete(data->animation) && !data->playing) {
+	if (IsAnimationComplete(data->animation) && !data->buffered) {
 		ShowMouse(game);
+		data->buffered = true;
 	}
+
 	if (data->playing) {
 		data->delay -= delta;
 		if (data->delay < 0.0) {
-			data->delay = 0.1 + ((rand() % 50) / 1000.0);
-			data->play = rand() % 17;
+			if (data->success) {
+				data->delay = 0.1 + ((rand() % 50) / 1000.0);
+				data->play = rand() % 17;
+			} else if (data->pressed) {
+				data->delay = data->user ? 8.0 : 2.0;
+				data->pressed = false;
+				data->play = 16;
+				data->position = 0;
+			} else if (data->position < 4) {
+				HideMouse(game);
+				data->delay = 0.3;
+				data->play = data->sequence[data->position++];
+			} else if (data->position == 4) {
+				data->delay = 6.0;
+				data->position = 0;
+				data->play = 16;
+				ShowMouse(game);
+			}
 		}
-		data->counter += delta;
+		if (data->success) {
+			data->counter += delta;
+		}
 	}
 	if (data->counter > 4.0) {
 		SwitchCurrentGamestate(game, "anim");
 	}
 
-	game->data->hover = true; // TODO
+	CheckMask(game, data->mask);
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
@@ -76,12 +105,28 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
-	if (IsAnimationComplete(data->animation)) {
+	if (IsAnimationComplete(data->animation) && game->data->hover) {
 		if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) ||
 			(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) ||
 			(ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
+			ALLEGRO_COLOR color = CheckMask(game, data->mask);
+
+			int pos = round(color.r * 255 / 10.0);
+			PrintConsole(game, "%d", pos);
+			data->play = 15 - pos;
+			data->delay = 0.2;
+			data->pressed = true;
 			data->playing = true;
-			HideMouse(game);
+
+			if (data->sequence[data->user] == data->play) {
+				data->user++;
+			} else {
+				data->user = 0;
+			}
+			if (data->user == 4) {
+				data->success = true;
+				HideMouse(game);
+			}
 		}
 	}
 
@@ -98,8 +143,11 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
 
 	data->animation = CreateAnimation(game, GetDataFilePath(game, "lawka_w_parku/lawka.awebp"), false);
+	progress(game);
 	data->bmps[0] = al_clone_bitmap(GetAnimationFrame(data->animation));
+	progress(game);
 
+	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/lawka_w_parku_maski.png"));
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 	return data;
 }
@@ -109,6 +157,7 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	for (int i = 0; i < 17; i++) {
 		al_destroy_bitmap(data->bmps[i]);
 	}
+	al_destroy_bitmap(data->mask);
 	free(data);
 }
 
@@ -117,6 +166,9 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->current = 0;
 	data->playing = false;
 	data->counter = 0;
+	for (int i = 0; i < 4; i++) {
+		data->sequence[i] = rand() % 16;
+	}
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}

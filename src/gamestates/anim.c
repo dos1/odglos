@@ -25,22 +25,26 @@ struct GamestateResources {
 	struct AnimationDecoder* anim;
 	ALLEGRO_BITMAP *bg, *fg;
 	double delay;
-	int repeats;
+	int repeats, all_repeats;
 	int x, y;
+	struct FreezeFrame* freezes;
 	bool finished;
-	void (*callback)(struct Game*, int, int*, int*, struct Character*);
+	bool stay;
+	bool (*callback)(struct Game*, int, int*, int*, struct Character*, void**);
 	struct Character* character;
 
 	int freezeno;
 	ALLEGRO_BITMAP* mask;
-	bool frozen;
+	bool frozen, linked;
+
+	void* callback_data;
 };
 
 int Gamestate_ProgressCount = 2;
 
 static void LoadAnimation(struct Game* game, struct GamestateResources* data, void (*progress)(struct Game*)) {
 	char path[255] = {0};
-	snprintf(path, 255, "animations/%s.awebp", game->data->scene->name);
+	snprintf(path, 255, "animations/%s.awebp", game->data->scene.name);
 
 	if (data->anim) {
 		DestroyAnimation(data->anim);
@@ -66,34 +70,50 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	if (progress) {
 		progress(game);
 	}
-	if (game->data->scene->bg) {
+	if (game->data->scene.bg) {
 		char p[255] = {0};
-		snprintf(p, 255, "%s.png", game->data->scene->bg);
+		snprintf(p, 255, "%s.png", game->data->scene.bg);
 		data->bg = al_load_bitmap(GetDataFilePath(game, p));
 	}
-	if (game->data->scene->fg) {
+	if (game->data->scene.fg) {
 		char p[255] = {0};
-		snprintf(p, 255, "%s.png", game->data->scene->fg);
+		snprintf(p, 255, "%s.png", game->data->scene.fg);
 		data->fg = al_load_bitmap(GetDataFilePath(game, p));
 	}
-	data->repeats = game->data->scene->repeats;
-	data->callback = game->data->scene->callback;
-	if (game->data->scene->character.name) {
-		data->character = CreateCharacter(game, game->data->scene->character.name);
-		char p[255] = {};
-		snprintf(p, 255, "sprites/%s/%s.awebp", game->data->scene->character.name, game->data->scene->character.spritesheet);
-		RegisterStreamedSpritesheet(game, data->character, game->data->scene->character.spritesheet, AnimationStream, DestroyStream, CreateAnimation(game, GetDataFilePath(game, p), true));
-		if (game->data->scene->character.preload) {
-			PreloadStreamedSpritesheet(game, data->character, game->data->scene->character.spritesheet);
+	data->repeats = game->data->scene.repeats;
+	data->all_repeats = game->data->scene.repeats;
+	data->callback = game->data->scene.callback;
+	data->stay = game->data->scene.stay;
+	data->freezes = game->data->scene.freezes;
+	if (game->data->scene.character.name) {
+		data->character = CreateCharacter(game, game->data->scene.character.name);
+		char** spritesheet = game->data->scene.character.spritesheets;
+		while (*spritesheet) {
+			char p[255] = {};
+			snprintf(p, 255, "sprites/%s/%s.awebp", game->data->scene.character.name, *spritesheet);
+			RegisterStreamedSpritesheet(game, data->character, *spritesheet, AnimationStream, DestroyStream, CreateAnimation(game, GetDataFilePath(game, p), game->data->scene.character.repeat));
+			if (game->data->scene.character.preload) {
+				PreloadStreamedSpritesheet(game, data->character, *spritesheet);
+			}
+			spritesheet++;
 		}
-		SelectSpritesheet(game, data->character, game->data->scene->character.spritesheet);
+		SelectSpritesheet(game, data->character, game->data->scene.character.spritesheets[0]);
 		SetCharacterPosition(game, data->character, 0, 0, 0);
+
+		if (game->data->scene.character.hidden) {
+			HideCharacter(game, data->character);
+		}
 	}
+
 	data->x = 0;
 	data->y = 0;
 	data->freezeno = 0;
+	data->linked = false;
+	data->callback_data = NULL;
 	if (data->callback) {
-		data->callback(game, 0, &data->x, &data->y, data->character);
+		if (data->callback(game, 0, &data->x, &data->y, data->character, &data->callback_data)) {
+			data->finished = true;
+		}
 	}
 	ResetAnimation(data->anim);
 	//PrintConsole(game, "Loaded: %s", path);
@@ -103,8 +123,8 @@ static void HandleDispatch(struct Game* game, struct GamestateResources* data, v
 	if (!Dispatch(game)) {
 		SwitchCurrentGamestate(game, "end");
 	} else {
-		if (game->data->scene->name[0] == '>') {
-			ChangeCurrentGamestate(game, game->data->scene->name + 1);
+		if (game->data->scene.name[0] == '>') {
+			ChangeCurrentGamestate(game, game->data->scene.name + 1);
 		} else {
 			LoadAnimation(game, data, progress);
 			data->finished = false;
@@ -113,21 +133,21 @@ static void HandleDispatch(struct Game* game, struct GamestateResources* data, v
 }
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
-	float modifier = 1.25 * ((game->data->scene->speed == 0.0) ? 1.0 : game->data->scene->speed);
+	float modifier = 1.25 * ((game->data->scene.speed == 0.0) ? 1.0 : game->data->scene.speed);
 
 	game->data->debuginfo = GetAnimationFrameNo(data->anim);
 
-	if (!data->frozen && game->data->scene->freezes[data->freezeno].mask && game->data->scene->freezes[data->freezeno].frame == GetAnimationFrameNo(data->anim)) {
+	if (!data->frozen && data->freezes[data->freezeno].mask && data->freezes[data->freezeno].frame == GetAnimationFrameNo(data->anim)) {
 		data->frozen = true;
 		ShowMouse(game);
 		if (!data->mask) {
-			if (game->data->scene->freezes[data->freezeno].mask && game->data->scene->freezes[data->freezeno].mask[0] != 0) {
+			if (data->freezes[data->freezeno].mask && data->freezes[data->freezeno].mask[0] != 0) {
 				char path[255] = {0};
-				snprintf(path, 255, "masks/%s.png", game->data->scene->freezes[data->freezeno].mask);
+				snprintf(path, 255, "masks/%s.png", data->freezes[data->freezeno].mask);
 				data->mask = al_load_bitmap(GetDataFilePath(game, path));
 			}
 		}
-		PrintConsole(game, "Freeze: [%d] %s (frame: %d)", data->freezeno, game->data->scene->freezes[data->freezeno].mask, GetAnimationFrameNo(data->anim));
+		PrintConsole(game, "Freeze: [%d] %s (frame: %d)", data->freezeno, data->freezes[data->freezeno].mask, GetAnimationFrameNo(data->anim));
 	}
 
 	if (data->frozen) {
@@ -143,33 +163,42 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 			ALLEGRO_COLOR color = al_get_pixel(bitmap, x, y);
 			game->data->hover = (color.a > 0.5);
 		}
-		return;
-	}
 
-	if (data->character) {
-		AnimateCharacter(game, data->character, delta, modifier);
-	}
-
-	if (data->delay > 0) {
-		data->delay -= delta;
-		if (data->delay <= 0) {
-			data->delay = 0;
-			if (!data->repeats) {
-				HandleDispatch(game, data, NULL);
-			} else {
-				ResetAnimation(data->anim);
-				data->repeats--;
-			}
+		if (data->character && data->linked) {
+			AnimateCharacter(game, data->character, delta, modifier);
 		}
 	} else {
-		if (!UpdateAnimation(data->anim, delta * modifier)) {
-			data->delay = GetAnimationFrameDuration(data->anim) / modifier;
-			data->finished = true;
+		if (data->character) {
+			AnimateCharacter(game, data->character, delta, modifier);
+		}
+
+		if (data->delay > 0) {
+			data->delay -= delta;
+			if (data->delay <= 0) {
+				data->delay = 0;
+				if (!data->repeats) {
+					HandleDispatch(game, data, NULL);
+				} else {
+					ResetAnimation(data->anim);
+					data->repeats--;
+				}
+			}
+		} else {
+			if (!UpdateAnimation(data->anim, delta * modifier)) {
+				data->delay = GetAnimationFrameDuration(data->anim) / modifier;
+				data->finished = !data->stay;
+			}
 		}
 	}
 
 	if (data->callback) {
-		data->callback(game, GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (game->data->scene->repeats - data->repeats) + 1, &data->x, &data->y, data->character);
+		if (data->callback(game, GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats) + 1, &data->x, &data->y, data->character, &data->callback_data)) {
+			data->finished = true;
+			data->freezeno++;
+			al_destroy_bitmap(data->mask);
+			data->mask = NULL;
+			data->frozen = false;
+		}
 	} else {
 		data->x = 0;
 		data->y = 0;
@@ -197,7 +226,21 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (game->data->hover && (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
-		if (data->frozen) {
+		if (data->frozen && !data->linked) {
+			if (data->character) {
+				for (int i = 0; i < 8; i++) {
+					if (data->freezes[data->freezeno].links[i].name) {
+						if (al_color_distance_ciede2000(data->freezes[data->freezeno].links[i].color, CheckMask(game, data->mask)) < 0.01) {
+							SelectSpritesheet(game, data->character, data->freezes[data->freezeno].links[i].name);
+							ShowCharacter(game, data->character);
+							PrintConsole(game, "Linked!");
+							HideMouse(game);
+							data->linked = true;
+							return;
+						}
+					}
+				}
+			}
 			data->freezeno++;
 			al_destroy_bitmap(data->mask);
 			data->mask = NULL;

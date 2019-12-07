@@ -27,20 +27,41 @@ struct AnimationDecoder {
 	struct Game* game;
 };
 
-static void Generator(struct Game* game, int frame, int* x, int* y, struct Character* character) {
+static bool Generator(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
 	*x = 142;
 	*y = 136;
+	return false;
 }
 
-static void DuchPortalu(struct Game* game, int frame, int* x, int* y, struct Character* character) {
+static bool DuchPortalu(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
 	*x = 0;
 	*y = -222;
+	return false;
 }
 
-static void RegalDmuchawa(struct Game* game, int frame, int* x, int* y, struct Character* character) {
+static bool Rzezby(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
+	//PrintConsole(game, "%d %d %p", character->pos + 1, character->spritesheet->frame_count, character->callback_data);
+	if (!IsCharacterHidden(game, character) && !*data) {
+		if (strcmp(character->spritesheet->name, "sowka_i_rzezby_02b_muzykanci") == 0) {
+			EnqueueSpritesheet(game, character, "sowka_i_rzezby_02a_zakochani");
+		} else {
+			EnqueueSpritesheet(game, character, "sowka_i_rzezby_02b_muzykanci");
+		}
+		*data = game;
+	}
+	if (!character->successor) {
+		if (character->pos + 1 == character->spritesheet->frame_count) {
+			return true;
+		}
+	}
+	return false;
+}
+
+static bool RegalDmuchawa(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
 	*x = 550;
 	*y = 60 - cos(frame / 4.0) * 10;
 	SetCharacterPosition(game, character, frame * 30 - 800, 68, 0);
+	return false;
 }
 
 static struct SceneDefinition SCENES[] = {
@@ -83,7 +104,7 @@ static struct SceneDefinition SCENES[] = {
 	{"donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej", .freezes = {{15, "donice_w_ogrodzie_maski"}}},
 	{"donice_08_mala_sowka_z_samochodem_wyjezdza_w_przod"},
 	//{"donice_16_samochod_kartonowy_duzy_wjezdza_z_prawej"},
-	{"regal_animacja_sam", .freezes = {{0, ""}}, .repeats = 1, .bg = "regal_dmuchawa_100_9254_tlo_przyciete", .callback = RegalDmuchawa, .character = {"dmuchawa", "dmuchawa_ptaszor_sam"}},
+	{"regal_animacja_sam", .freezes = {{0, ""}}, .repeats = 1, .bg = "regal_dmuchawa_100_9254_tlo_przyciete", .callback = RegalDmuchawa, .character = {"dmuchawa", {"dmuchawa_ptaszor_sam"}, .repeat = true}},
 	{"generator_animacja_wstepna", .freezes = {{0, ""}}, .callback = Generator, .bg = "generator_tlo_liscie_przyciete"},
 	{"gawron_i_drewniany_medrzec", .freezes = {{107, "DSCF2982_maska"}, {290, "DSCF3781_maska"}}},
 	//{">skrzypce"},
@@ -111,9 +132,7 @@ static struct SceneDefinition SCENES[] = {
 	{"siatka_na_drzewie_myszka"},
 	{">lawka"},
 	{"rzezby_w_lazience_2_wyciszenie_sznureczka"},
-	{"sowka_i_rzezby_01_sowka_przejezdza", .freezes = {{18, "DSCF7440_maska2_z_zakochana_para"}}},
-	{"sowka_i_rzezby_02a_zakochani"},
-	{"sowka_i_rzezby_02b_muzykanci"},
+	{"sowka_i_rzezby_01_sowka_przejezdza", .character = {"rzezby", {"sowka_i_rzezby_02a_zakochani", "sowka_i_rzezby_02b_muzykanci"}, .hidden = true}, .callback = Rzezby, .freezes = {{18, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, "sowka_i_rzezby_02a_zakochani"}, {{0.0, 1.0, 0.0}, "sowka_i_rzezby_02b_muzykanci"}}}}, .stay = true},
 	//{"donice_07_sowka_srednia_wjezdza_do_donicy_z_lewej"},
 	{"donice_15_maly_samochodzik_kartonowy_wyjezdza"},
 	{"donice_23_sowka_mala_wychodzi_w_przod"},
@@ -585,15 +604,26 @@ void HideMouse(struct Game* game) {
 }
 
 bool Dispatch(struct Game* game) {
+	if (game->data->queue_pos) {
+		game->data->queue_pos--;
+		game->data->scene = game->data->queue[game->data->queue_pos];
+		PrintConsole(game, "Dispatch (from queue): %s", game->data->scene.name);
+		return true;
+	}
 	do {
 		game->data->sceneid++;
 		if ((size_t)game->data->sceneid >= sizeof(SCENES) / sizeof(struct SceneDefinition)) {
 			return false;
 		}
 	} while (!SCENES[game->data->sceneid].name);
-	game->data->scene = &SCENES[game->data->sceneid];
-	PrintConsole(game, "Dispatch: %s", game->data->scene->name);
+	game->data->scene = SCENES[game->data->sceneid];
+	PrintConsole(game, "Dispatch: %s", game->data->scene.name);
 	return true;
+}
+
+void Enqueue(struct Game* game, struct SceneDefinition scene) {
+	game->data->queue[game->data->queue_pos] = scene;
+	game->data->queue_pos++;
 }
 
 struct CommonResources* CreateGameData(struct Game* game) {
@@ -610,6 +640,7 @@ struct CommonResources* CreateGameData(struct Game* game) {
 	data->pause = false;
 	data->font = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 42, 0);
 	data->gradient = al_load_bitmap(GetDataFilePath(game, "gradient.png"));
+	data->queue_pos = 0;
 	return data;
 }
 
