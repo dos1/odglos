@@ -119,8 +119,70 @@ static bool DonicaPrawa(struct Game* game, struct Character* character, void** d
 	return true;
 }
 
-static struct SceneDefinition SCENES[] = {
+static bool Dzwieki(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
+	if (!*data) {
+		*data = malloc(sizeof(bool) * 3);
+		bool* d = *data;
+		*d = false;
+		*(d + 1) = false;
+		*(d + 2) = false;
+	}
+	return false;
+}
 
+static bool Dzwiek1(struct Game* game, struct Character* character, void** data);
+static bool Dzwiek2(struct Game* game, struct Character* character, void** data);
+static bool Dzwiek3(struct Game* game, struct Character* character, void** data);
+
+static bool Dzwiek1(struct Game* game, struct Character* character, void** data) {
+	bool* d = *data;
+
+	*d = true;
+
+	if (!(*d && *(d + 1) && *(d + 2))) {
+		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek1", .freezes = {{25, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}, .callback_data = *data});
+	} else {
+		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek1"});
+		free(*data);
+		*data = NULL;
+	}
+
+	return true;
+}
+
+static bool Dzwiek2(struct Game* game, struct Character* character, void** data) {
+	bool* d = *data;
+
+	*(d + 1) = true;
+
+	if (!(*d && *(d + 1) && *(d + 2))) {
+		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek2", .freezes = {{45, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}, .callback_data = *data});
+	} else {
+		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek2"});
+		free(*data);
+		*data = NULL;
+	}
+
+	return true;
+}
+
+static bool Dzwiek3(struct Game* game, struct Character* character, void** data) {
+	bool* d = *data;
+
+	*(d + 2) = true;
+
+	if (!(*d && *(d + 1) && *(d + 2))) {
+		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek3", .freezes = {{25, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}, .callback_data = *data});
+	} else {
+		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek3"});
+		free(*data);
+		*data = NULL;
+	}
+
+	return true;
+}
+
+static struct SceneDefinition SCENES[] = {
 	//{"sucha_trawa_aksamitki_waz_stary"},
 	{"wedrowka_rodzinki_po_trawce"},
 	{"rodzinka_jak_wiewiorki", .freezes = {{20, "DSCF8146_maska"}}},
@@ -222,10 +284,7 @@ static struct SceneDefinition SCENES[] = {
 	{">naparstki"},
 	{"01statki_szyszki_tasmy_animacja1"},
 	{"02statki_szyszki_tasmy_animacja2"},
-	{"03statki_szyszki_tasmy_animacja3"},
-	{"04statki_szyszki_tasmy_gra_dzwiek1", .freezes = {{0, "DSCF4234_maska"}}},
-	{"04statki_szyszki_tasmy_gra_dzwiek2", .freezes = {{0, "DSCF4234_maska"}}},
-	{"04statki_szyszki_tasmy_gra_dzwiek3", .freezes = {{0, "DSCF4234_maska"}}},
+	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}},
 	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska"}}},
 	{"06statki_szyszki_tasmy_animacja5"},
 	{"magnetofon2_bez_myszek", .freezes = {{0, "DSCF9467_maska_magnetofon"}}},
