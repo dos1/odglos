@@ -623,7 +623,7 @@ void DrawBuildInfo(struct Game* game) {
 	DrawTextWithShadow(game->_priv.font_console, al_map_rgb(255, 255, 255), w - 10, h * 0.965, ALLEGRO_ALIGN_RIGHT, revs);
 
 	if (game->_priv.showconsole && game->data->sceneid >= 0 && (size_t)game->data->sceneid < sizeof(SCENES) / sizeof(struct SceneDefinition)) {
-		snprintf(revs, 255, "%s (%d)", SCENES[game->data->sceneid].name, game->data->debuginfo);
+		snprintf(revs, 255, "%s (%d)", game->data->scene.name, game->data->debuginfo);
 		DrawTextWithShadow(game->_priv.font_console, al_map_rgb(255, 255, 255), 10, h * 0.965, ALLEGRO_ALIGN_LEFT, revs);
 	}
 
