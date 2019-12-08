@@ -253,7 +253,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->right.character->shared = true;
 	data->right.character->spritesheets = data->left.character->spritesheets;
 
-	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/pudelka_od_cioci_maska.png"));
+	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/pudelka_od_cioci_maska.mask"));
 
 	return data;
 }

@@ -143,7 +143,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		if (!data->mask) {
 			if (data->freezes[data->freezeno].mask && data->freezes[data->freezeno].mask[0] != 0) {
 				char path[255] = {0};
-				snprintf(path, 255, "masks/%s.png", data->freezes[data->freezeno].mask);
+				snprintf(path, 255, "masks/%s.mask", data->freezes[data->freezeno].mask);
 				data->mask = al_load_bitmap(GetDataFilePath(game, path));
 			}
 		}

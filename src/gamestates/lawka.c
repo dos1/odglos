@@ -150,7 +150,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->bmps[0] = al_clone_bitmap(GetAnimationFrame(data->animation));
 	progress(game);
 
-	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/lawka_w_parku_maski.png"));
+	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/lawka_w_parku_maski.mask"));
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 	return data;
 }
