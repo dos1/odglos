@@ -10,6 +10,8 @@
 struct FreezeLink {
 	ALLEGRO_COLOR color;
 	char* name;
+	bool (*callback)(struct Game*, struct Character*, void**);
+	bool ignore;
 };
 
 struct FreezeFrame {
@@ -51,8 +53,9 @@ struct CommonResources {
 
 	int sceneid;
 	struct SceneDefinition scene;
-	struct SceneDefinition queue[16];
+	struct SceneDefinition queue[64];
 	int queue_pos;
+	int queue_handled;
 
 	ALLEGRO_FONT* font;
 };

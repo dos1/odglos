@@ -152,7 +152,15 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 
 	if (data->frozen) {
 		if (data->mask) {
-			CheckMask(game, data->mask);
+			ALLEGRO_COLOR color = CheckMask(game, data->mask);
+			for (int i = 0; i < 8; i++) {
+				if (al_color_distance_ciede2000(data->freezes[data->freezeno].links[i].color, color) < 0.01) {
+					if (data->freezes[data->freezeno].links[i].ignore) {
+						game->data->hover = false;
+					}
+					break;
+				}
+			}
 		} else {
 			ALLEGRO_BITMAP* bitmap = GetAnimationFrame(data->anim);
 			int x = game->data->mouseX * game->viewport.width;
@@ -227,16 +235,22 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (game->data->hover && (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
 		if (data->frozen && !data->linked) {
-			if (data->character) {
-				for (int i = 0; i < 8; i++) {
-					if (data->freezes[data->freezeno].links[i].name) {
-						if (al_color_distance_ciede2000(data->freezes[data->freezeno].links[i].color, CheckMask(game, data->mask)) < 0.01) {
+			for (int i = 0; i < 8; i++) {
+				if (data->freezes[data->freezeno].links[i].callback || data->freezes[data->freezeno].links[i].name) {
+					if (al_color_distance_ciede2000(data->freezes[data->freezeno].links[i].color, CheckMask(game, data->mask)) < 0.01) {
+						PrintConsole(game, "Linked!");
+						if (data->character && data->freezes[data->freezeno].links[i].name) {
 							SelectSpritesheet(game, data->character, data->freezes[data->freezeno].links[i].name);
 							ShowCharacter(game, data->character);
-							PrintConsole(game, "Linked!");
 							HideMouse(game);
 							data->linked = true;
 							return;
+						}
+						if (data->freezes[data->freezeno].links[i].callback) {
+							if (!data->freezes[data->freezeno].links[i].callback(game, data->character, &data->callback_data)) {
+								data->linked = true;
+								return;
+							}
 						}
 					}
 				}

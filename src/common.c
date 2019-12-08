@@ -39,29 +39,25 @@ static bool DuchPortalu(struct Game* game, int frame, int* x, int* y, struct Cha
 	return false;
 }
 
-static bool Rzezby(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
-	//PrintConsole(game, "%d %d %p", character->pos + 1, character->spritesheet->frame_count, character->callback_data);
-	if (!IsCharacterHidden(game, character) && !*data) {
-		if (strcmp(character->spritesheet->name, "sowka_i_rzezby_02b_muzykanci") == 0) {
-			EnqueueSpritesheet(game, character, "sowka_i_rzezby_02a_zakochani");
-		} else {
-			EnqueueSpritesheet(game, character, "sowka_i_rzezby_02b_muzykanci");
-		}
-		*data = game;
-	}
-	if (!character->successor) {
-		if (character->pos + 1 == character->spritesheet->frame_count) {
-			return true;
-		}
-	}
-	return false;
-}
-
 static bool RegalDmuchawa(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
 	*x = 550;
 	*y = 60 - cos(frame / 4.0) * 10;
 	SetCharacterPosition(game, character, frame * 30 - 800, 68, 0);
 	return false;
+}
+
+static bool Zakochani(struct Game* game, struct Character* character, void** data) {
+	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02a_zakochani", .freezes = {{8, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}});
+	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02b_muzykanci"});
+
+	return true;
+}
+
+static bool Muzykanci(struct Game* game, struct Character* character, void** data) {
+	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02b_muzykanci", .freezes = {{26, "DSCF7440_maska2_z_zakochana_para", .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}});
+	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02a_zakochani"});
+
+	return true;
 }
 
 static struct SceneDefinition SCENES[] = {
@@ -132,7 +128,7 @@ static struct SceneDefinition SCENES[] = {
 	{"siatka_na_drzewie_myszka"},
 	{">lawka"},
 	{"rzezby_w_lazience_2_wyciszenie_sznureczka"},
-	{"sowka_i_rzezby_01_sowka_przejezdza", .character = {"rzezby", {"sowka_i_rzezby_02a_zakochani", "sowka_i_rzezby_02b_muzykanci"}, .hidden = true}, .callback = Rzezby, .freezes = {{18, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, "sowka_i_rzezby_02a_zakochani"}, {{0.0, 1.0, 0.0}, "sowka_i_rzezby_02b_muzykanci"}}}}, .stay = true},
+	{"sowka_i_rzezby_01_sowka_przejezdza", .freezes = {{18, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .callback = Zakochani}, {{0.0, 1.0, 0.0}, .callback = Muzykanci}}}}},
 	//{"donice_07_sowka_srednia_wjezdza_do_donicy_z_lewej"},
 	{"donice_15_maly_samochodzik_kartonowy_wyjezdza"},
 	{"donice_23_sowka_mala_wychodzi_w_przod"},
@@ -605,9 +601,13 @@ void HideMouse(struct Game* game) {
 
 bool Dispatch(struct Game* game) {
 	if (game->data->queue_pos) {
-		game->data->queue_pos--;
-		game->data->scene = game->data->queue[game->data->queue_pos];
+		game->data->scene = game->data->queue[game->data->queue_handled];
+		game->data->queue_handled++;
 		PrintConsole(game, "Dispatch (from queue): %s", game->data->scene.name);
+		if (game->data->queue_handled == game->data->queue_pos) {
+			game->data->queue_handled = 0;
+			game->data->queue_pos = 0;
+		}
 		return true;
 	}
 	do {
@@ -622,6 +622,7 @@ bool Dispatch(struct Game* game) {
 }
 
 void Enqueue(struct Game* game, struct SceneDefinition scene) {
+	PrintConsole(game, "Enqueue: %s", scene.name);
 	game->data->queue[game->data->queue_pos] = scene;
 	game->data->queue_pos++;
 }
@@ -641,6 +642,7 @@ struct CommonResources* CreateGameData(struct Game* game) {
 	data->font = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 42, 0);
 	data->gradient = al_load_bitmap(GetDataFilePath(game, "gradient.png"));
 	data->queue_pos = 0;
+	data->queue_handled = 0;
 	return data;
 }
 
