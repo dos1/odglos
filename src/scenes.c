@@ -182,6 +182,91 @@ static bool Dzwiek3(struct Game* game, struct Character* character, void** data)
 	return true;
 }
 
+static bool Ul(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
+	if (!*data) {
+		*data = malloc(sizeof(bool) * 3);
+		bool* d = *data;
+		*d = false;
+		*(d + 1) = false;
+		*(d + 2) = false;
+	}
+	return false;
+}
+
+static bool UlLewo(struct Game* game, struct Character* character, void** data);
+static bool UlGora(struct Game* game, struct Character* character, void** data);
+static bool UlDol(struct Game* game, struct Character* character, void** data);
+
+static void UlSetup(struct Game* game, struct SceneDefinition* scene, bool* data) {
+	*scene = (struct SceneDefinition){"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .callback = Ul, .freezes = {{0, "IMG_0053_maska", .links = {{{0.0, 1.0, 0.0}, .callback = UlLewo}, {{1.0, 0.0, 0.0}, .callback = UlGora}, {{0.0, 0.0, 1.0}, .callback = UlDol}}}}, .callback_data = data};
+	if (*data) {
+		scene->freezes[0].links[0].ignore = true;
+	}
+	if (*(data + 1)) {
+		scene->freezes[0].links[1].ignore = true;
+	}
+	if (*(data + 2)) {
+		scene->freezes[0].links[2].ignore = true;
+	}
+}
+
+static bool UlLewo(struct Game* game, struct Character* character, void** data) {
+	bool* d = *data;
+
+	*d = true;
+
+	Enqueue(game, (struct SceneDefinition){"ul_duzy_lewo"});
+
+	if (!(*d && *(d + 1) && *(d + 2))) {
+		struct SceneDefinition scene;
+		UlSetup(game, &scene, d);
+		Enqueue(game, scene);
+	} else {
+		free(*data);
+		*data = NULL;
+	}
+
+	return true;
+}
+
+static bool UlGora(struct Game* game, struct Character* character, void** data) {
+	bool* d = *data;
+
+	*(d + 1) = true;
+
+	Enqueue(game, (struct SceneDefinition){"ul_duzy_gora"});
+
+	if (!(*d && *(d + 1) && *(d + 2))) {
+		struct SceneDefinition scene;
+		UlSetup(game, &scene, d);
+		Enqueue(game, scene);
+	} else {
+		free(*data);
+		*data = NULL;
+	}
+
+	return true;
+}
+
+static bool UlDol(struct Game* game, struct Character* character, void** data) {
+	bool* d = *data;
+
+	*(d + 2) = true;
+
+	Enqueue(game, (struct SceneDefinition){"ul_duzy_dol"});
+
+	if (!(*d && *(d + 1) && *(d + 2))) {
+		struct SceneDefinition scene;
+		UlSetup(game, &scene, d);
+		Enqueue(game, scene);
+	} else {
+		free(*data);
+		*data = NULL;
+	}
+
+	return true;
+}
+
 static struct SceneDefinition SCENES[] = {
 	//{"sucha_trawa_aksamitki_waz_stary"},
 	{"wedrowka_rodzinki_po_trawce"},
@@ -243,7 +328,6 @@ static struct SceneDefinition SCENES[] = {
 
 	{"silacz2_maly_samochod_z_sowka_opuszcz_cien_rozny", .freezes = {{0, "silacz_maska"}}},
 	{"silacz3_maly_samochod_sam"}, //.freezes = {{0, "silacz_maska"}}},
-	{"siatka_na_drzewie_myszka"},
 	{">lawka"},
 	{"rzezby_w_lazience_2_wyciszenie_sznureczka"},
 	{"sowka_i_rzezby_01_sowka_przejezdza", .freezes = {{18, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .callback = Zakochani}, {{0.0, 1.0, 0.0}, .callback = Muzykanci}}}}},
@@ -267,12 +351,10 @@ static struct SceneDefinition SCENES[] = {
 	{">pudelka"},
 	{"waz_zmienia_sie_w_kostke", .freezes = {{14, "IMG_0770_maska"}}},
 	{"portal_ze_stolika_bialego", .freezes = {{9, "DSCF8382_maska"}, {14, "DSCF8387_maska"}}},
-	{"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .freezes = {{0, "IMG_0053_maska"}}},
-	{"ul_duzy_lewo"},
-	{"ul_duzy_gora"},
-	{"ul_duzy_dol"},
+	{"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .callback = Ul, .freezes = {{0, "IMG_0053_maska", .links = {{{0.0, 1.0, 0.0}, .callback = UlLewo}, {{1.0, 0.0, 0.0}, .callback = UlGora}, {{0.0, 0.0, 1.0}, .callback = UlDol}}}}},
 	{"ul_duzy_animacja_koncowa_samochod"},
 	{"pudelko_w_ogrodzie", .freezes = {{22, "pudelko_w_ogrodzie_maska1"}, {56, "pudelko_w_ogrodzie_maska3"}, {93, "pudelko_w_ogrodzie_maska2"}, {119, "pudelko_w_ogrodzie_maska3"}, {157, "pudelko_w_ogrodzie_maska2"}, {183, "pudelko_w_ogrodzie_maska3"}}},
+	{"siatka_na_drzewie_myszka"},
 	{"drzewko_kolorowe1_maskotki_podwojne_moze_lepsze_TAK"},
 	{"sowka_wchodzi_do_miski_ciemniejsze", .freezes = {{0, "DSCF1595_maska"}}},
 	{"duza_sowka_na_drewnianym_kole", .freezes = {{13, "IMG_1010_maska"}}},
