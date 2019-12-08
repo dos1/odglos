@@ -36,6 +36,7 @@ struct GamestateResources {
 	int freezeno;
 	ALLEGRO_BITMAP* mask;
 	bool frozen, linked;
+	char *bgname, *fgname, *maskname;
 
 	void* callback_data;
 };
@@ -49,11 +50,11 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	if (data->anim) {
 		DestroyAnimation(data->anim);
 	}
-	if (data->bg) {
+	if (data->bg && game->data->scene.bg != data->bgname) {
 		al_destroy_bitmap(data->bg);
 		data->bg = NULL;
 	}
-	if (data->fg) {
+	if (data->fg && game->data->scene.fg != data->fgname) {
 		al_destroy_bitmap(data->fg);
 		data->fg = NULL;
 	}
@@ -70,15 +71,17 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	if (progress) {
 		progress(game);
 	}
-	if (game->data->scene.bg) {
+	if (!data->bg && game->data->scene.bg) {
 		char p[255] = {0};
 		snprintf(p, 255, "%s.png", game->data->scene.bg);
 		data->bg = al_load_bitmap(GetDataFilePath(game, p));
+		data->bgname = game->data->scene.bg;
 	}
-	if (game->data->scene.fg) {
+	if (!data->fg && game->data->scene.fg) {
 		char p[255] = {0};
 		snprintf(p, 255, "%s.png", game->data->scene.fg);
 		data->fg = al_load_bitmap(GetDataFilePath(game, p));
+		data->fgname = game->data->scene.fg;
 	}
 	data->repeats = game->data->scene.repeats;
 	data->all_repeats = game->data->scene.repeats;
