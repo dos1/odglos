@@ -289,8 +289,8 @@ static struct SceneDefinition SCENES[] = {
 	{"aksamitki_samochod_sowka", .speed = 1.25},
 
 	{"donice_02_samochod_duzy_jedzie_w_lewo", .speed = 0.75},
-	{"donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej", .freezes = {{15, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}},
-	{"donice_01_samochod_duzy_jedzie_w_prawo"},
+	{"donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej"},
+	{"donice_01_samochod_duzy_jedzie_w_prawo", .freezes = {{18, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}},
 	{"donice_08_mala_sowka_z_samochodem_wyjezdza_w_przod"},
 
 	{"przyciski_na_stacji_przycisk1", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
@@ -314,7 +314,7 @@ static struct SceneDefinition SCENES[] = {
 	{"gawron_i_drewniany_medrzec", .freezes = {{107, "DSCF2982_maska"}, {290, "DSCF3781_maska"}}},
 	//{">skrzypce"},
 	{"ciemna_trawa_samochod_sowka", .speed = 1.25},
-	{"ciemna_trawa_waz_r", .speed = 1.25},
+	{"ciemna_trawa_waz", .speed = 1.25},
 	{"wchodzenie_po_schodach_samochod_sowka", .freezes = {{19, "maska_schodek1"}, {23, "maska_schodek2"}, {26, "maska_schodek3"}, {29, "maska_schodek4"}}},
 	{"schodzenie_ze_schodow_waz"},
 	{"lira_korbowa", .freezes = {{0, "DSCF8976_maska"}}}, {"male_dziwne_cos", .freezes = {{0, "DSCF8646_maska"}}, .repeats = 1}, {"turkusowe_cos", .freezes = {{0, "DSCF9030_maska"}}},
