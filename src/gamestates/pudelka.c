@@ -49,7 +49,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		AnimateCharacter(game, data->center.character, delta, 1.0);
 		AnimateCharacter(game, data->right.character, delta, 1.0);
 	} else {
-		AnimateCharacter(game, data->center.character, delta, 1.0);
+		AnimateCharacter(game, data->center.character, delta, 1.3);
 	}
 
 	CheckMask(game, data->mask);

@@ -46,6 +46,7 @@ int Gamestate_ProgressCount = 2;
 static void LoadAnimation(struct Game* game, struct GamestateResources* data, void (*progress)(struct Game*)) {
 	char path[255] = {0};
 	snprintf(path, 255, "animations/%s.awebp", game->data->scene.name);
+	HideMouse(game);
 
 	if (data->anim) {
 		DestroyAnimation(data->anim);
@@ -312,7 +313,6 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
-	HideMouse(game);
 	if (data->finished) {
 		HandleDispatch(game, data, NULL);
 	}
