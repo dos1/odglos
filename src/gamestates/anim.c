@@ -109,7 +109,7 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	data->y = 0;
 	data->freezeno = 0;
 	data->linked = false;
-	data->callback_data = NULL;
+	data->callback_data = game->data->scene.callback_data;
 	if (data->callback) {
 		if (data->callback(game, 0, &data->x, &data->y, data->character, &data->callback_data)) {
 			data->finished = true;

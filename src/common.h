@@ -27,6 +27,7 @@ struct SceneDefinition {
 	float speed;
 	int repeats;
 	bool (*callback)(struct Game*, int, int*, int*, struct Character*, void**);
+	void* callback_data;
 	struct {
 		char* name;
 		char* spritesheets[8];
