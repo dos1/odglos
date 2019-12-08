@@ -23,6 +23,7 @@ int main(int argc, char** argv) {
 			1280,
 			720,
 			.show_loading_on_launch = true,
+			.fixed_size = IS_EMSCRIPTEN,
 			.handlers = (struct Handlers){
 				.event = GlobalEventHandler,
 				.destroy = DestroyGameData,
