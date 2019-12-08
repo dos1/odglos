@@ -188,10 +188,10 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		}
 	}
 
-	if (game->_priv.showconsole && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
+	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
 		SwitchCurrentGamestate(game, "anim");
 	}
-	if (game->_priv.showconsole && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
+	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
 		game->data->sceneid--;
 		SwitchCurrentGamestate(game, "anim");
 	}

@@ -342,7 +342,7 @@ void DrawBuildInfo(struct Game* game) {
 	snprintf(revs, 255, "%s-%s", LIBSUPERDERPY_GAME_GIT_REV, LIBSUPERDERPY_GIT_REV);
 	DrawTextWithShadow(game->_priv.font_console, al_map_rgb(255, 255, 255), w - 10, h * 0.965, ALLEGRO_ALIGN_RIGHT, revs);
 
-	if (game->_priv.showconsole) {
+	if (game->show_console) {
 		snprintf(revs, 255, "%s (%d)", game->data->scene.name, game->data->debuginfo);
 		DrawTextWithShadow(game->_priv.font_console, al_map_rgb(255, 255, 255), 10, h * 0.965, ALLEGRO_ALIGN_LEFT, revs);
 	}
@@ -385,7 +385,7 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 	}
 #endif
 
-	if (game->_priv.showconsole && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
+	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
 		game->data->sceneid--;
 		if (game->data->sceneid < -1) {
 			game->data->sceneid = -1;

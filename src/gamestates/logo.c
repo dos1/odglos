@@ -64,7 +64,7 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	// Called for each event in Allegro event queue.
 	// Here you can handle user input, expiring timers etc.
-	if (game->_priv.showconsole && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
+	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
 		SwitchScene(game, "anim");
 	}
 }
