@@ -76,15 +76,10 @@ int main(int argc, char** argv) {
 		LoadGamestate(game, "naparstki2");
 		LoadGamestate(game, "end");
 		LoadGamestate(game, "lawka");
+		LoadGamestate(game, "byk");
 		LoadGamestate(game, "pudelka");
 		LoadGamestate(game, "pergola");
 		LoadGamestate(game, "armata");
-
-		//LoadGamestate(game, "duch_portalu");
-		//LoadGamestate(game, "skrzypce");
-		//LoadGamestate(game, "byk");
-		//LoadGamestate(game, "dzwonki");
-		//LoadGamestate(game, "swiecznik");
 	}
 
 	StartGamestate(game, IS_EMSCRIPTEN ? "start" : "logo");

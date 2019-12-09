@@ -346,7 +346,7 @@ static struct SceneDefinition SCENES[] = {
 	{"sowka_konfrontacja_z_rzezba", .freezes = {{0, "DSCF8160_maska"}}},
 	{"wrzosy_kuzyn_i_sowka2"},
 	{"samochod_kominek"},
-	//{">byk"},
+	{">byk"},
 	{"swiecznik_hover_ewentualnie", .freezes = {{2, "DSCF2296_maska_oczy_ewentualnie", .links = {{{10.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikLewy}, {{20.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikPrawy}}}}},
 	{"swiecznik3_TAK"},
 	//{">swiecznik"},
