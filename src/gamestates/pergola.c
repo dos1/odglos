@@ -32,9 +32,7 @@ struct GamestateResources {
 	struct PergolaCharacter left, right;
 	double counter;
 	bool mode;
-	bool locked;
 	struct Timeline* timeline;
-	int changed;
 	double hint;
 };
 
@@ -44,27 +42,6 @@ static bool IsCompleted(struct Game* game, struct GamestateResources* data) {
 	return data->left.i == 3 && data->left.j == 3 && data->right.i == 0 && data->right.j == 0;
 }
 
-static TM_ACTION(Switch) {
-	TM_RunningOnly;
-	data->mode = !data->mode;
-	if (!IsCompleted(game, data)) {
-		data->hint = 255;
-	}
-	if (data->mode) {
-		ResetAnimation(data->right.animations[data->right.j][data->right.i]);
-	} else {
-		ResetAnimation(data->left.animations[data->left.j][data->left.i]);
-	}
-	return TM_END;
-}
-
-static TM_ACTION(Unlock) {
-	TM_RunningOnly;
-	data->locked = false;
-	ShowMouse(game);
-	return TM_END;
-}
-
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	TM_Process(data->timeline, delta);
 	data->counter += delta;
@@ -72,14 +49,12 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	if (data->hint < 0) {
 		data->hint = 0;
 	}
-	if (data->locked) {
-		if (data->mode) {
-			UpdateAnimation(data->right.animations[data->right.j][data->right.i], delta);
-		} else {
-			UpdateAnimation(data->left.animations[data->left.j][data->left.i], delta);
-		}
+	if (data->mode) {
+		UpdateAnimation(data->right.animations[data->right.j][data->right.i], delta);
+	} else {
+		UpdateAnimation(data->left.animations[data->left.j][data->left.i], delta);
 	}
-	if (!data->locked && IsCompleted(game, data)) {
+	if (IsCompleted(game, data)) {
 		SwitchCurrentGamestate(game, "anim");
 	}
 
@@ -125,10 +100,15 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN || ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) {
-		if (!data->locked && game->data->hover) {
+		if (game->data->hover) {
 			ev->keyboard.type = ALLEGRO_EVENT_KEY_DOWN;
 			int pos = game->data->mouseY * 720;
-			if (pos > 410) {
+			if (pos > 520) {
+				data->mode = !data->mode;
+				if (!IsCompleted(game, data)) {
+					data->hint = 255;
+				}
+			} else if (pos > 410) {
 				ev->keyboard.keycode = ALLEGRO_KEY_LEFT;
 			} else if (pos > 305) {
 				ev->keyboard.keycode = ALLEGRO_KEY_DOWN;
@@ -140,50 +120,43 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		}
 	}
 
-	if (!data->locked && !IsCompleted(game, data)) {
+	if (!IsCompleted(game, data)) {
 		struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
 
 		if (ev->type == ALLEGRO_EVENT_KEY_DOWN) {
 			if (ev->keyboard.keycode == ALLEGRO_KEY_UP) {
 				c->j -= 1;
 				if (c->j < 0) {
+					data->hint = 255;
 					c->j = 0;
-					return;
 				}
-				data->changed++;
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_DOWN) {
 				c->j += 1;
 				if (c->j > 3) {
+					data->hint = 255;
 					c->j = 3;
-					return;
 				}
-				data->changed++;
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_LEFT) {
 				c->i -= 1;
 				if (c->i < 0) {
+					data->hint = 255;
 					c->i = 0;
-					return;
 				}
-				data->changed++;
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_RIGHT) {
 				c->i += 1;
 				if (c->i > 3) {
+					data->hint = 255;
 					c->i = 3;
-					return;
 				}
-				data->changed++;
 			}
 
-			if (data->changed == 3) {
-				data->locked = true;
-				HideMouse(game);
-				data->changed = 0;
-				TM_AddDelay(data->timeline, 0.5);
-				TM_AddAction(data->timeline, Unlock, NULL);
-				TM_AddAction(data->timeline, Switch, NULL);
+			if (data->mode) {
+				ResetAnimation(data->right.animations[data->right.j][data->right.i]);
+			} else {
+				ResetAnimation(data->left.animations[data->left.j][data->left.i]);
 			}
 		}
 	}
@@ -253,9 +226,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->right.j = 3;
 	data->mode = false;
 	data->hint = 255;
-	data->locked = false;
 	data->counter = 0;
-	data->changed = 0;
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
