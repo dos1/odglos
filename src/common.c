@@ -358,9 +358,6 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 
 	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_F)) { // || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)) {
 		ToggleFullscreen(game);
-#ifdef __EMSCRIPTEN__
-		al_resize_display(game->display, game->viewport.width, game->viewport.height);
-#endif
 	}
 
 	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_SPACE || ev->keyboard.keycode == ALLEGRO_KEY_P)) {
