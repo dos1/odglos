@@ -2,19 +2,38 @@
 #include "defines.h"
 #include <libsuperderpy.h>
 
-static bool Generator(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
+static bool Pergola(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
+	*x = 655 - 1355 / 2;
+	*y = 353 - 762 / 2;
+	*scale = 1355.0 / 1280.0;
+	return false;
+};
+
+static bool Pergola2(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
+	*x = 0;
+	*y = 0;
+	*scale = 1.0;
+	if ((frame >= 8 && frame <= 15) || (frame >= 21)) {
+		*x = 655 - 1355 / 2;
+		*y = 353 - 762 / 2;
+		*scale = 1355.0 / 1280.0;
+	}
+	return false;
+};
+
+static bool Generator(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
 	*x = 142;
 	*y = 136;
 	return false;
 }
 
-static bool DuchPortalu(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
+static bool DuchPortalu(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
 	*x = 0;
 	*y = -222;
 	return false;
 }
 
-static bool RegalDmuchawa(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
+static bool RegalDmuchawa(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
 	*x = 550;
 	*y = 60 - cos(frame / 4.0) * 10;
 	SetCharacterPosition(game, character, frame * 30 - 800, 68, 0);
@@ -35,7 +54,7 @@ static bool Muzykanci(struct Game* game, struct Character* character, void** dat
 	return true;
 }
 
-static bool Donice(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
+static bool Donice(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
 	if (!*data) {
 		*data = malloc(sizeof(int) * 2);
 		int* left = *data;
@@ -119,7 +138,7 @@ static bool DonicaPrawa(struct Game* game, struct Character* character, void** d
 	return true;
 }
 
-static bool Dzwieki(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
+static bool Dzwieki(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
 	if (!*data) {
 		*data = malloc(sizeof(bool) * 3);
 		bool* d = *data;
@@ -182,7 +201,7 @@ static bool Dzwiek3(struct Game* game, struct Character* character, void** data)
 	return true;
 }
 
-static bool Ul(struct Game* game, int frame, int* x, int* y, struct Character* character, void** data) {
+static bool Ul(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
 	if (!*data) {
 		*data = malloc(sizeof(bool) * 3);
 		bool* d = *data;
@@ -335,12 +354,13 @@ static struct SceneDefinition SCENES[] = {
 	{"donice_27_sowka_duza_wychodzi_z_lewej_donicy"},
 	{"donice_11_waz_buszuje_w_prawo_w_lewo_i_wchodzi_z_lewej"},
 	{"donica_w_hortensjach_06_waz", .freezes = {{0, "donica_w_hortensjach_maska"}, {10, "donica_w_hortensjach_maska"}}},
-	{"aksamitki_waz_r", .speed = 1.25},
+	{"aksamitki_waz", .speed = 1.25},
 	{"waz_zmienia_sie_w_kostke", .freezes = {{14, "IMG_0770_maska"}}},
 	{"sowka_wchodzi_do_miski_ciemniejsze", .freezes = {{0, "DSCF1595_maska"}}},
 	{"duza_sowka_na_drewnianym_kole", .freezes = {{13, "IMG_1010_maska"}}},
+	{"animacja_poczatkowa", .repeats = 2, .callback = Pergola},
 	{">pergola"},
-	{"pergola_animacja_koncowa2"},
+	{"pergola_animacja_koncowa2", .callback = Pergola2},
 	{"pergola_animacja_koncowa6"},
 	{"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .callback = Ul, .freezes = {{0, "IMG_0053_maska", .links = {{{0.0, 1.0, 0.0}, .callback = UlLewo}, {{1.0, 0.0, 0.0}, .callback = UlGora}, {{0.0, 0.0, 1.0}, .callback = UlDol}}}}},
 	{"ul_duzy_animacja_koncowa_samochod"},

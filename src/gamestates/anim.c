@@ -27,10 +27,11 @@ struct GamestateResources {
 	double delay;
 	int repeats, all_repeats;
 	int x, y;
+	double scale;
 	struct FreezeFrame* freezes;
 	bool finished;
 	bool stay;
-	bool (*callback)(struct Game*, int, int*, int*, struct Character*, void**);
+	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
 	struct Character* character;
 
 	int freezeno;
@@ -111,11 +112,12 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 
 	data->x = 0;
 	data->y = 0;
+	data->scale = 1.0;
 	data->freezeno = 0;
 	data->linked = false;
 	data->callback_data = game->data->scene.callback_data;
 	if (data->callback) {
-		if (data->callback(game, 0, &data->x, &data->y, data->character, &data->callback_data)) {
+		if (data->callback(game, 0, &data->x, &data->y, &data->scale, data->character, &data->callback_data)) {
 			data->finished = true;
 		}
 	}
@@ -204,7 +206,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	}
 
 	if (data->callback) {
-		if (data->callback(game, GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats) + 1, &data->x, &data->y, data->character, &data->callback_data)) {
+		if (data->callback(game, GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats) + 1, &data->x, &data->y, &data->scale, data->character, &data->callback_data)) {
 			data->finished = true;
 			data->freezeno++;
 			al_destroy_bitmap(data->mask);
@@ -224,7 +226,7 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 		al_draw_scaled_bitmap(bitmap, 0, 0, al_get_bitmap_width(bitmap), al_get_bitmap_height(bitmap), 0, 0, game->viewport.width, game->viewport.height, 0);
 	}
 	bitmap = GetAnimationFrame(data->anim);
-	al_draw_bitmap(bitmap, data->x, data->y, 0);
+	al_draw_scaled_bitmap(bitmap, 0, 0, al_get_bitmap_width(bitmap), al_get_bitmap_height(bitmap), data->x, data->y, al_get_bitmap_width(bitmap) * data->scale, al_get_bitmap_height(bitmap) * data->scale, 0);
 
 	if (data->character) {
 		DrawCharacter(game, data->character);
