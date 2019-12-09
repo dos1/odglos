@@ -335,6 +335,9 @@ static bool SwiecznikPrawy(struct Game* game, struct Character* character, void*
 }
 
 static struct SceneDefinition SCENES[] = {
+	{"kostki_animacja02_cwierc_obrotu_zapetlic", .repeats = 3, .freezes = {{23, ""}}, .bg = "ekran_startowy_tlo_przyciete"},
+	{"kostki_animacja03_waz", .bg = "ekran_startowy_tlo_przyciete"},
+	{">logo"},
 	{"wedrowka_rodzinki_po_trawce"},
 	{"rodzinka_jak_wiewiorki", .freezes = {{20, "DSCF8146_maska"}}},
 	{"sowka_wchodzi_na_drzewo"},

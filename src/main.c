@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 		LoadGamestate(game, "armata");
 	}
 
-	StartGamestate(game, IS_EMSCRIPTEN ? "start" : "logo");
+	StartGamestate(game, "anim");
 
 	al_hide_mouse_cursor(game->display);
 

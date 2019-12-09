@@ -141,9 +141,11 @@ static void HandleDispatch(struct Game* game, struct GamestateResources* data, v
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	float modifier = 1.25 * ((game->data->scene.speed == 0.0) ? 1.0 : game->data->scene.speed);
 
-	game->data->debuginfo = GetAnimationFrameNo(data->anim);
+	int frame = GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats) + 1;
 
-	if (!data->frozen && data->freezes[data->freezeno].mask && data->freezes[data->freezeno].frame == GetAnimationFrameNo(data->anim)) {
+	game->data->debuginfo = frame;
+
+	if (!data->frozen && data->freezes[data->freezeno].mask && data->freezes[data->freezeno].frame == frame) {
 		data->frozen = true;
 		ShowMouse(game);
 		if (!data->mask) {
@@ -153,7 +155,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 				data->mask = al_load_bitmap(GetDataFilePath(game, path));
 			}
 		}
-		PrintConsole(game, "Freeze: [%d] %s (frame: %d)", data->freezeno, data->freezes[data->freezeno].mask, GetAnimationFrameNo(data->anim));
+		PrintConsole(game, "Freeze: [%d] %s (frame: %d)", data->freezeno, data->freezes[data->freezeno].mask, frame);
 	}
 
 	if (data->frozen) {

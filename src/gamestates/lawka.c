@@ -72,11 +72,11 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 				data->pressed = false;
 				data->play = 16;
 				data->position = 0;
-			} else if (data->position < 4) {
+			} else if (data->position < 3) {
 				HideMouse(game);
 				data->delay = 0.4;
 				data->play = data->sequence[data->position++];
-			} else if (data->position == 4) {
+			} else if (data->position == 3) {
 				data->delay = 6.0;
 				data->position = 0;
 				data->play = 16;
@@ -126,7 +126,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			} else {
 				data->user = 0;
 			}
-			if (data->user == 4) {
+			if (data->user == 3) {
 				data->success = true;
 				HideMouse(game);
 			}
@@ -171,6 +171,11 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->counter = 0;
 	for (int i = 0; i < 4; i++) {
 		data->sequence[i] = rand() % 16;
+		if (i > 0) {
+			while (data->sequence[i - 1] == data->sequence[i]) {
+				data->sequence[i] = rand() % 16;
+			}
+		}
 	}
 }
 
