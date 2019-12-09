@@ -13,7 +13,7 @@ static bool Pergola2(struct Game* game, int frame, int* x, int* y, double* scale
 	*x = 0;
 	*y = 0;
 	*scale = 1.0;
-	if ((frame >= 8 && frame <= 15) || (frame >= 21)) {
+	if ((frame >= 7 && frame <= 14) || (frame >= 20)) {
 		*x = 655 - 1355 / 2;
 		*y = 353 - 762 / 2;
 		*scale = 1355.0 / 1280.0;

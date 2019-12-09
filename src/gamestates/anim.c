@@ -141,8 +141,7 @@ static void HandleDispatch(struct Game* game, struct GamestateResources* data, v
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	float modifier = 1.25 * ((game->data->scene.speed == 0.0) ? 1.0 : game->data->scene.speed);
 
-	int frame = GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats) + 1;
-
+	int frame = GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats);
 	game->data->debuginfo = frame;
 
 	if (!data->frozen && data->freezes[data->freezeno].mask && data->freezes[data->freezeno].frame == frame) {
@@ -211,7 +210,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	}
 
 	if (data->callback) {
-		if (data->callback(game, GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats) + 1, &data->x, &data->y, &data->scale, data->character, &data->callback_data)) {
+		if (data->callback(game, GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats), &data->x, &data->y, &data->scale, data->character, &data->callback_data)) {
 			data->finished = true;
 			data->freezeno++;
 			al_destroy_bitmap(data->mask);
