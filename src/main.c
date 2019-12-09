@@ -77,6 +77,7 @@ int main(int argc, char** argv) {
 		LoadGamestate(game, "end");
 		LoadGamestate(game, "lawka");
 		LoadGamestate(game, "byk");
+		LoadGamestate(game, "blank");
 		LoadGamestate(game, "pudelka");
 		LoadGamestate(game, "pergola");
 		LoadGamestate(game, "armata");

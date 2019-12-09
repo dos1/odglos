@@ -416,7 +416,9 @@ struct CommonResources* CreateGameData(struct Game* game) {
 	data->sceneid = -1;
 	data->pause = false;
 	data->font = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 42, 0);
+	data->creditsfont = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 24, 0);
 	data->gradient = al_load_bitmap(GetDataFilePath(game, "gradient.png"));
+	data->banner = al_load_bitmap(GetDataFilePath(game, "banner.png"));
 	data->queue_pos = 0;
 	data->queue_handled = 0;
 	return data;
@@ -431,6 +433,8 @@ void DestroyGameData(struct Game* game) {
 	al_destroy_bitmap(game->data->cursorhover);
 	al_destroy_bitmap(game->data->gradient);
 	al_destroy_font(game->data->font);
+	al_destroy_font(game->data->creditsfont);
+	al_destroy_bitmap(game->data->banner);
 	free(game->data);
 }
 

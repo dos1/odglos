@@ -22,57 +22,43 @@
 #include <libsuperderpy.h>
 
 struct GamestateResources {
-	ALLEGRO_FONT* font;
-	int blink_counter;
+	bool empty;
 };
 
-int Gamestate_ProgressCount = 1;
+int Gamestate_ProgressCount = 0;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
-	data->blink_counter++;
-	if (data->blink_counter >= 60) {
-		data->blink_counter = 0;
-	}
+	LoadGamestate(game, "logo");
+	LoadGamestate(game, "anim");
+	LoadGamestate(game, "naparstki");
+	LoadGamestate(game, "naparstki2");
+	LoadGamestate(game, "end");
+	LoadGamestate(game, "lawka");
+	LoadGamestate(game, "byk");
+	LoadGamestate(game, "blank");
+	LoadGamestate(game, "pudelka");
+	LoadGamestate(game, "pergola");
+	LoadGamestate(game, "armata");
+	game->data->sceneid = -1;
+	ChangeCurrentGamestate(game, "anim");
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
-	if (data->blink_counter < 50) {
-		al_draw_text(data->font, al_map_rgb(255, 255, 255), game->viewport.width / 2.0, game->viewport.height / 2.0,
-			ALLEGRO_ALIGN_CENTRE, "That's all folks.");
-	}
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
-	if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) ||
-		(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) ||
-		(ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
-		UnloadCurrentGamestate(game); // mark this gamestate to be stopped and unloaded
-		// When there are no active gamestates, the engine will quit.
-	}
-	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
-		game->data->sceneid--;
-		SwitchCurrentGamestate(game, "anim");
-	}
 }
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
-	int flags = al_get_new_bitmap_flags();
-	al_set_new_bitmap_flags(flags & ~ALLEGRO_MAG_LINEAR); // disable linear scaling for pixelarty appearance
-	data->font = al_create_builtin_font();
-	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
-	al_set_new_bitmap_flags(flags);
 	return data;
 }
 
 void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
-	al_destroy_font(data->font);
 	free(data);
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
-	data->blink_counter = 0;
-	ShowMouse(game);
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}

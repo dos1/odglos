@@ -32,6 +32,7 @@ struct GamestateResources {
 	bool finished;
 	bool stay;
 	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
+	void (*draw)(struct Game*, int, void**);
 	struct Character* character;
 
 	int freezeno;
@@ -88,6 +89,7 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	data->repeats = game->data->scene.repeats;
 	data->all_repeats = game->data->scene.repeats;
 	data->callback = game->data->scene.callback;
+	data->draw = game->data->scene.draw;
 	data->stay = game->data->scene.stay;
 	data->freezes = game->data->scene.freezes;
 	if (game->data->scene.character.name) {
@@ -232,6 +234,10 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	}
 	bitmap = GetAnimationFrame(data->anim);
 	al_draw_scaled_bitmap(bitmap, 0, 0, al_get_bitmap_width(bitmap), al_get_bitmap_height(bitmap), data->x, data->y, al_get_bitmap_width(bitmap) * data->scale, al_get_bitmap_height(bitmap) * data->scale, 0);
+
+	if (data->draw) {
+		data->draw(game, GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats), &data->callback_data);
+	}
 
 	if (data->character) {
 		DrawCharacter(game, data->character);

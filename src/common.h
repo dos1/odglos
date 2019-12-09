@@ -27,6 +27,7 @@ struct SceneDefinition {
 	float speed;
 	int repeats;
 	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
+	void (*draw)(struct Game*, int, void**);
 	void* callback_data;
 	struct {
 		char* name;
@@ -58,7 +59,8 @@ struct CommonResources {
 	int queue_pos;
 	int queue_handled;
 
-	ALLEGRO_FONT* font;
+	ALLEGRO_FONT *font, *creditsfont;
+	ALLEGRO_BITMAP* banner;
 };
 
 bool Dispatch(struct Game* game);
