@@ -200,6 +200,9 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		} else {
 			if (!UpdateAnimation(data->anim, delta * modifier)) {
 				data->delay = GetAnimationFrameDuration(data->anim) / modifier;
+				if (!data->delay) {
+					data->delay = 0.01;
+				}
 				data->finished = !data->stay;
 			}
 		}
@@ -216,6 +219,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	} else {
 		data->x = 0;
 		data->y = 0;
+		data->scale = 1.0;
 	}
 }
 

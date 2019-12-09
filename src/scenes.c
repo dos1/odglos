@@ -286,6 +286,54 @@ static bool UlDol(struct Game* game, struct Character* character, void** data) {
 	return true;
 }
 
+static bool SwiecznikLewy(struct Game* game, struct Character* character, void** data);
+static bool SwiecznikPrawy(struct Game* game, struct Character* character, void** data);
+
+static void Swiecznik(struct Game* game, void** data) {
+	bool* d = *data;
+	char* name;
+	if (!*d && !*(d + 1)) {
+		name = "DSCF2449";
+	} else if (*d && !*(d + 1)) {
+		name = "DSCF2305";
+	} else if (!*d && *(d + 1)) {
+		name = "DSCF2311";
+	} else {
+		free(*data);
+		*data = NULL;
+		Enqueue(game, (struct SceneDefinition){"DSCF2320"});
+		return;
+	}
+	Enqueue(game, (struct SceneDefinition){name, .callback_data = *data, .freezes = {{0, "DSCF2296_maska_oczy_ewentualnie", .links = {{{10.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikLewy}, {{20.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikPrawy}}}}});
+}
+
+static bool SwiecznikLewy(struct Game* game, struct Character* character, void** data) {
+	if (!*data) {
+		*data = malloc(sizeof(bool) * 2);
+		bool* d = *data;
+		*d = false;
+		*(d + 1) = false;
+	}
+	bool* d = *data;
+	*d = !*d;
+	Swiecznik(game, data);
+	return true;
+}
+
+static bool SwiecznikPrawy(struct Game* game, struct Character* character, void** data) {
+	if (!*data) {
+		*data = malloc(sizeof(bool) * 2);
+		bool* d = *data;
+		*d = false;
+		*(d + 1) = false;
+	}
+	bool* d = *data;
+	*(d + 1) = !*(d + 1);
+
+	Swiecznik(game, data);
+	return true;
+}
+
 static struct SceneDefinition SCENES[] = {
 	{"wedrowka_rodzinki_po_trawce"},
 	{"rodzinka_jak_wiewiorki", .freezes = {{20, "DSCF8146_maska"}}},
@@ -299,7 +347,8 @@ static struct SceneDefinition SCENES[] = {
 	{"wrzosy_kuzyn_i_sowka2"},
 	{"samochod_kominek"},
 	//{">byk"},
-	{"swiecznik3_TAK", .freezes = {{0, "DSCF2296_maska_caly"}}},
+	{"swiecznik_hover_ewentualnie", .freezes = {{2, "DSCF2296_maska_oczy_ewentualnie", .links = {{{10.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikLewy}, {{20.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikPrawy}}}}},
+	{"swiecznik3_TAK"},
 	//{">swiecznik"},
 	{"samochody_w_lesie", .freezes = {{0, "DSCF2433_maska"}}},
 	{"aksamitki_samochod_sowka", .speed = 1.25},
@@ -308,8 +357,17 @@ static struct SceneDefinition SCENES[] = {
 	{"donice_01_samochod_duzy_jedzie_w_prawo", .freezes = {{18, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}},
 	{"donice_08_mala_sowka_z_samochodem_wyjezdza_w_przod"},
 	//{">skrzypce"},
+	{"skrzypce2_animacja_przerywnikowa"},
+	{"skrzypce2_dzwiek1", .freezes = {{0, "skrzypce_maski_DSCF9053"}}},
+	{"skrzypce2_dzwiek2"},
+	{"skrzypce2_dzwiek3"},
+	{"skrzypce2_dzwiek4"},
+	{"skrzypce2_dzwiek5"},
+	{"skrzypce2_dzwiek6"},
+	{"skrzypce2_animacja_koncowa"},
 	{"gawron_i_drewniany_medrzec", .freezes = {{107, "DSCF2982_maska"}, {290, "DSCF3781_maska"}}},
 	//{">przyciski"},
+	/*
 	{"przyciski_na_stacji_przycisk1", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
 	{"przyciski_na_stacji_przycisk1_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
 	{"przyciski_na_stacji_przycisk1_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
@@ -328,6 +386,7 @@ static struct SceneDefinition SCENES[] = {
 	{"przyciski_na_kominie_przycisk_3_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
 	{"przyciski_na_kominie_przycisk_3_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
 	{"przyciski_na_kominie_przycisk_3_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	  */
 	{"ciemna_trawa_samochod_sowka", .speed = 1.25},
 	{"ciemna_trawa_waz", .speed = 1.25},
 	{"wchodzenie_po_schodach_samochod_sowka", .freezes = {{19, "maska_schodek1"}, {23, "maska_schodek2"}, {26, "maska_schodek3"}, {29, "maska_schodek4"}}},
