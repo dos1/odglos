@@ -316,6 +316,7 @@ static bool SwiecznikLewy(struct Game* game, struct Character* character, void**
 	}
 	bool* d = *data;
 	*d = !*d;
+	PlayMusic(game, "switch", false);
 	Swiecznik(game, data);
 	return true;
 }
@@ -330,6 +331,7 @@ static bool SwiecznikPrawy(struct Game* game, struct Character* character, void*
 	bool* d = *data;
 	*(d + 1) = !*(d + 1);
 
+	PlayMusic(game, "switch", false);
 	Swiecznik(game, data);
 	return true;
 }
@@ -362,7 +364,7 @@ static void DrawCredits(struct Game* game, int frame, void** data) {
 		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 8, ALLEGRO_ALIGN_LEFT, "Zośka Koszałkowska");
 		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 9, ALLEGRO_ALIGN_LEFT, "Lisa Slater");
 
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 11, ALLEGRO_ALIGN_LEFT, "SEPR model:");
+		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 11, ALLEGRO_ALIGN_LEFT, "PRES model:");
 		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 12, ALLEGRO_ALIGN_LEFT, "Museum of Modern Art in Warsaw");
 
 	} else if (frame < 70) {
@@ -389,28 +391,53 @@ static void DrawCredits(struct Game* game, int frame, void** data) {
 	}
 }
 
+static bool Wedrowka(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "wedrowka2_lapis", true);
+	return true;
+}
+
+static bool PlayDmuchawa(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "dmuchawa_metrographfuture", true);
+	return true;
+}
+
+static bool Birdy(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "BIRDY K K LAP L 05 29 08", true);
+	return true;
+}
+
+static bool Flange(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "MEGAFLANGE SZ POINTS1 L 00 04 48- 51 ", true);
+	return true;
+}
+
+static bool Metrograph(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "generator_metrographfuture", true);
+	return true;
+}
+
 static struct SceneDefinition SCENES[] = {
 	{"kostki_animacja02_cwierc_obrotu_zapetlic", .repeats = 3, .freezes = {{23, ""}}, .bg = "ekran_startowy_tlo_przyciete"},
 	{"kostki_animacja03_waz", .bg = "ekran_startowy_tlo_przyciete"},
 	{">logo"},
-	{"wedrowka_rodzinki_po_trawce", .freezes = {{30, .footnote = 9}}},
-	{"rodzinka_jak_wiewiorki", .freezes = {{20, "DSCF8146_maska"}}},
+	{"wedrowka_rodzinki_po_trawce", .music = {"wedrowka_lapis", true}, .freezes = {{30, .footnote = 9}}},
+	{"rodzinka_jak_wiewiorki", .freezes = {{20, "DSCF8146_maska", .callback = Wedrowka}}},
 	{"sowka_wchodzi_na_drzewo"},
 	{"sowka_pokazuje_mordke_i_wraca"},
-	{"buty_drewniane"},
-	{"regal_animacja_sam", .freezes = {{0, ""}}, .repeats = 1, .bg = "regal_dmuchawa_100_9254_tlo_przyciete", .callback = RegalDmuchawa, .character = {"dmuchawa", {"dmuchawa_ptaszor_sam"}, .repeat = true}},
-	{"generator_animacja_wstepna", .freezes = {{0, ""}}, .callback = Generator, .bg = "generator_tlo_liscie_przyciete"},
-	{"sucha_trawa_aksamitki_samochod_stary"},
-	{"sowka_konfrontacja_z_rzezba", .freezes = {{0, "DSCF8160_maska"}}},
-	{"wrzosy_kuzyn_i_sowka2"},
-	{"samochod_kominek"},
+	{"buty_drewniane", .music = {"buciki_trickstar", false}},
+	{"regal_animacja_sam", .freezes = {{0, "", .callback = PlayDmuchawa}}, .repeats = 1, .bg = "regal_dmuchawa_100_9254_tlo_przyciete", .callback = RegalDmuchawa, .character = {"dmuchawa", {"dmuchawa_ptaszor_sam"}, .repeat = true}},
+	{"generator_animacja_wstepna", .music = {""}, .freezes = {{0, "", .callback = Metrograph}}, .callback = Generator, .bg = "generator_tlo_liscie_przyciete"},
+	{"sucha_trawa_aksamitki_samochod_stary", .music = {"K ROB FX 03 26 00-001", false}},
+	{"sowka_konfrontacja_z_rzezba", .music = {""}, .freezes = {{0, "DSCF8160_maska", .callback = Birdy}}},
+	{"wrzosy_kuzyn_i_sowka2", .music = {"DIGI DOGZ K NOR L 04 16 61", true}},
+	{"samochod_kominek", .music = {"LASER SHOWER S LIST L 12 35 45", true}},
 	{">byk"},
 	{"swiecznik_hover_ewentualnie", .freezes = {{2, "DSCF2296_maska_oczy_ewentualnie", .links = {{{10.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikLewy}, {{20.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikPrawy}}}}},
-	{"swiecznik3_TAK"},
+	{"swiecznik3_TAK", .music = {"MAD CASPER SZ AGNT L 00 02 10 45 - 13 89", true}},
 	//{">swiecznik"},
-	{"samochody_w_lesie", .freezes = {{0, "DSCF2433_maska"}}},
-	{"aksamitki_samochod_sowka", .speed = 1.25},
-	{"donice_02_samochod_duzy_jedzie_w_lewo", .speed = 0.75},
+	{"samochody_w_lesie", .music = {"silence", true}, .freezes = {{0, "DSCF2433_maska", .callback = Flange}}},
+	{"aksamitki_samochod_sowka", .speed = 1.25, .music = {"PIXEL BUBBLES K ROB L 05 29 10 ", true}},
+	{"donice_02_samochod_duzy_jedzie_w_lewo", .music = {""}, .speed = 0.75},
 	{"donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej"},
 	{"donice_01_samochod_duzy_jedzie_w_prawo", .freezes = {{18, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}},
 	{"donice_08_mala_sowka_z_samochodem_wyjezdza_w_przod"},
@@ -507,24 +534,24 @@ static struct SceneDefinition SCENES[] = {
 	{"sowka1_wlacza_konsole_z_daleka2", .bg = "kosmos"},
 	{"sowka1_wlacza_konsole_z_bliska_lewa_konsola", .freezes = {{0, "DSCF0067_maska_ze_stolem"}}},
 	{"sowka1_wlacza_konsole_z_bliska_srodkowa_konsola", .freezes = {{0, "DSCF0067_maska_ze_stolem"}}},
-	{"sowka1_zaluzje"},
-	{"sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK"},
-	{"drzwi_zamykaja_sie_same", .bg = "kosmos"},
+	{"altanka_samochod"},
+	{"zamiana_myszki_w_bramie"},
+	//{"sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK"},
 	{"sowka2_klika_konsole_prawa", .freezes = {{0, "DSCF0286_maska"}}},
 	{"sowka2_klika_konsole_lewa", .freezes = {{0, "DSCF0286_maska"}}},
-	{"sowka2_zaluzje_nie_znika_TAK"},
-	{"okna_sie_otwieraja_z_sowka2", .bg = "kosmos"},
-	{"buzia_01_bez_niczego"},
-	{"buzia_02_sowa"},
-	{"buzia_03_kuzyn"},
-	{"buzia_04_myszka"},
-	{"zamiana_myszki_w_bramie"},
-	{"altanka_samochod"},
+	//{"buzia_01_bez_niczego"},
+	//{"buzia_02_sowa"},
+	//{"buzia_03_kuzyn"},
+	//{"buzia_04_myszka"},
 	{"wiklinowy_cyrk_po_dwa_bez_myszki"},
 	{"wiklinowy_cyrk_sama_myszka"},
-	{"wiklinowe_kolo1_samochod"},
-	{"wiklinowe_kolo2_pilka"},
-	{"wiklinowe_kolo3_myszka"},
+	//{"wiklinowe_kolo1_samochod"},
+	//{"wiklinowe_kolo2_pilka"},
+	//{"wiklinowe_kolo3_myszka"},
+	{"drzwi_zamykaja_sie_same", .bg = "kosmos"},
+	{"okna_sie_otwieraja_z_sowka2", .bg = "kosmos"},
+	{"sowka2_zaluzje_nie_znika_TAK"},
+	{"sowka1_zaluzje"},
 	{"animacja_koncowa", .bg = "kosmos", .freezes = {{29, .footnote = 1}}},
 	{"animacje_koncowe_rodzinki", .callback = Credits, .draw = DrawCredits, .speed = 0.5},
 	{">blank"},

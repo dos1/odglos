@@ -123,6 +123,11 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 			data->finished = true;
 		}
 	}
+
+	if (game->data->scene.music.name) {
+		PlayMusic(game, game->data->scene.music.name, game->data->scene.music.loop);
+	}
+
 	ResetAnimation(data->anim);
 	//PrintConsole(game, "Loaded: %s", path);
 }
@@ -282,6 +287,9 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 						}
 					}
 				}
+			}
+			if (data->freezes[data->freezeno].callback) {
+				data->freezes[data->freezeno].callback(game, data->character, &data->callback_data);
 			}
 			data->freezeno++;
 			al_destroy_bitmap(data->mask);

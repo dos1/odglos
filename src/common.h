@@ -19,6 +19,7 @@ struct FreezeFrame {
 	char* mask;
 	int footnote;
 	struct FreezeLink links[8];
+	bool (*callback)(struct Game*, struct Character*, void**);
 };
 
 struct SceneDefinition {
@@ -39,6 +40,11 @@ struct SceneDefinition {
 	} character;
 	bool stay;
 	struct FreezeFrame freezes[16];
+
+	struct {
+		char* name;
+		bool loop;
+	} music;
 };
 
 struct CommonResources {
@@ -62,6 +68,8 @@ struct CommonResources {
 
 	ALLEGRO_FONT *font, *creditsfont;
 	ALLEGRO_BITMAP* banner;
+
+	ALLEGRO_AUDIO_STREAM* music;
 
 	bool footnote;
 };
@@ -95,6 +103,7 @@ void HideMouse(struct Game* game);
 void HideHTMLLoading(struct Game* game);
 #endif
 void ShowFootnote(struct Game* game, int id);
+void PlayMusic(struct Game* game, char* name, bool loop);
 
 SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream);
 SPRITESHEET_STREAM(AnimationStream);
