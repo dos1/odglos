@@ -25,7 +25,7 @@ struct GamestateResources {
 	bool empty;
 };
 
-int Gamestate_ProgressCount = 0;
+int Gamestate_ProgressCount = 1;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	LoadGamestate(game, "logo");
@@ -51,6 +51,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
+	progress(game);
 	return data;
 }
 

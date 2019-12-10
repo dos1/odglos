@@ -95,6 +95,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		if (nr < 17) {
 			if (nr > data->enabled) {
 				SelectSpritesheet(game, data->bg, ANIMS_EMPTY[nr]);
+				PlayMusic(game, "K STUD 01 25 13-001", false, false);
 			} else {
 				if (nr == 9) {
 					SwitchCurrentGamestate(game, "naparstki2");
@@ -104,6 +105,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				if (nr == data->enabled) {
 					data->enabled++;
 				}
+				PlayMusic(game, "K STUD 01 39 48-001", false, false);
 				if (nr == 0) {
 					if (data->jaszczur == 1) {
 						SelectSpritesheet(game, data->bg, "naparstki_01_kapelusz_jaszczurka_wersja1");

@@ -487,6 +487,11 @@ static bool Jammin(struct Game* game, struct Character* character, void** data) 
 	return true;
 }
 
+static bool Pudelko3(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "pudelko3", false, false);
+	return true;
+}
+
 static struct SceneDefinition SCENES[] = {
 	{"kostki_animacja02_cwierc_obrotu_zapetlic", .repeats = 3, .freezes = {{23, ""}}, .bg = "ekran_startowy_tlo_przyciete"},
 	{"kostki_animacja03_waz", .music = {"odlot", true}, .bg = "ekran_startowy_tlo_przyciete"},
@@ -588,7 +593,7 @@ static struct SceneDefinition SCENES[] = {
 	{">pudelka"},
 	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .music = {""}, .freezes = {{0, "DSCF5025_maska", .callback = Jammin}}},
 	{">naparstki"},
-	{"01statki_szyszki_tasmy_animacja1", .music = {""}},
+	{"01statki_szyszki_tasmy_animacja1"},
 	{"02statki_szyszki_tasmy_animacja2", .freezes = {{11, .footnote = 4}}},
 	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}},
 	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska"}}},
@@ -596,8 +601,9 @@ static struct SceneDefinition SCENES[] = {
 	{"magnetofon2_bez_myszek", .freezes = {{0, "DSCF9467_maska_magnetofon"}}},
 	{"duch_portalu_animacja2_zlozona_TAK", .callback = DuchPortalu},
 	{">armata"},
+
 	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska"}}},
-	{"makieta_w_kosmosie_bez_tla", .bg = "kosmos", .freezes = {{28, .footnote = 2}}},
+	{"makieta_w_kosmosie_bez_tla", .music = {"kosmos_metrograph", true}, .bg = "kosmos", .freezes = {{28, .footnote = 2}}},
 	{"makieta_pusta"},
 	{"krzeslo_w_lesie_czesc1", .freezes = {{12, "krzeslo_w_lesie08_maska"}}},
 	{"krzeslo_w_lesie_czesc2"},
@@ -607,8 +613,8 @@ static struct SceneDefinition SCENES[] = {
 	{"sowka1_wlacza_konsole_z_daleka2", .bg = "kosmos"},
 	{"sowka1_wlacza_konsole_z_bliska_lewa_konsola", .freezes = {{0, "DSCF0067_maska_ze_stolem"}}},
 	{"sowka1_wlacza_konsole_z_bliska_srodkowa_konsola", .freezes = {{0, "DSCF0067_maska_ze_stolem"}}},
-	{"altanka_samochod"},
-	{"zamiana_myszki_w_bramie"},
+	//{"altanka_samochod"},
+	//{"zamiana_myszki_w_bramie"},
 	//{"sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK"},
 	{"sowka2_klika_konsole_prawa", .freezes = {{0, "DSCF0286_maska"}}},
 	{"sowka2_klika_konsole_lewa", .freezes = {{0, "DSCF0286_maska"}}},
@@ -616,20 +622,20 @@ static struct SceneDefinition SCENES[] = {
 	//{"buzia_02_sowa"},
 	//{"buzia_03_kuzyn"},
 	//{"buzia_04_myszka"},
-	{"wiklinowy_cyrk_po_dwa_bez_myszki"},
-	{"wiklinowy_cyrk_sama_myszka"},
+	//{"wiklinowy_cyrk_po_dwa_bez_myszki"},
+	//{"wiklinowy_cyrk_sama_myszka"},
 	//{"wiklinowe_kolo1_samochod"},
 	//{"wiklinowe_kolo2_pilka"},
 	//{"wiklinowe_kolo3_myszka"},
-	{"drzwi_zamykaja_sie_same", .bg = "kosmos"},
+	{"drzwi_zamykaja_sie_same", .music = {"koniec_lapis", true}, .bg = "kosmos"},
 	{"okna_sie_otwieraja_z_sowka2", .bg = "kosmos"},
 	{"sowka2_zaluzje_nie_znika_TAK"},
 	{"sowka1_zaluzje"},
 	{"animacja_koncowa", .bg = "kosmos", .freezes = {{29, .footnote = 1}}},
 	{">blank"},
-	{"animacje_koncowe_rodzinki", .callback = Credits, .draw = DrawCredits, .speed = 0.5},
+	{"animacje_koncowe_rodzinki", .music = {"napisy_metrograph"}, .callback = Credits, .draw = DrawCredits, .speed = 0.5},
 	{">blank"},
-	{"donice_13_tasma", .speed = 0.5, .freezes = {{0, "donice_w_ogrodzie_maski", .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}},
+	{"donice_13_tasma", .speed = 0.5, .freezes = {{0, "donice_w_ogrodzie_maski", .callback = Pudelko3, .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}},
 	//
 	//{"sowka_na_trawie"},
 	//{"kuzyn_na_galeziach_podwojne"},

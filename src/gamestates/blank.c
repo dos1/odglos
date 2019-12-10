@@ -28,7 +28,7 @@ struct GamestateResources {
 	double time; // just so the struct is not 0 size, remove me when adding something
 };
 
-int Gamestate_ProgressCount = 0; // number of loading steps as reported by Gamestate_Load; 0 when missing
+int Gamestate_ProgressCount = 1; // number of loading steps as reported by Gamestate_Load; 0 when missing
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	// Here you should do all your game logic as if <delta> seconds have passed.
@@ -60,6 +60,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	// create VBOs, etc. do it in Gamestate_PostLoad.
 
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
+	progress(game);
 	return data;
 }
 
@@ -72,6 +73,7 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	// Called when this gamestate gets control. Good place for initializing state,
 	// playing music etc.
+	PlayMusic(game, "", false, false);
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
