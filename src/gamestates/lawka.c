@@ -37,6 +37,7 @@ struct GamestateResources {
 	bool success;
 	int position;
 	bool pressed;
+	bool footnoted;
 
 	int user;
 };
@@ -90,7 +91,12 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		}
 	}
 	if (data->counter > 4.0) {
-		SwitchCurrentGamestate(game, "anim");
+		if (!data->footnoted) {
+			data->footnoted = true;
+			ShowFootnote(game, 5);
+		} else {
+			SwitchCurrentGamestate(game, "anim");
+		}
 	}
 
 	CheckMask(game, data->mask);
@@ -173,6 +179,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->current = 0;
 	data->playing = false;
 	data->counter = 0;
+	data->footnoted = false;
 	for (int i = 0; i < 4; i++) {
 		data->sequence[i] = rand() % 16;
 		if (i > 0) {
