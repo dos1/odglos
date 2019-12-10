@@ -121,7 +121,7 @@ static bool DonicaLewa(struct Game* game, struct Character* character, void** da
 
 	DonicaSetup(game, &anim, data);
 	Enqueue(game, anim);
-	PlayMusic(game, "S LIST FX 00 50 07-001", false, false);
+	PlayMusic(game, (rand() % 2) ? "S LIST FX 00 50 07-001" : "S LIST FX 00 51 84-001", false, false);
 
 	return true;
 }
@@ -135,7 +135,7 @@ static bool DonicaPrawa(struct Game* game, struct Character* character, void** d
 
 	DonicaSetup(game, &anim, data);
 	Enqueue(game, anim);
-	PlayMusic(game, "S LIST FX 00 51 84-001", false, false);
+	PlayMusic(game, (rand() % 2) ? "S LIST FX 00 50 07-001" : "S LIST FX 00 51 84-001", false, false);
 
 	return true;
 }
@@ -442,6 +442,21 @@ static bool Silacz(struct Game* game, struct Character* character, void** data) 
 	return true;
 }
 
+static bool Silacz1(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "K ROB FX 03 26 00-001", false, false);
+	return true;
+}
+
+static bool Silacz2(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "S RHAP FX 05 56 09-001", false, false);
+	return true;
+}
+
+static bool Silacz3(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "LASER SHOWER S LIST L 12 35 45", false, false);
+	return true;
+}
+
 static bool Rave(struct Game* game, struct Character* character, void** data) {
 	PlayMusic(game, "rave", true, false);
 	return true;
@@ -519,18 +534,18 @@ static struct SceneDefinition SCENES[] = {
 	//{"schodzenie_ze_schodow_waz"},
 
 	{">lawka"},
-	{"animacja_silacz1", .freezes = {{0, "silacz_maska", .callback = Silacz}, {22, "silacz_maska", .callback = Silacz}, {46, "silacz_maska", .callback = Silacz}}},
+	{"animacja_silacz1", .freezes = {{0, "silacz_maska", .callback = Silacz3}, {22, "silacz_maska", .callback = Silacz2}, {46, "silacz_maska", .callback = Silacz}}},
 	{"donice_14_samochod_nadjezdza_z_prawej_i_wjezdza_do_donicy_z_lewej", .music = {"DIGI DOGZ K NOR L 04 16 61"}, .callback = Donice, .freezes = {{16, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .callback = DonicaLewa}, {{0.0, 1.0, 0.0}, .callback = DonicaPrawa}}}}},
 	{"donice_12_waz_idzie_w_prawo_i_wchodzi_do_prawej_donicy", .music = {"S LIST FX 07 17 05-001"}},
-	{"silacz2_maly_samochod_z_sowka_opuszcz_cien_rozny", .freezes = {{0, "silacz_maska", .callback = Silacz}}},
+	{"silacz2_maly_samochod_z_sowka_opuszcz_cien_rozny", .freezes = {{0, "silacz_maska", .callback = Silacz1}}},
 	{"silacz3_maly_samochod_sam", .music = {"LASER SHOWER S LIST L 12 35 45"}}, //.freezes = {{0, "silacz_maska"}}},
 	{"lira_korbowa", .music = {""}, .freezes = {{0, "DSCF8976_maska", .callback = Centauri}}},
 	{"male_dziwne_cos", .music = {""}, .freezes = {{0, "DSCF8646_maska", .callback = Breath}}, .repeats = 1},
 	{"turkusowe_cos", .music = {""}, .freezes = {{0, "DSCF9030_maska", .callback = Rave}}},
-	{"rzezby_w_lazience_2_wyciszenie_sznureczka", .music = {""}},
+	{"rzezby_w_lazience_2_wyciszenie_sznureczka", .music = {"points", true}},
 	{"sowka_i_rzezby_01_sowka_przejezdza", .freezes = {{8, .footnote = 6}, {18, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .callback = Zakochani}, {{0.0, 1.0, 0.0}, .callback = Muzykanci}}}}},
-	{"031_donice_dom1"},
-	{"donice_16_samochod_kartonowy_duzy_wjezdza_z_prawej", .freezes = {{0, "donice_w_ogrodzie_maski", .callback = Donice2, .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}},
+	{"031_donice_dom1", .music = {"S LIST FX 10 39 39-001"}},
+	{"donice_16_samochod_kartonowy_duzy_wjezdza_z_prawej", .music = {"donice4_points"}, .freezes = {{0, "donice_w_ogrodzie_maski", .callback = Donice2, .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}},
 	{"donice_22_sowka_srednia_whodzi_do_duzej_donicy_z_lewej", .music = {"donice3_points", .layer = true}, .freezes = {{7, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}},
 	{"donice_15_maly_samochodzik_kartonowy_wyjezdza", .music = {"donice1_points"}},
 	{"donice_23_sowka_mala_wychodzi_w_przod", .music = {"donice2_points", .layer = true}},
