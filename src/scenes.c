@@ -316,7 +316,7 @@ static bool SwiecznikLewy(struct Game* game, struct Character* character, void**
 	}
 	bool* d = *data;
 	*d = !*d;
-	PlayMusic(game, "switch", false);
+	PlayMusic(game, "switch", false, false);
 	Swiecznik(game, data);
 	return true;
 }
@@ -331,7 +331,7 @@ static bool SwiecznikPrawy(struct Game* game, struct Character* character, void*
 	bool* d = *data;
 	*(d + 1) = !*(d + 1);
 
-	PlayMusic(game, "switch", false);
+	PlayMusic(game, "switch", false, false);
 	Swiecznik(game, data);
 	return true;
 }
@@ -392,33 +392,38 @@ static void DrawCredits(struct Game* game, int frame, void** data) {
 }
 
 static bool Wedrowka(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "wedrowka2_lapis", true);
+	PlayMusic(game, "wedrowka2_lapis", true, false);
 	return true;
 }
 
 static bool PlayDmuchawa(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "dmuchawa_metrographfuture", true);
+	PlayMusic(game, "dmuchawa_metrographfuture", true, false);
 	return true;
 }
 
 static bool Birdy(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "BIRDY K K LAP L 05 29 08", true);
+	PlayMusic(game, "BIRDY K K LAP L 05 29 08", true, false);
 	return true;
 }
 
 static bool Flange(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "MEGAFLANGE SZ POINTS1 L 00 04 48- 51 ", true);
+	PlayMusic(game, "MEGAFLANGE SZ POINTS1 L 00 04 48- 51 ", true, false);
 	return true;
 }
 
 static bool Metrograph(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "generator_metrographfuture", true);
+	PlayMusic(game, "generator_metrographfuture", true, false);
+	return true;
+}
+
+static bool Skrzypce1(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "skrzypce1_orange", false, true);
 	return true;
 }
 
 static struct SceneDefinition SCENES[] = {
 	{"kostki_animacja02_cwierc_obrotu_zapetlic", .repeats = 3, .freezes = {{23, ""}}, .bg = "ekran_startowy_tlo_przyciete"},
-	{"kostki_animacja03_waz", .bg = "ekran_startowy_tlo_przyciete"},
+	{"kostki_animacja03_waz", .music = {"odlot", true}, .bg = "ekran_startowy_tlo_przyciete"},
 	{">logo"},
 	{"wedrowka_rodzinki_po_trawce", .music = {"wedrowka_lapis", true}, .freezes = {{30, .footnote = 9}}},
 	{"rodzinka_jak_wiewiorki", .freezes = {{20, "DSCF8146_maska", .callback = Wedrowka}}},
@@ -437,20 +442,21 @@ static struct SceneDefinition SCENES[] = {
 	//{">swiecznik"},
 	{"samochody_w_lesie", .music = {"silence", true}, .freezes = {{0, "DSCF2433_maska", .callback = Flange}}},
 	{"aksamitki_samochod_sowka", .speed = 1.25, .music = {"PIXEL BUBBLES K ROB L 05 29 10 ", true}},
-	{"donice_02_samochod_duzy_jedzie_w_lewo", .music = {""}, .speed = 0.75},
-	{"donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej"},
-	{"donice_01_samochod_duzy_jedzie_w_prawo", .freezes = {{18, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}},
-	{"donice_08_mala_sowka_z_samochodem_wyjezdza_w_przod"},
+	{"donice_02_samochod_duzy_jedzie_w_lewo", .music = {"donice1_points"}, .speed = 0.5},
+	{"donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej", .music = {"donice2_points", .layer = true}},
+
+	{"donice_01_samochod_duzy_jedzie_w_prawo", .music = {"donice3_points", .layer = true}, .freezes = {{18, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}},
+	{"donice_08_mala_sowka_z_samochodem_wyjezdza_w_przod", .music = {"donice4_points", .layer = true}},
 	//{">skrzypce"},
-	{"skrzypce2_animacja_przerywnikowa"},
-	{"skrzypce2_dzwiek1", .freezes = {{0, "skrzypce_maski_DSCF9053"}}},
-	{"skrzypce2_dzwiek2"},
-	{"skrzypce2_dzwiek3"},
-	{"skrzypce2_dzwiek4"},
-	{"skrzypce2_dzwiek5"},
-	{"skrzypce2_dzwiek6"},
-	{"skrzypce2_animacja_koncowa"},
-	{"gawron_i_drewniany_medrzec", .freezes = {{87, .footnote = 7}, {107, "DSCF2982_maska"}, {290, "DSCF3781_maska"}}},
+	{"skrzypce2_animacja_przerywnikowa", .music = {"S RHAP FX 05 56 09-001", .layer = true}},
+	{"skrzypce2_dzwiek1", .freezes = {{0, "skrzypce_maski_DSCF9053", .callback = Skrzypce1}}},
+	{"skrzypce2_dzwiek2", .music = {"skrzypce2_orange", .layer = true}},
+	{"skrzypce2_dzwiek3", .music = {"skrzypce3_orange", .layer = true}},
+	{"skrzypce2_dzwiek4", .music = {"skrzypce5_orange", .layer = true}},
+	{"skrzypce2_dzwiek5", .music = {"skrzypce6_orange", .layer = true}},
+	{"skrzypce2_dzwiek6", .music = {"skrzypce4_orange", .layer = true}},
+	{"skrzypce2_animacja_koncowa", .repeats = 1, .music = {"skrzypce_orange", .layer = true}},
+	{"gawron_i_drewniany_medrzec", .music = {"gawron_poko", .layer = true, .loop = true}, .freezes = {{87, .footnote = 7}, {107, "DSCF2982_maska"}, {290, "DSCF3781_maska"}}},
 	//{">przyciski"},
 	/*
 	{"przyciski_na_stacji_przycisk1", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
@@ -472,8 +478,8 @@ static struct SceneDefinition SCENES[] = {
 	{"przyciski_na_kominie_przycisk_3_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
 	{"przyciski_na_kominie_przycisk_3_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
 	  */
-	{"ciemna_trawa_samochod_sowka", .speed = 1.25},
-	{"ciemna_trawa_waz", .speed = 1.25},
+	{"ciemna_trawa_samochod_sowka", .music = {"S LIST FX 01 37 00-001 S LIST FX 01 53 86-001"}, .speed = 1.25},
+	{"ciemna_trawa_waz", .music = {"S LIST FX 07 17 05-001"}, .speed = 1.25},
 	{"wchodzenie_po_schodach_samochod_sowka", .freezes = {{19, "maska_schodek1"}, {23, "maska_schodek2"}, {26, "maska_schodek3"}, {29, "maska_schodek4"}}},
 	{"schodzenie_ze_schodow_waz"},
 	{">lawka"},

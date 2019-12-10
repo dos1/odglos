@@ -125,7 +125,7 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	}
 
 	if (game->data->scene.music.name) {
-		PlayMusic(game, game->data->scene.music.name, game->data->scene.music.loop);
+		PlayMusic(game, game->data->scene.music.name, game->data->scene.music.loop, game->data->scene.music.layer);
 	}
 
 	ResetAnimation(data->anim);

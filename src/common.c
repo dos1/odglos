@@ -500,10 +500,11 @@ SPRITESHEET_STREAM(AnimationStream) {
 	};
 }
 
-void PlayMusic(struct Game* game, char* name, bool loop) {
-	if (game->data->music) {
+void PlayMusic(struct Game* game, char* name, bool loop, bool layer) {
+	if (game->data->music && !layer) {
 		al_destroy_audio_stream(game->data->music);
 		game->data->music = false;
+		// TODO: leak
 	}
 	if (name[0]) {
 		char path[255] = {};

@@ -108,6 +108,7 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	// Called when this gamestate gets control. Good place for initializing state,
 	// playing music etc.
+	PlayMusic(game, "", false, false);
 	al_set_audio_stream_playing(data->music, true);
 	data->counter = 0;
 	HideMouse(game);

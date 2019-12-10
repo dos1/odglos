@@ -44,6 +44,7 @@ struct SceneDefinition {
 	struct {
 		char* name;
 		bool loop;
+		bool layer;
 	} music;
 };
 
@@ -103,7 +104,7 @@ void HideMouse(struct Game* game);
 void HideHTMLLoading(struct Game* game);
 #endif
 void ShowFootnote(struct Game* game, int id);
-void PlayMusic(struct Game* game, char* name, bool loop);
+void PlayMusic(struct Game* game, char* name, bool loop, bool layer);
 
 SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream);
 SPRITESHEET_STREAM(AnimationStream);
