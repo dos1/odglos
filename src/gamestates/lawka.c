@@ -44,6 +44,8 @@ struct GamestateResources {
 int Gamestate_ProgressCount = 3;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
+	if (game->data->footnote) { return; }
+
 	if (delta > GetAnimationFrameDuration(data->animation)) {
 		delta = GetAnimationFrameDuration(data->animation);
 	}
@@ -105,6 +107,8 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
+	if (game->data->footnote) { return; }
+
 	if (IsAnimationComplete(data->animation) && game->data->hover) {
 		if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) ||
 			(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) ||

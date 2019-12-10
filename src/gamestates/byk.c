@@ -49,6 +49,7 @@ static void UpdateState(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
+	if (game->data->footnote) { return; }
 	// Here you should do all your game logic as if <delta> seconds have passed.
 	if (data->munching) {
 		AnimateCharacter(game, data->byk, delta, 1.0);
@@ -96,6 +97,7 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
+	if (game->data->footnote) { return; }
 	// Called for each event in Allegro event queue.
 	// Here you can handle user input, expiring timers etc.
 

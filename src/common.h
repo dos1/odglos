@@ -17,6 +17,7 @@ struct FreezeLink {
 struct FreezeFrame {
 	int frame;
 	char* mask;
+	int footnote;
 	struct FreezeLink links[8];
 };
 
@@ -61,6 +62,8 @@ struct CommonResources {
 
 	ALLEGRO_FONT *font, *creditsfont;
 	ALLEGRO_BITMAP* banner;
+
+	bool footnote;
 };
 
 bool Dispatch(struct Game* game);
@@ -88,6 +91,10 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev);
 void Compositor(struct Game* game);
 void ShowMouse(struct Game* game);
 void HideMouse(struct Game* game);
+#ifdef __EMSCRIPTEN__
+void HideHTMLLoading(struct Game* game);
+#endif
+void ShowFootnote(struct Game* game, int id);
 
 SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream);
 SPRITESHEET_STREAM(AnimationStream);

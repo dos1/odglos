@@ -41,7 +41,7 @@ static bool RegalDmuchawa(struct Game* game, int frame, int* x, int* y, double* 
 }
 
 static bool Zakochani(struct Game* game, struct Character* character, void** data) {
-	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02a_zakochani", .freezes = {{8, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}});
+	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02a_zakochani", .freezes = {{16, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}});
 	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02b_muzykanci"});
 
 	return true;
@@ -393,7 +393,7 @@ static struct SceneDefinition SCENES[] = {
 	{"kostki_animacja02_cwierc_obrotu_zapetlic", .repeats = 3, .freezes = {{23, ""}}, .bg = "ekran_startowy_tlo_przyciete"},
 	{"kostki_animacja03_waz", .bg = "ekran_startowy_tlo_przyciete"},
 	{">logo"},
-	{"wedrowka_rodzinki_po_trawce"},
+	{"wedrowka_rodzinki_po_trawce", .freezes = {{30, .footnote = 9}}},
 	{"rodzinka_jak_wiewiorki", .freezes = {{20, "DSCF8146_maska"}}},
 	{"sowka_wchodzi_na_drzewo"},
 	{"sowka_pokazuje_mordke_i_wraca"},
@@ -423,7 +423,7 @@ static struct SceneDefinition SCENES[] = {
 	{"skrzypce2_dzwiek5"},
 	{"skrzypce2_dzwiek6"},
 	{"skrzypce2_animacja_koncowa"},
-	{"gawron_i_drewniany_medrzec", .freezes = {{107, "DSCF2982_maska"}, {290, "DSCF3781_maska"}}},
+	{"gawron_i_drewniany_medrzec", .freezes = {{87, .footnote = 7}, {107, "DSCF2982_maska"}, {290, "DSCF3781_maska"}}},
 	//{">przyciski"},
 	/*
 	{"przyciski_na_stacji_przycisk1", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
@@ -459,7 +459,7 @@ static struct SceneDefinition SCENES[] = {
 	{"male_dziwne_cos", .freezes = {{0, "DSCF8646_maska"}}, .repeats = 1},
 	{"turkusowe_cos", .freezes = {{0, "DSCF9030_maska"}}},
 	{"rzezby_w_lazience_2_wyciszenie_sznureczka"},
-	{"sowka_i_rzezby_01_sowka_przejezdza", .freezes = {{18, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .callback = Zakochani}, {{0.0, 1.0, 0.0}, .callback = Muzykanci}}}}},
+	{"sowka_i_rzezby_01_sowka_przejezdza", .freezes = {{8, .footnote = 6}, {18, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .callback = Zakochani}, {{0.0, 1.0, 0.0}, .callback = Muzykanci}}}}},
 	{"031_donice_dom1"},
 	{"donice_16_samochod_kartonowy_duzy_wjezdza_z_prawej", .freezes = {{0, "donice_w_ogrodzie_maski", .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}},
 	{"donice_22_sowka_srednia_whodzi_do_duzej_donicy_z_lewej", .freezes = {{7, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}},
@@ -478,10 +478,10 @@ static struct SceneDefinition SCENES[] = {
 	{"animacja_poczatkowa", .repeats = 2, .callback = Pergola},
 	{">pergola"},
 	{"pergola_animacja_koncowa2", .callback = Pergola2},
-	{"pergola_animacja_koncowa6"},
+	{"pergola_animacja_koncowa6", .freezes = {{9, .footnote = 3}}},
 	{"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .callback = Ul, .freezes = {{0, "IMG_0053_maska", .links = {{{0.0, 1.0, 0.0}, .callback = UlLewo}, {{1.0, 0.0, 0.0}, .callback = UlGora}, {{0.0, 0.0, 1.0}, .callback = UlDol}}}}},
 	{"ul_duzy_animacja_koncowa_samochod"},
-	{"pudelko_w_ogrodzie", .freezes = {{22, "pudelko_w_ogrodzie_maska1"}, {56, "pudelko_w_ogrodzie_maska3"}, {93, "pudelko_w_ogrodzie_maska2"}, {119, "pudelko_w_ogrodzie_maska3"}, {157, "pudelko_w_ogrodzie_maska2"}, {183, "pudelko_w_ogrodzie_maska3"}}},
+	{"pudelko_w_ogrodzie", .freezes = {{22, "pudelko_w_ogrodzie_maska1"}, {56, "pudelko_w_ogrodzie_maska3"}, {93, "pudelko_w_ogrodzie_maska2"}, {119, "pudelko_w_ogrodzie_maska3"}, {157, "pudelko_w_ogrodzie_maska2"}, {183, "pudelko_w_ogrodzie_maska3"}, {195, .footnote = 8}}},
 	{"portal_ze_stolika_bialego", .freezes = {{9, "DSCF8382_maska"}, {14, "DSCF8387_maska"}}},
 	{"siatka_na_drzewie_myszka"},
 	{"drzewko_kolorowe1_maskotki_podwojne_moze_lepsze_TAK"},
@@ -489,7 +489,7 @@ static struct SceneDefinition SCENES[] = {
 	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .freezes = {{0, "DSCF5025_maska"}}},
 	{">naparstki"},
 	{"01statki_szyszki_tasmy_animacja1"},
-	{"02statki_szyszki_tasmy_animacja2"},
+	{"02statki_szyszki_tasmy_animacja2", .freezes = {{11, .footnote = 4}}},
 	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}},
 	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska"}}},
 	{"06statki_szyszki_tasmy_animacja5"},
@@ -497,7 +497,7 @@ static struct SceneDefinition SCENES[] = {
 	{"duch_portalu_animacja2_zlozona_TAK", .callback = DuchPortalu},
 	{">armata"},
 	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska"}}},
-	{"makieta_w_kosmosie_bez_tla", .bg = "kosmos"},
+	{"makieta_w_kosmosie_bez_tla", .bg = "kosmos", .freezes = {{28, .footnote = 2}}},
 	{"makieta_pusta"},
 	{"krzeslo_w_lesie_czesc1", .freezes = {{12, "krzeslo_w_lesie08_maska"}}},
 	{"krzeslo_w_lesie_czesc2"},
@@ -525,7 +525,7 @@ static struct SceneDefinition SCENES[] = {
 	{"wiklinowe_kolo1_samochod"},
 	{"wiklinowe_kolo2_pilka"},
 	{"wiklinowe_kolo3_myszka"},
-	{"animacja_koncowa", .bg = "kosmos"},
+	{"animacja_koncowa", .bg = "kosmos", .freezes = {{29, .footnote = 1}}},
 	{"animacje_koncowe_rodzinki", .callback = Credits, .draw = DrawCredits, .speed = 0.5},
 	{">blank"},
 	{"donice_13_tasma", .speed = 0.5, .freezes = {{0, "donice_w_ogrodzie_maski", .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}},

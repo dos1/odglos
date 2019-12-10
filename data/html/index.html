@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="https://adobe-fonts.github.io/source-sans-pro/source-sans-pro.css" />
+    <title>ODGŁOS</title>
+    <style>
+      body { background-color: black; margin:0; padding: 0;}
+      .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+      textarea.emscripten { font-family: monospace; width: 80%; display: none; }
+      div.emscripten { text-align: center; }
+      .emscripten_border {  position: relative; margin: 0 auto; margin-top: 15px; width: 1280px;}
+      /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+      canvas.emscripten { border: 0px none; background-color: black; width: 1280px; height: 720px; box-shadow: 0px 0px 25px rgba(55, 55, 55, 0.75); }
+      .loading, .loading > canvas { border: 0; padding: 0; width: 100%; height: 100%; margin: 0; position: absolute; top: 0; left: 0; pointer-events: none; z-index: 999; }
+.footnote {
+  color: white;
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  padding: 2% 3%;
+  box-sizing: border-box;
+  font-size: 16pt;
+  background: linear-gradient(to bottom, rgba(0.0, 0.0, 0.0, 0.8), rgba(0.0, 0.0, 0.0, 0.8) 50%, rgba(0.0, 0.0, 0.0, 0.0) 65%);
+  font-family: "comic sans ms";
+font-family: 'Source Sans Pro', sans;
+            font-feature-settings: "kern" 1,"liga" 1;
+  text-align: justify;
+}
+.footnote-title {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+.footnote-content {
+  max-height: 42%;
+  overflow-y: auto;
+  margin-right: 14%;
+  padding-right: 3%;
+  padding-top: 0;
+  margin-top: 1.5%;
+}
+.footnote-content p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+.footnote-close {
+  position: absolute;
+  top: 3%;
+  right: 3%;
+  cursor: pointer;
+  font-size: 3rem;
+}
+.footnote-close img {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.footnote-close:hover {
+  opacity: 0.5;
+}
+@media (max-width: 1300px) {
+  canvas.emscripten, .loading canvas, .emscripten_border {
+     width: 1024px; height: 576px;
+  }
+  .footnote {
+    font-size: 15pt;
+  }
+}
+
+@media (max-width: 1100px) {
+  canvas.emscripten, .loading canvas, .emscripten_border {
+     width: 800px; height: 450px;
+  }
+  .footnote {
+    font-size: 14pt;
+  }
+}
+
+@media (max-width: 820px) {
+  canvas.emscripten, .loading canvas, .emscripten_border {
+     width: 640px; height: 320px;
+  }
+  .footnote {
+    font-size: 13pt;
+  }
+}
+
+@media (max-width: 639px) {
+  canvas.emscripten, .loading canvas, .emscripten_border {
+     width: 480px; height: 270px;
+  }
+  .footnote {
+    font-size: 12pt;
+  }
+}
+
+@media (max-width: 479px) {
+  canvas.emscripten, .loading canvas, .emscripten_border {
+     width: 360px; height: 202px;
+  }
+}
+
+@media (max-width: 359px) {
+  canvas.emscripten, .loading canvas, .emscripten_border {
+     width: 240px; height: 135px;
+  }
+}
+
+#wrapper.withFootnote > canvas, #wrapper.withFootnote > img {
+  filter: grayscale(100%) brightness(130%);
+}
+
+.footnote {
+  display: none;
+}
+
+#wrapper.withFootnote .footnote {
+  display: block;
+}
+
+.templates {
+  display: none;
+}
+
+    </style>
+  </head>
+  <body>
+    <div class="emscripten_border" id="wrapper">
+      <canvas class="emscripten" id="canvas" width="1280" height="720"></canvas>
+<div id="loading" class="loading">
+      <img src="ekran_startowy_tlo_przyciete.jpg" width="1280" height="720" style="width: 100%; height: 100%; position: absolute; filter: brightness(50%)" />
+      <canvas id="loading-canvas" width="1280" height="720"></canvas>
+</div>
+      <div class="footnote">
+        <div class="footnote-close" onclick="window.ODGLOS.footnote = false; document.getElementById('wrapper').classList.remove('withFootnote');"><img src="x2.png" /></div>
+        <div class="footnote-title">Lorem ipsum</div>
+        <div class="footnote-content">
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris tempor elit ac erat ultricies ornare. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed id lacinia tortor. Mauris et urna cursus, pretium velit mattis, tempor nunc. Duis elementum auctor rhoncus. Pellentesque vel venenatis augue, eget mollis neque. Duis feugiat massa ac metus vulputate, non vulputate dui molestie.</p>
+
+<p>Ut ac erat nec urna blandit dignissim. Sed ultrices eleifend cursus. Suspendisse potenti. Phasellus feugiat convallis justo a rhoncus. Duis purus nisi, pretium eu congue vel, lacinia quis tortor. Aliquam elementum sodales dictum. Praesent tortor ligula, semper tincidunt felis quis, hendrerit consectetur turpis. Suspendisse potenti. Morbi urna ante, egestas at risus sit amet, gravida mollis purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi sed elementum odio.</p>
+
+<p>Nulla scelerisque neque vitae justo commodo laoreet. Donec ut nulla vel ligula vulputate sodales tincidunt vitae leo. Proin vitae libero a neque pulvinar pharetra at ut enim. Fusce cursus dolor at auctor vulputate. Etiam arcu diam, suscipit vitae posuere at, tempus sed ipsum. In imperdiet metus nulla, molestie tincidunt mauris volutpat at. In hac habitasse platea dictumst. Praesent sed mi sed leo interdum suscipit vel non erat. Donec vel magna nec lacus scelerisque ultricies. Integer molestie nisi est. Aenean diam lacus, volutpat ut neque id, egestas malesuada ipsum. Curabitur nibh sapien, aliquam commodo purus at, elementum placerat leo. Curabitur pharetra auctor tellus eget varius. Morbi turpis felis, elementum id mi sed, ornare mattis magna. Quisque sed nisl aliquet, porta ipsum sed, ultrices libero.</p>
+
+<p>Sed a leo ex. Integer tempor condimentum libero, sed mattis magna fermentum eget. Quisque tempus nulla lectus, ac pharetra libero congue id. Donec dignissim egestas tortor, eu laoreet turpis laoreet in. In et nisl sem. Integer et facilisis quam. Praesent gravida tortor convallis mattis eleifend. Nullam accumsan, ligula eu tempus interdum, metus lectus pharetra dui, in ullamcorper urna augue sed nibh. Sed a leo tempor, auctor ante et, elementum turpis. Quisque euismod arcu id quam imperdiet imperdiet sit amet ac nunc. Aenean bibendum eleifend bibendum. Integer in arcu metus. Nunc suscipit sit amet lacus eu auctor. Fusce iaculis neque lobortis libero tristique pharetra. Nam faucibus, ligula sed ultricies rutrum, orci eros pharetra tellus, ac aliquam nunc metus sit amet ex. Donec sagittis orci ac dui sagittis consequat.</p>
+
+<p>Vestibulum ut auctor purus. Sed ac laoreet tellus. Pellentesque imperdiet scelerisque pulvinar. Morbi vestibulum convallis elit eu tempor. Praesent nibh arcu, condimentum tincidunt magna eu, imperdiet laoreet urna. Curabitur at nulla tincidunt, auctor nunc vestibulum, rutrum tortor. Vestibulum ut tempus arcu. Fusce pharetra, turpis id auctor vestibulum, dui odio efficitur augue, dictum ultrices felis quam dapibus velit. Quisque sed rhoncus magna. Sed sagittis, nulla et placerat elementum, orci libero luctus lacus, non sollicitudin erat risus id tellus. Nunc eu vulputate arcu. In vel sagittis lectus, et bibendum massa. Phasellus enim tortor, ultrices non nisi non, tempus rutrum eros.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="templates">
+      <div id="template1">
+        <div class="title">Black Room</div>
+        <div class="content">
+        <p><b>What Polish Radio Experimental Studio truly meant? An institution, a place, or maybe a music style? We can boldly assume that mostly, it was an instrument designed by genius architect Oskar Hansen.</b></p>
+
+<p>First computers were enormous – having abilities comparable to a calculator, they could take a whole room for themselves. And the same goes for the early designed experimental studios. To do simple composing jobs, that now can be completed on a home computer, tons of various equipment was needed – simple tone generators, square-wave pulses generators, filters, tape recorders, mixer desks, and others. In theory, most of them weren't meant to be used for musical purposes, and they could hardly be called independent instruments. Does it mean that early electronic music was created without instruments? Not necessarily. According to many creators, the instrument was built by mixing all those devices, which, together with engineers and composers using them, made hugely, "prehistoric" synthesizer.</p>
+
+<p>In 1962, after few years of running Polish Radio Experimental Studio, its boss, Jozef Patkowski, ordered such super-synthesizer from Oskar Hansen. Studio's needs played well with an outstanding composer's concept of "free form". Hansen designed a whole set of mobile elements that enabled continuous modifications of super-synthesizer. It was plain on one side (reflecting the sound) and perforated on the other (to absorb the sound). With this, the acoustics of the Black Room – the most essential element of every concert hall – could be adjusted to the needs of every track. Looking at the photos today, it is hard to judge how it fulfilled its role. However, it is easy to imagine it being used as the bridge of the first Polish spaceship going on its mission to explore Mars.</p>
+        </div>
+      </div>
+
+
+
+            <div id="template2">
+        <div class="title">Cosmos</div>
+        <div class="content">
+<p><b>"Even today, most listeners connect electronic sounds with green aliens or robots. I fought these associations from the beginning, even though it wasn't easy. […] Besides, Polish Radio Experimental Studio very soon was included in this "cosmic business" – complained few years ago Eugeniusz Rudnik, one of Studio's most productive composers.</b></p>
+
+<p>But, could we really blame listeners, who preferred sounds of a pulsar, meteor shower, or supernova explosion to abstract, experimental ones? How many of you heard "Lesson" ("Lekcja"), "Collage" ("Kolaż"), or "Mobile" composed by Rudnik? But if you were born in Poland in the second half of the XX century, then it is almost certain that you have watched (and listened to!) such movies as "Silent Star", "Mister Blot's Academy", or "Pilot Prix's Test". Electronic music to those pictures was created by Polish Radio Experimental Studio, and the last one was even done by Eugeniusz Rudnik himself. Besides - it's quite easy to find movies about androids, miniature worlds, and also about alien's ships landing at State Collective Farm among his artistic achievements. So it's quite easy to assume that the way how Polish people imagine alien's voice, the sound of starship moving into the void (sic!) is mainly Rudnik's and his friends doing. It is almost sure that our players who claimed that they have never before heard sounds from the Polish Radio Experimental Studio were wrong. Shouldn't it be the most important reason to be proud for Studio's artists?</p>
+        </div>
+      </div>
+
+                  <div id="template3">
+        <div class="title">Musique Concrète</div>
+        <div class="content">
+<p><b>Nowadays, nobody's surprised by the sound of shooting and reloading gun in "Paper Planes" M.I.A, or the sound that the elephant makes in" Work It" Missy Eliott. Those sounds could not be included in popular songs, if not for the concept of musique concrete created in the forties.</b></p>
+
+<p>Before that, sounds were simply divided for "music" (instruments and singing) and "nonmusic". Nobody thought about creating music from sounds that animals make or those heard when a train is passing by. But those things have their own rhythm, their own timbre, and more often – more or less accurate – pitch. The problem is that our brains hear in them mostly sounds that describe our reality: "Stop! The train is coming", "Watch out, the wolf is near" - and not music. The way to free sounds from their original meaning is taking them out from their original context and putting them into abstract, uncommon configurations. And for this purpose, the electronic studio is perfect.</p>
+
+<p>The first European center of experimental music - Groupe de Recherche de Musique Concrète from Paris – did not create new sounds but used sounds of the surrounding world to create music. The creator of this idea and the studio that came with it - Pierre Schaeffer – called this new form of art, musique concrete. He also named the way of listening to "ordinary" sounds outside of their original context – "acousmatic". Those ideas have no less effect on Polish Radio Experimental Studio than the concept of electronic music. There is no shortage of examples among the first tracks produced by Warsaw studio: "Etiuda na jedno uderzenie w talerz" by Włodzimierz Kotański, "Psalmus" by Krzysztof Penderecki (disfigured studio recordings of a choir) or "Lekcja" by Eugeniusz Rudnik (consisting mostly from recordings taken in school).</p>
+        </div>
+      </div>
+
+		                  <div id="template4">
+        <div class="title">Electro Thaw</div>
+        <div class="content">
+<p><b>"Some call it a cacophony of decibels, others prefer to call it a happy song of the future. But that's how the right to do experiments works" – enthusiastically claimed announcer in propaganda newsreel from the sixties, dedicated to Polish Radio Experimental Studio.</b></p>
+
+<p>But a few years earlier, in the very same Poland, Stalinist minister of culture said about Witold Lutosławski, upon hearing his – from today's perspective very classic – I Symphony: "that is a composer, who should be thrown under the tram". Those words come from Włodzimierz Sokorowski, who in 1957 – this time as a boss in public tv and radio – personally decided to allow the creation of Polish Radio Experimental Studio. What happened through these years, that this experiment (not only in the musical sense) from antirevolutionary crime became something to cherish?
+Firstly – Stalin has died. In many countries of the eastern bloc, this death brought more freedom – in politics, civil rights, and, obviously, art. In Poland, this process was called "October thaw" (because of the change of leaders of the ruling party that happened on 21.10.1956). It opened the golden era for Polish cinematography, art, and music. Soon people like Niemen, Komeda, or Paderecki would become famous, often internationally. This new cultural policy was supposed to show the Polish People's Republic as rich, modern, and, above all, free country. And what is better to show just that than electronic music, which comes from unrestricted imagination and experiment, and also very costly and very modern equipment. It seems that we owe this the most futuristic and cutting-edge institution in Polish music history to the lifting of sorts that Gomulka wanted to give to somber, poor image Poland had...</p>
+        </div>
+      </div>
+
+
+
+		                  <div id="template5">
+        <div class="title">Ryszard Szeremeta: the Wonder Child of the Digital Era</div>
+        <div class="content">
+<p><b>Ryszard Szeremeta (born 1952) was one of the last directors and composers of Polish Radio Experimental Studio. And he was the one who really opened Polish vanguard music to pleasures of digital sound.</b></p>
+
+<p>Today, with the world reveling in the vintage sound of analog studio equipment, Szeremeta stays true to his own digital lineage. "It was really a revolution, and I witnessed it first-hand. During my time at the EMS in Stockholm, all composers there used enormous, bulky computers. They had to be programmed, which involved a lot of arduous work. One time, a strange young man came over and began to roam the halls, shoeless, observing specialists at work. A few days later, he came back with a synthesizer and plugged it in. As it began to produce sounds, everyone froze. It was the legendary Yamaha DX7, one of the first versions. This digital machine virtually swept the studios across Europe, since it offered markedly more possibilities than the whole intricate equipment still in use in Stockholm. This revolution continues, which I think is great. My only fear is that composers, who now have such readily available and cheap tools at hand, will turn towards instant samples and presets instead of looking for new paths. Personally, I continue to advocate for the digital format: its clarity opens up infinite possibilities scale-wise, while also increasing the range of intervention sound-wise when compared with the analog domain" says Szeremeta.</p>
+</div>
+      </div>
+
+
+
+		                  <div id="template6">
+        <div class="title">Elżbieta Sikora: A Woman, Not a Machine</div>
+        <div class="content">
+<p><b>A true heroine of Polish electronic music whose adventure with new sounds started in 1968 in Paris under the wing of the Groupe de Recherches Musicales.</b></p>
+
+<p>Elżbieta Sikora (born 1943), a sound engineering graduate from Warsaw, was taking her first steps under the watchful eye of Pierre Schaeffer and François Bayle. After returning to Poland, she took up regular composition studies. In the Polish composer's œuvre – with all her knowledge and technical mastery – it is difficult to find any total intoxication with technology. What was important to her was and still is: meaning, context, and emotions. Her music has a pictorial sensitivity, a saturation with timbre and color, a search for non-obvious extra-musical associations, often elaborate storylines (the Head of Orpheus cycle). It is a peculiar "sculpture with and in sound", telling of the most recent history as well – such works as Rhapsody for the Death of the Republic (utilizing the sound of an atomic bomb explosion) and Janek Wiśniewski – December – Poland (a piece written in 1981 upon hearing the news that martial law had been declared in Poland). Sikora soberly assesses the possibilities of work with electronics:</p>
+
+<p>"As an artist-teacher, I have traveled the long road from tape-recorder technology to the newest computer methods. I have always been worried by my students' drive toward more and more efficient machines that would create music for them […]; even experimental composers allow themselves to be dominated by computers. But then the machine must be harnessed and forced to do things that it was not created to do."</p>
+
+<p>Retro-electronics with soul. And a feminine touch par excellence, as in the œuvre of Daphne Oram, a Briton, or – even more so – Suzanne Ciani, an American born the same year as Sikora.</p>
+</div>
+      </div>
+
+
+			                  <div id="template7">
+        <div class="title">Eugeniusz Rudnik: Hip Hop Country Boy</div>
+        <div class="content">
+<p><b>It could seem to the creators of hip-hop that they've invented the formula for recycling in music, utilizing ready-made sound material. It's not true. A large part of the œuvre of Eugeniusz Rudnik (1932–2016) from the end of the 1950s was based on the reuse of various types of archival materials to build characteristic text-sound compositions which he called sound shows or sound-word.</b></p>
+
+<p>"I became possessed by the physicality of the tape; I suddenly held the sound in my hands" – this is how he described his point of departure as an artist who (having previously been a soldier and a miner) started out as an administrative employee at Polish Radio and became a co-creator of the legendary Polish Radio Experimental Studio. It is here that he, a country boy from Nadkole – and that, self-taught, for after all, he finished his degree at the Warsaw University of Technology only in 1967, already as a titled producer – introduced his contemporaries, great composers including such luminaries as Krzysztof Penderecki and Arne Nordheim, to the world of new possibilities brought by technology. At the same time constructing his own collages – full of emotions and juxtaposing a plane of childlike, down-to-earth naïveté with the brutal plane of history (as in the pioneering Lesson, 1959–1965), and avant-garde means of expression with an idyllic vision of the countryside (as in his later work Dzięcielina pałała, 2010). Breaking through the stereotype of cold, inhuman technology seemed to be one of the primary intentions of Rudnik, who on the one hand treated himself as an automaton (he mentioned having been a "tapecutter", having cut up to 15 000 kilometers of tape over his lifetime); on the other, in a documentary film by Zuzanna Solakiewicz entitled 15 Corners of the World, he said, "I wanted to humanize, warm-up, tame those electronics." Through his life story – through his continual distance, his simple approach to life (as a country boy, he grew potatoes with a passion) and modesty – he certainly did exactly that.</p>
+
+        </div>
+      </div>
+
+
+			                  <div id="template8">
+        <div class="title">Krzysztof Knittel: The Guy Is Just Like That</div>
+        <div class="content">
+<p><b>Intuition and improvisation. Keywords to which Krzysztof Knittel – despite changing stylistic languages and compositional methods – remains faithful. Nothing forever, nothing permanent. He is both here and there. The guy is just like that.</b></p>
+
+<p>Krzysztof Knittel (born 1947) distinguishes several phases in his composer's career, but they result from a desire more to describe than to organize, for with Knittel, the various threads overlap, mix and circle back. Styles, genres, techniques and fascinations moving from one to the other. And he began by writing cabaret and poetic songs that brought him his initial popularity. He was attracted by the aesthetics of turpism, the peacefulness of the Far East, jazz, rock, hip-hop, the connections between music and the visual arts, and finally, total syncretism of artistic activities. There is, however, something that has run through his œuvre from the very beginning. That is electronics. He ended up at the Polish Radio Experimental Studio (SEPR) in 1973. He also worked at the SUNY Buffalo Computer Studio in 1978. With Knittel, nothing has ever been definitive: ideas that were thrown out ad hoc have unexpectedly turned into long-term projects, while others have died right after the première. He has always had his ears wide open. It will suffice to listen to norcet (today, there exist several versions, 1978–80) – a work whose title comprises the first letters of the words: natural-objects-recording-computer-electronics-tape – which defines Knittel as a sonic omnivore, a "hippie electronics engineer". Or, for instance, leftovers (1978), a composition realized at SEPR, derived from the leftovers from… the achievements of other composers. </p>
+
+        </div>
+      </div>
+
+
+			                  <div id="template9">
+        <div class="title">Experimental music</div>
+        <div class="content">
+<p><b>No one is surprised, of course, when experiments are done in the name of science. However, what if we decided to do some experiments in music? </b></p>
+
+<p>This weird idea was first sighted in Europe and the USA after II World War, and its main propagator was John Cage. This American composer wanted to create new sounds, new music, and a new way to experience music in general. It is not easy, even though we have all those new, fancy instruments and tools given to us by the modern era. Next on the list of obstacles, we have our own minds and their own habits. To beat them, Cage used elements of unpredictability in his music. Many others, such as Pierre Schaeffer in France, or Karlhienz Stockhausen in Germany, choose to put most of the effort on new ways of creating music, given to them by electronic studios. Instead of violin or piano, they have used magnetic tapes, electrical circuits, and loudspeakers. In the second half of the 50' artists from Polish Radio Experimental Studio, led by charismatic musicologist Józef Patkowski, and followed in their footsteps. Among them were: Krzysztof Penderecki, Bogusław Schaeffer, and Włodzimierz Kotoński. Okay, but why all those experiments happened? Maybe because, similarly to science, they wanted to better understand worlds around us and those inside us? To get to know better the way we hear the world, how we understand it, how we experience emotions? Besides, without those experiments, we would not have rock'n'roll, techno, or hip-hop. Can you imagine the world without them?</p>
+
+        </div>
+      </div>
+    </div>
+
+    <!--<textarea class="emscripten" id="output"></textarea>-->
+    <script type='text/javascript'>
+      window.ODGLOS = {
+        footnote: false,
+        hideLoading: function() {
+          document.getElementById('loading').style.display = 'none';
+        },
+        showFootnote: function(x) {
+          var template = document.getElementById('template'+x);
+          var title = template.querySelector('.title').innerHTML;
+          var content = template.querySelector('.content').innerHTML;
+          document.querySelector('.footnote-title').innerHTML = title;
+          document.querySelector('.footnote-content').innerHTML = content;
+          document.getElementById('wrapper').classList.add('withFootnote');
+          window.ODGLOS.footnote = true;
+        }
+      };
+
+      var Module = {
+        preRun: [],
+        postRun: [],
+        print: (function() {
+          var element = document.getElementById('output');
+          if (element) element.value = ''; // clear browser cache
+          return function(text) {
+            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+            // These replacements are necessary if you render to raw HTML
+            //text = text.replace(/&/g, "&amp;");
+            //text = text.replace(/</g, "&lt;");
+            //text = text.replace(/>/g, "&gt;");
+            //text = text.replace('\n', '<br>', 'g');
+            console.log(text);
+            if (element) {
+              element.value += text + "\n";
+              element.scrollTop = element.scrollHeight; // focus on bottom
+            }
+          };
+        })(),
+        printErr: function(text) {
+          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+          if (0) { // XXX disabled for safety typeof dump == 'function') {
+            dump(text + '\n'); // fast, straight to the real console
+          } else {
+            console.error(text);
+          }
+        },
+        canvas: (function() {
+          var canvas = document.getElementById('canvas');
+
+          // As a default initial behavior, pop up an alert when webgl context is lost. To make your
+          // application robust, you may want to override this behavior before shipping!
+          // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
+          canvas.addEventListener("webglcontextlost", function(e) { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
+
+          return canvas;
+        })(),
+        canvasContext: document.getElementById('loading-canvas').getContext('2d'),
+        setStatus: function(text) {
+          if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
+          if (text === Module.setStatus.last.text) return;
+          var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+          var now = Date.now();
+          if (m && now - Module.setStatus.last.time < 30) return; // if this is a progress update, skip it if too soon
+          Module.setStatus.last.time = now;
+          Module.setStatus.last.text = text;
+          Module.canvasContext.fillStyle = 'white';
+          if (m) {
+            text = m[1];
+            console.log(parseInt(m[2])*100, parseInt(m[4])*100);
+            Module.canvasContext.fillRect(0, 720/2 - 5, 1280 * parseInt(m[2]) / parseInt(m[4]), 10);
+          } else {
+            console.log('---');
+          }
+          console.info(text);
+//if (text.indexOf("Running...") != -1) { document.getElementById('loading').style.display = 'none'; }
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: function(left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+        }
+      };
+      Module.setStatus('Downloading...');
+      window.onerror = function() {
+        Module.setStatus('Exception thrown, see JavaScript console');
+        //Module.setStatus = function(text) {
+        //  if (text) Module.printErr('[post-exception status] ' + text);
+        //};
+      };
+    </script>
+
+<script>var ASSERTIONS=0,dataURIPrefix="data:application/octet-stream;base64,";function isDataURI(e){return String.prototype.startsWith?e.startsWith(dataURIPrefix):0===e.indexOf(dataURIPrefix)}var decodeBase64="function"==typeof atob?atob:function(e){var r,t,a,n,o,i,f="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",s="",d=0;for(e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");r=f.indexOf(e.charAt(d++))<<2|(n=f.indexOf(e.charAt(d++)))>>4,t=(15&n)<<4|(o=f.indexOf(e.charAt(d++)))>>2,a=(3&o)<<6|(i=f.indexOf(e.charAt(d++))),s+=String.fromCharCode(r),64!==o&&(s+=String.fromCharCode(t)),64!==i&&(s+=String.fromCharCode(a)),d<e.length;);return s};function intArrayFromBase64(r){if("boolean"==typeof ENVIRONMENT_IS_NODE&&ENVIRONMENT_IS_NODE){var t;try{t=Buffer.from(r,"base64")}catch(e){t=new Buffer(r,"base64")}return new Uint8Array(t.buffer,t.byteOffset,t.byteLength)}try{for(var e=decodeBase64(r),a=new Uint8Array(e.length),n=0;n<e.length;++n)a[n]=e.charCodeAt(n);return a}catch(e){throw new Error("Converting base64 string to bytes failed.")}}function tryParseAsDataURI(e){if(isDataURI(e))return intArrayFromBase64(e.slice(dataURIPrefix.length))}function intArrayFromString(e,r,t){var a=0<t?t:lengthBytesUTF8(e)+1,n=new Array(a),o=stringToUTF8Array(e,n,0,n.length);return r&&(n.length=o),n}function intArrayToString(e){for(var r=[],t=0;t<e.length;t++){var a=e[t];255<a&&(ASSERTIONS&&assert(!1,"Character code "+a+" ("+String.fromCharCode(a)+")  at offset "+t+" not in 0x00-0xFF."),a&=255),r.push(String.fromCharCode(a))}return r.join("")}var emterpretURL="odglos.emterpret.js",emterpretXHR=new XMLHttpRequest;emterpretXHR.open("GET",emterpretURL,!0),emterpretXHR.responseType="arraybuffer",emterpretXHR.onload=function(){if(200===emterpretXHR.status||0===emterpretXHR.status)Module.emterpreterFile=emterpretXHR.response;else{var e=tryParseAsDataURI(emterpretURL);e&&(Module.emterpreterFile=e.buffer)}var r=document.createElement("script");r.src="odglos.js",document.body.appendChild(r)},emterpretXHR.send(null)</script>
+
+  </body>
+</html>

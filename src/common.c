@@ -244,6 +244,34 @@ void SwitchScene(struct Game* game, char* name) {
 
 void PreLogic(struct Game* game, double delta) {
 	game->data->hover = false;
+
+	if (game->data->footnote) {
+#ifdef __EMSCRIPTEN__
+		game->data->footnote = EM_ASM_INT({
+			return window.ODGLOS && window.ODGLOS.footnote;
+		});
+#else
+		game->data->footnote = false; // not implemented yet
+#endif
+	}
+}
+
+#ifdef __EMSCRIPTEN__
+void HideHTMLLoading(struct Game* game) {
+	EM_ASM({
+		window.ODGLOS.hideLoading();
+	});
+}
+#endif
+
+void ShowFootnote(struct Game* game, int id) {
+	game->data->footnote = true;
+#ifdef __EMSCRIPTEN__
+	EM_ASM({
+		window.ODGLOS.showFootnote($0);
+	},
+		id);
+#endif
 }
 
 ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap) {

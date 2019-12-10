@@ -44,6 +44,8 @@ struct GamestateResources {
 int Gamestate_ProgressCount = 24;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
+	if (game->data->footnote) { return; }
+
 	if (data->frames) {
 		AnimateCharacter(game, data->left.character, delta, 1.0);
 		AnimateCharacter(game, data->center.character, delta, 1.0);
@@ -81,6 +83,8 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
+	if (game->data->footnote) { return; }
+
 	if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN || ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) {
 		if (!game->data->cursor || !game->data->hover) {
 			return;

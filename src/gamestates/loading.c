@@ -23,7 +23,7 @@
 
 /*! \brief Resources used by Loading state. */
 struct GamestateResources {
-	bool unused;
+	ALLEGRO_BITMAP* bg;
 };
 
 int Gamestate_ProgressCount = -1;
@@ -33,18 +33,25 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta){};
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
+	al_draw_tinted_scaled_bitmap(data->bg, al_map_rgba_f(0.5, 0.5, 0.5, 0.5), 0, 0, al_get_bitmap_width(data->bg), al_get_bitmap_height(data->bg), 0, 0, game->viewport.width, game->viewport.height, 0);
 	al_draw_filled_rectangle(0, game->viewport.height * 0.49, game->viewport.width, game->viewport.height * 0.51, al_map_rgba(32, 32, 32, 32));
 	al_draw_filled_rectangle(0, game->viewport.height * 0.49, game->loading.progress * game->viewport.width, game->viewport.height * 0.51, al_map_rgba(128, 128, 128, 128));
 };
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = malloc(sizeof(struct GamestateResources));
+	data->bg = al_load_bitmap(GetDataFilePath(game, "ekran_startowy_tlo_przyciete.png"));
 	return data;
 }
 
 void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
+	al_destroy_bitmap(data->bg);
 	free(data);
 }
 
-void Gamestate_Start(struct Game* game, struct GamestateResources* data) {}
+void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
+#ifdef __EMSCRIPTEN__
+	HideHTMLLoading(game);
+#endif
+}
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}

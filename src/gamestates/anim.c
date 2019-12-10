@@ -141,22 +141,31 @@ static void HandleDispatch(struct Game* game, struct GamestateResources* data, v
 }
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
+	if (game->data->footnote) { return; }
+
 	float modifier = 1.25 * ((game->data->scene.speed == 0.0) ? 1.0 : game->data->scene.speed);
 
 	int frame = GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats);
 	game->data->debuginfo = frame;
 
-	if (!data->frozen && data->freezes[data->freezeno].mask && data->freezes[data->freezeno].frame == frame) {
-		data->frozen = true;
-		ShowMouse(game);
-		if (!data->mask) {
-			if (data->freezes[data->freezeno].mask && data->freezes[data->freezeno].mask[0] != 0) {
-				char path[255] = {0};
-				snprintf(path, 255, "masks/%s.mask", data->freezes[data->freezeno].mask);
-				data->mask = al_load_bitmap(GetDataFilePath(game, path));
+	if (!data->frozen && data->freezes[data->freezeno].frame == frame) {
+		if (data->freezes[data->freezeno].mask) {
+			data->frozen = true;
+			ShowMouse(game);
+			if (!data->mask) {
+				if (data->freezes[data->freezeno].mask && data->freezes[data->freezeno].mask[0] != 0) {
+					char path[255] = {0};
+					snprintf(path, 255, "masks/%s.mask", data->freezes[data->freezeno].mask);
+					data->mask = al_load_bitmap(GetDataFilePath(game, path));
+				}
 			}
+			PrintConsole(game, "Freeze: [%d] %s (frame: %d)", data->freezeno, data->freezes[data->freezeno].mask, frame);
 		}
-		PrintConsole(game, "Freeze: [%d] %s (frame: %d)", data->freezeno, data->freezes[data->freezeno].mask, frame);
+		if (data->freezes[data->freezeno].footnote) {
+			ShowFootnote(game, data->freezes[data->freezeno].footnote);
+			data->freezeno++;
+			PrintConsole(game, "Footnote: %d (frame: %d)", data->freezes[data->freezeno].footnote, frame);
+		}
 	}
 
 	if (data->frozen) {
@@ -250,6 +259,8 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
+	if (game->data->footnote) { return; }
+
 	if (game->data->hover && (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
 		if (data->frozen && !data->linked) {
 			for (int i = 0; i < 8; i++) {
