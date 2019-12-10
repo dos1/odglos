@@ -428,7 +428,7 @@ static bool Donice2(struct Game* game, struct Character* character, void** data)
 }
 
 static bool Waz(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "S LIST FX 07 17 05-001", false, true);
+	PlayMusic(game, "S LIST FX 07 17 05-001", false, false);
 	return true;
 }
 
@@ -462,6 +462,11 @@ static bool Rave(struct Game* game, struct Character* character, void** data) {
 	return true;
 }
 
+static bool Chill(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "chill", true, false);
+	return true;
+}
+
 static bool Breath(struct Game* game, struct Character* character, void** data) {
 	PlayMusic(game, "breath", true, false);
 	return true;
@@ -469,6 +474,16 @@ static bool Breath(struct Game* game, struct Character* character, void** data) 
 
 static bool Centauri(struct Game* game, struct Character* character, void** data) {
 	PlayMusic(game, "CENTAURI SZ MIRAC L 06 20 79 - 24 61", true, false);
+	return true;
+}
+
+static bool DrynDryn(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "dryndryn", false, false);
+	return true;
+}
+
+static bool Jammin(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "JAMMIN K LAP L 18 10 23", true, false);
 	return true;
 }
 
@@ -555,24 +570,25 @@ static struct SceneDefinition SCENES[] = {
 	{"donice_27_sowka_duza_wychodzi_z_lewej_donicy", .music = {"donice1_points", .layer = true}},
 	{"donice_11_waz_buszuje_w_prawo_w_lewo_i_wchodzi_z_lewej", .music = {"donice3_points", .layer = true}},
 	{"donica_w_hortensjach_06_waz", .freezes = {{0, "donica_w_hortensjach_maska", .callback = Waz}, {10, "donica_w_hortensjach_maska", .callback = Pac}}},
-	{"aksamitki_waz", .speed = 1.25},
-	{"waz_zmienia_sie_w_kostke", .freezes = {{14, "IMG_0770_maska"}}},
-	{"sowka_wchodzi_do_miski_ciemniejsze", .freezes = {{0, "DSCF1595_maska"}}},
-	{"duza_sowka_na_drewnianym_kole", .freezes = {{13, "IMG_1010_maska"}}},
-	{"animacja_poczatkowa", .repeats = 2, .callback = Pergola},
+
+	{"aksamitki_waz", .speed = 1.25, .music = {"waz_poko", true}},
+	{"waz_zmienia_sie_w_kostke", .freezes = {{14, "IMG_0770_maska", .callback = Waz}}, .music = {"waz2_poko", true}},
+	{"sowka_wchodzi_do_miski_ciemniejsze", .music = {""}, .freezes = {{0, "DSCF1595_maska", .callback = Chill}}},
+	{"duza_sowka_na_drewnianym_kole", .music = {"K RESZT FX 03 27 28-001"}, .speed = 0.8, .freezes = {{13, "IMG_1010_maska", .callback = DrynDryn}}},
+	{"animacja_poczatkowa", .music = {"pergola_trickstar", .layer = true}, .repeats = 2, .callback = Pergola},
 	{">pergola"},
-	{"pergola_animacja_koncowa2", .callback = Pergola2},
+	{"pergola_animacja_koncowa2", .callback = Pergola2, .music = {"pergola2_trickstar", true}},
 	{"pergola_animacja_koncowa6", .freezes = {{9, .footnote = 3}}},
-	{"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .callback = Ul, .freezes = {{0, "IMG_0053_maska", .links = {{{0.0, 1.0, 0.0}, .callback = UlLewo}, {{1.0, 0.0, 0.0}, .callback = UlGora}, {{0.0, 0.0, 1.0}, .callback = UlDol}}}}},
+	{"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .music = {"dwor", true}, .callback = Ul, .freezes = {{0, "IMG_0053_maska", .links = {{{0.0, 1.0, 0.0}, .callback = UlLewo}, {{1.0, 0.0, 0.0}, .callback = UlGora}, {{0.0, 0.0, 1.0}, .callback = UlDol}}}}},
 	{"ul_duzy_animacja_koncowa_samochod"},
-	{"pudelko_w_ogrodzie", .freezes = {{22, "pudelko_w_ogrodzie_maska1"}, {56, "pudelko_w_ogrodzie_maska3"}, {93, "pudelko_w_ogrodzie_maska2"}, {119, "pudelko_w_ogrodzie_maska3"}, {157, "pudelko_w_ogrodzie_maska2"}, {183, "pudelko_w_ogrodzie_maska3"}, {195, .footnote = 8}}},
-	{"portal_ze_stolika_bialego", .freezes = {{9, "DSCF8382_maska"}, {14, "DSCF8387_maska"}}},
-	{"siatka_na_drzewie_myszka"},
+	{"pudelko_w_ogrodzie", .music = {""}, .freezes = {{22, "pudelko_w_ogrodzie_maska1", .callback = Pac}, {56, "pudelko_w_ogrodzie_maska3", .callback = Pac}, {93, "pudelko_w_ogrodzie_maska2", .callback = Pac}, {119, "pudelko_w_ogrodzie_maska3", .callback = Pac}, {157, "pudelko_w_ogrodzie_maska2", .callback = Pac}, {183, "pudelko_w_ogrodzie_maska3", .callback = Pac}, {195, .footnote = 8}}},
+	{"portal_ze_stolika_bialego", .freezes = {{9, "DSCF8382_maska", .callback = Pac}, {14, "DSCF8387_maska", .callback = Pac}}},
+	{"siatka_na_drzewie_myszka", .music = {"myszki", true}},
 	{"drzewko_kolorowe1_maskotki_podwojne_moze_lepsze_TAK"},
 	{">pudelka"},
-	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .freezes = {{0, "DSCF5025_maska"}}},
+	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .music = {""}, .freezes = {{0, "DSCF5025_maska", .callback = Jammin}}},
 	{">naparstki"},
-	{"01statki_szyszki_tasmy_animacja1"},
+	{"01statki_szyszki_tasmy_animacja1", .music = {""}},
 	{"02statki_szyszki_tasmy_animacja2", .freezes = {{11, .footnote = 4}}},
 	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}},
 	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska"}}},
@@ -610,6 +626,7 @@ static struct SceneDefinition SCENES[] = {
 	{"sowka2_zaluzje_nie_znika_TAK"},
 	{"sowka1_zaluzje"},
 	{"animacja_koncowa", .bg = "kosmos", .freezes = {{29, .footnote = 1}}},
+	{">blank"},
 	{"animacje_koncowe_rodzinki", .callback = Credits, .draw = DrawCredits, .speed = 0.5},
 	{">blank"},
 	{"donice_13_tasma", .speed = 0.5, .freezes = {{0, "donice_w_ogrodzie_maski", .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}},

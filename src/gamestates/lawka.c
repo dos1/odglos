@@ -200,6 +200,7 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	HideMouse(game);
+	PlayMusic(game, "", false, false);
 	data->current = 0;
 	data->playing = false;
 	data->counter = 0;

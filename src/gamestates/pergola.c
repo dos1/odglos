@@ -34,6 +34,7 @@ struct GamestateResources {
 	bool mode;
 	struct Timeline* timeline;
 	double hint;
+	ALLEGRO_AUDIO_STREAM *l, *r, *t, *b, *s;
 };
 
 int Gamestate_ProgressCount = 36;
@@ -105,6 +106,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			int pos = game->data->mouseY * 720;
 			if (pos > 520) {
 				data->mode = !data->mode;
+				al_rewind_audio_stream(data->s);
+				al_set_audio_stream_playing(data->s, true);
 				if (!IsCompleted(game, data)) {
 					data->hint = 255;
 				}
@@ -130,6 +133,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 					data->hint = 255;
 					c->j = 0;
 				}
+				al_rewind_audio_stream(data->t);
+				al_set_audio_stream_playing(data->t, true);
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_DOWN) {
 				c->j += 1;
@@ -137,6 +142,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 					data->hint = 255;
 					c->j = 3;
 				}
+				al_rewind_audio_stream(data->b);
+				al_set_audio_stream_playing(data->b, true);
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_LEFT) {
 				c->i -= 1;
@@ -144,6 +151,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 					data->hint = 255;
 					c->i = 0;
 				}
+				al_rewind_audio_stream(data->l);
+				al_set_audio_stream_playing(data->l, true);
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_RIGHT) {
 				c->i += 1;
@@ -151,6 +160,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 					data->hint = 255;
 					c->i = 3;
 				}
+				al_rewind_audio_stream(data->r);
+				al_set_audio_stream_playing(data->r, true);
 			}
 
 			if (data->mode) {
@@ -200,6 +211,26 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->right.hint = al_load_bitmap(GetDataFilePath(game, "pergola/DSCF7662_tasma_prawa.png"));
 	progress(game);
 
+	data->l = al_load_audio_stream(GetDataFilePath(game, "sounds/S LIST FX 08 07 74-001.flac.opus"), 4, 2048);
+	al_set_audio_stream_playing(data->l, false);
+	al_attach_audio_stream_to_mixer(data->l, game->audio.fx);
+
+	data->r = al_load_audio_stream(GetDataFilePath(game, "sounds/S LIST FX 08 18 20-001.flac.opus"), 4, 2048);
+	al_set_audio_stream_playing(data->r, false);
+	al_attach_audio_stream_to_mixer(data->r, game->audio.fx);
+
+	data->t = al_load_audio_stream(GetDataFilePath(game, "sounds/S LIST FX 08 40 33-001.flac.opus"), 4, 2048);
+	al_set_audio_stream_playing(data->t, false);
+	al_attach_audio_stream_to_mixer(data->t, game->audio.fx);
+
+	data->b = al_load_audio_stream(GetDataFilePath(game, "sounds/S LIST FX 08 00 42-001.flac.opus"), 4, 2048);
+	al_set_audio_stream_playing(data->b, false);
+	al_attach_audio_stream_to_mixer(data->b, game->audio.fx);
+
+	data->s = al_load_audio_stream(GetDataFilePath(game, "sounds/S LIST FX 09 42 19-001.flac.opus"), 4, 2048);
+	al_set_audio_stream_playing(data->s, false);
+	al_attach_audio_stream_to_mixer(data->s, game->audio.fx);
+
 	return data;
 }
 
@@ -214,11 +245,17 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	al_destroy_bitmap(data->right.hint);
 	al_destroy_bitmap(data->left.controls);
 	al_destroy_bitmap(data->right.controls);
+	al_destroy_audio_stream(data->l);
+	al_destroy_audio_stream(data->r);
+	al_destroy_audio_stream(data->t);
+	al_destroy_audio_stream(data->b);
+	al_destroy_audio_stream(data->s);
 	TM_Destroy(data->timeline);
 	free(data);
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
+	PlayMusic(game, "silence", true, true);
 	ShowMouse(game);
 	data->left.i = 0;
 	data->left.j = 0;

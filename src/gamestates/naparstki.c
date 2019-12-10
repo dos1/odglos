@@ -58,12 +58,14 @@ struct GamestateResources {
 	ALLEGRO_BITMAP* mask;
 	int enabled;
 	int jaszczur;
+	bool first;
 };
 
 int Gamestate_ProgressCount = 61;
 
 static CHARACTER_CALLBACK(ShowMouseCb) {
 	ShowMouse(game);
+	PlayMusic(game, "ambient", true, false);
 }
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
@@ -71,6 +73,10 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	ALLEGRO_COLOR color = CheckMask(game, data->mask);
 	int nr = round(((color.r * 255) + (color.g * 255) + (color.b * 255)) / 40.0);
 	game->data->hover = nr < 17;
+
+	if (data->first && game->data->cursor) {
+		data->first = false;
+	}
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
@@ -192,6 +198,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	SelectSpritesheet(game, data->bg, "naparstki_00_poczatek");
 	data->bg->callback = ShowMouseCb;
 	data->enabled = 0;
+	data->first = true;
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}

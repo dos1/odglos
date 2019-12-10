@@ -264,9 +264,9 @@ Firstly – Stalin has died. In many countries of the eastern bloc, this death b
           var content = template.querySelector('.content').innerHTML;
           document.querySelector('.footnote-title').innerHTML = title;
           document.querySelector('.footnote-content').innerHTML = content;
-          document.querySelector('.footnote-content').scrollTop = 0;
           document.getElementById('wrapper').classList.add('withFootnote');
           window.ODGLOS.footnote = true;
+          document.querySelector('.footnote-content').scrollTop = 0;
         }
       };
 
