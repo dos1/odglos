@@ -121,6 +121,7 @@ static bool DonicaLewa(struct Game* game, struct Character* character, void** da
 
 	DonicaSetup(game, &anim, data);
 	Enqueue(game, anim);
+	PlayMusic(game, "S LIST FX 00 50 07-001", false, false);
 
 	return true;
 }
@@ -134,6 +135,7 @@ static bool DonicaPrawa(struct Game* game, struct Character* character, void** d
 
 	DonicaSetup(game, &anim, data);
 	Enqueue(game, anim);
+	PlayMusic(game, "S LIST FX 00 51 84-001", false, false);
 
 	return true;
 }
@@ -420,6 +422,40 @@ static bool Skrzypce1(struct Game* game, struct Character* character, void** dat
 	PlayMusic(game, "skrzypce1_orange", false, true);
 	return true;
 }
+static bool Donice2(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "donice4_points", false, true);
+	return true;
+}
+
+static bool Waz(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "S LIST FX 07 17 05-001", false, true);
+	return true;
+}
+
+static bool Pac(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "pac", false, true);
+	return true;
+}
+
+static bool Silacz(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "S HEAD FX 17 06 27-001", false, false);
+	return true;
+}
+
+static bool Rave(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "rave", true, false);
+	return true;
+}
+
+static bool Breath(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "breath", true, false);
+	return true;
+}
+
+static bool Centauri(struct Game* game, struct Character* character, void** data) {
+	PlayMusic(game, "CENTAURI SZ MIRAC L 06 20 79 - 24 61", true, false);
+	return true;
+}
 
 static struct SceneDefinition SCENES[] = {
 	{"kostki_animacja02_cwierc_obrotu_zapetlic", .repeats = 3, .freezes = {{23, ""}}, .bg = "ekran_startowy_tlo_przyciete"},
@@ -458,52 +494,52 @@ static struct SceneDefinition SCENES[] = {
 	{"skrzypce2_animacja_koncowa", .repeats = 1, .music = {"skrzypce_orange", .layer = true}},
 	{"gawron_i_drewniany_medrzec", .music = {"gawron_poko", .layer = true, .loop = true}, .freezes = {{87, .footnote = 7}, {107, "DSCF2982_maska"}, {290, "DSCF3781_maska"}}},
 	//{">przyciski"},
-	/*
-	{"przyciski_na_stacji_przycisk1", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	{"przyciski_na_stacji_przycisk1_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	{"przyciski_na_stacji_przycisk1_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	{"przyciski_na_stacji_przycisk2", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	{"przyciski_na_stacji_przycisk2_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	{"przyciski_na_stacji_przycisk2_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	{"przyciski_na_stacji_przycisk3", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	{"przyciski_na_stacji_przycisk3_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	{"przyciski_na_stacji_przycisk3_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	{"przyciski_na_kominie_przycisk_1_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	{"przyciski_na_kominie_przycisk_1_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	{"przyciski_na_kominie_przycisk_1_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	{"przyciski_na_kominie_przycisk_2_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	{"przyciski_na_kominie_przycisk_2_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	{"przyciski_na_kominie_przycisk_2_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	{"przyciski_na_kominie_przycisk_3_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	{"przyciski_na_kominie_przycisk_3_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	{"przyciski_na_kominie_przycisk_3_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	  */
+	//{"przyciski_na_stacji_przycisk1", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	//{"przyciski_na_stacji_przycisk1_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	//{"przyciski_na_stacji_przycisk1_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	//{"przyciski_na_stacji_przycisk2", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	//{"przyciski_na_stacji_przycisk2_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	//{"przyciski_na_stacji_przycisk2_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	//{"przyciski_na_stacji_przycisk3", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	//{"przyciski_na_stacji_przycisk3_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	//{"przyciski_na_stacji_przycisk3_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
+	//{"przyciski_na_kominie_przycisk_1_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	//{"przyciski_na_kominie_przycisk_1_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	//{"przyciski_na_kominie_przycisk_1_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	//{"przyciski_na_kominie_przycisk_2_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	//{"przyciski_na_kominie_przycisk_2_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	//{"przyciski_na_kominie_przycisk_2_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	//{"przyciski_na_kominie_przycisk_3_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	//{"przyciski_na_kominie_przycisk_3_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+	//{"przyciski_na_kominie_przycisk_3_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
 	{"ciemna_trawa_samochod_sowka", .music = {"S LIST FX 01 37 00-001 S LIST FX 01 53 86-001"}, .speed = 1.25},
 	{"ciemna_trawa_waz", .music = {"S LIST FX 07 17 05-001"}, .speed = 1.25},
-	{"wchodzenie_po_schodach_samochod_sowka", .freezes = {{19, "maska_schodek1"}, {23, "maska_schodek2"}, {26, "maska_schodek3"}, {29, "maska_schodek4"}}},
-	{"schodzenie_ze_schodow_waz"},
+	// TYMCZASOWO :(
+	//{"wchodzenie_po_schodach_samochod_sowka", .freezes = {{19, "maska_schodek1"}, {23, "maska_schodek2"}, {26, "maska_schodek3"}, {29, "maska_schodek4"}}},
+	//{"schodzenie_ze_schodow_waz"},
+
 	{">lawka"},
-	{"animacja_silacz1", .freezes = {{0, "silacz_maska"}, {22, "silacz_maska"}, {46, "silacz_maska"}}},
-	{"donice_14_samochod_nadjezdza_z_prawej_i_wjezdza_do_donicy_z_lewej", .callback = Donice, .freezes = {{16, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .callback = DonicaLewa}, {{0.0, 1.0, 0.0}, .callback = DonicaPrawa}}}}},
-	{"donice_12_waz_idzie_w_prawo_i_wchodzi_do_prawej_donicy"},
-	{"silacz2_maly_samochod_z_sowka_opuszcz_cien_rozny", .freezes = {{0, "silacz_maska"}}},
-	{"silacz3_maly_samochod_sam"}, //.freezes = {{0, "silacz_maska"}}},
-	{"lira_korbowa", .freezes = {{0, "DSCF8976_maska"}}},
-	{"male_dziwne_cos", .freezes = {{0, "DSCF8646_maska"}}, .repeats = 1},
-	{"turkusowe_cos", .freezes = {{0, "DSCF9030_maska"}}},
-	{"rzezby_w_lazience_2_wyciszenie_sznureczka"},
+	{"animacja_silacz1", .freezes = {{0, "silacz_maska", .callback = Silacz}, {22, "silacz_maska", .callback = Silacz}, {46, "silacz_maska", .callback = Silacz}}},
+	{"donice_14_samochod_nadjezdza_z_prawej_i_wjezdza_do_donicy_z_lewej", .music = {"DIGI DOGZ K NOR L 04 16 61"}, .callback = Donice, .freezes = {{16, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .callback = DonicaLewa}, {{0.0, 1.0, 0.0}, .callback = DonicaPrawa}}}}},
+	{"donice_12_waz_idzie_w_prawo_i_wchodzi_do_prawej_donicy", .music = {"S LIST FX 07 17 05-001"}},
+	{"silacz2_maly_samochod_z_sowka_opuszcz_cien_rozny", .freezes = {{0, "silacz_maska", .callback = Silacz}}},
+	{"silacz3_maly_samochod_sam", .music = {"LASER SHOWER S LIST L 12 35 45"}}, //.freezes = {{0, "silacz_maska"}}},
+	{"lira_korbowa", .music = {""}, .freezes = {{0, "DSCF8976_maska", .callback = Centauri}}},
+	{"male_dziwne_cos", .music = {""}, .freezes = {{0, "DSCF8646_maska", .callback = Breath}}, .repeats = 1},
+	{"turkusowe_cos", .music = {""}, .freezes = {{0, "DSCF9030_maska", .callback = Rave}}},
+	{"rzezby_w_lazience_2_wyciszenie_sznureczka", .music = {""}},
 	{"sowka_i_rzezby_01_sowka_przejezdza", .freezes = {{8, .footnote = 6}, {18, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .callback = Zakochani}, {{0.0, 1.0, 0.0}, .callback = Muzykanci}}}}},
 	{"031_donice_dom1"},
-	{"donice_16_samochod_kartonowy_duzy_wjezdza_z_prawej", .freezes = {{0, "donice_w_ogrodzie_maski", .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}},
-	{"donice_22_sowka_srednia_whodzi_do_duzej_donicy_z_lewej", .freezes = {{7, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}},
-	{"donice_15_maly_samochodzik_kartonowy_wyjezdza"},
-	{"donice_23_sowka_mala_wychodzi_w_przod"},
-	{"donice_24_sowka_mala_wchodzi_z_prawej"},
-	{"donice_25_sowka_srednia_wychodzi_z_lewej_donicy"},
-	{"donice_26_sowka_srednia_wchodzi_do_prawej_donicy"},
-	{"donice_27_sowka_duza_wychodzi_z_lewej_donicy"},
-	{"donice_11_waz_buszuje_w_prawo_w_lewo_i_wchodzi_z_lewej"},
-	{"donica_w_hortensjach_06_waz", .freezes = {{0, "donica_w_hortensjach_maska"}, {10, "donica_w_hortensjach_maska"}}},
+	{"donice_16_samochod_kartonowy_duzy_wjezdza_z_prawej", .freezes = {{0, "donice_w_ogrodzie_maski", .callback = Donice2, .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}},
+	{"donice_22_sowka_srednia_whodzi_do_duzej_donicy_z_lewej", .music = {"donice3_points", .layer = true}, .freezes = {{7, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}},
+	{"donice_15_maly_samochodzik_kartonowy_wyjezdza", .music = {"donice1_points"}},
+	{"donice_23_sowka_mala_wychodzi_w_przod", .music = {"donice2_points", .layer = true}},
+	{"donice_24_sowka_mala_wchodzi_z_prawej", .music = {"donice3_points", .layer = true}},
+	{"donice_25_sowka_srednia_wychodzi_z_lewej_donicy", .music = {"donice4_points", .layer = true}},
+	{"donice_26_sowka_srednia_wchodzi_do_prawej_donicy", .music = {"donice2_points", .layer = true}},
+	{"donice_27_sowka_duza_wychodzi_z_lewej_donicy", .music = {"donice1_points", .layer = true}},
+	{"donice_11_waz_buszuje_w_prawo_w_lewo_i_wchodzi_z_lewej", .music = {"donice3_points", .layer = true}},
+	{"donica_w_hortensjach_06_waz", .freezes = {{0, "donica_w_hortensjach_maska", .callback = Waz}, {10, "donica_w_hortensjach_maska", .callback = Pac}}},
 	{"aksamitki_waz", .speed = 1.25},
 	{"waz_zmienia_sie_w_kostke", .freezes = {{14, "IMG_0770_maska"}}},
 	{"sowka_wchodzi_do_miski_ciemniejsze", .freezes = {{0, "DSCF1595_maska"}}},
