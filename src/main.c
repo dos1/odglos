@@ -72,6 +72,7 @@ int main(int argc, char** argv) {
 	} else {
 		LoadGamestate(game, "logo");
 		LoadGamestate(game, "anim");
+		LoadGamestate(game, "myszka");
 		LoadGamestate(game, "naparstki");
 		LoadGamestate(game, "naparstki2");
 		LoadGamestate(game, "end");

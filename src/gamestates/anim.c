@@ -29,13 +29,14 @@ struct GamestateResources {
 	int x, y;
 	double scale;
 	struct FreezeFrame* freezes;
+	struct Sound* sounds;
 	bool finished;
 	bool stay;
 	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
 	void (*draw)(struct Game*, int, void**);
 	struct Character* character;
 
-	int freezeno;
+	int freezeno, soundno;
 	ALLEGRO_BITMAP* mask;
 	bool frozen, linked;
 	char *bgname, *fgname, *maskname;
@@ -92,6 +93,7 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	data->draw = game->data->scene.draw;
 	data->stay = game->data->scene.stay;
 	data->freezes = game->data->scene.freezes;
+	data->sounds = game->data->scene.sounds;
 	if (game->data->scene.character.name) {
 		data->character = CreateCharacter(game, game->data->scene.character.name);
 		char** spritesheet = game->data->scene.character.spritesheets;
@@ -116,6 +118,7 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	data->y = 0;
 	data->scale = 1.0;
 	data->freezeno = 0;
+	data->soundno = 0;
 	data->linked = false;
 	data->callback_data = game->data->scene.callback_data;
 	if (data->callback) {
@@ -152,6 +155,19 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 
 	int frame = GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats);
 	game->data->debuginfo = frame;
+
+	if (data->sounds[data->soundno].name && data->sounds[data->soundno].frame == frame) {
+		if (data->sounds[data->soundno].music) {
+			PlayMusic(game, data->sounds[data->soundno].name, true, false);
+		} else {
+			char path[255] = {};
+			snprintf(path, 255, "sounds/%s.flac.opus", data->sounds[data->soundno].name);
+			ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, path), 4, 2048);
+			al_attach_audio_stream_to_mixer(sound, game->audio.music);
+			al_set_audio_stream_playing(sound, true);
+		}
+		data->soundno++;
+	}
 
 	if (!data->frozen && data->freezes[data->freezeno].frame == frame) {
 		if (data->freezes[data->freezeno].mask) {
@@ -268,6 +284,17 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 	if (game->data->hover && (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
 		if (data->frozen && !data->linked) {
+			if (data->freezes[data->freezeno].sound) {
+				char path[255] = {};
+				snprintf(path, 255, "sounds/%s.flac.opus", data->freezes[data->freezeno].sound);
+				ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, path), 4, 2048);
+				al_attach_audio_stream_to_mixer(sound, game->audio.music);
+				al_set_audio_stream_playing(sound, true);
+			}
+			if (data->freezes[data->freezeno].music) {
+				PlayMusic(game, data->freezes[data->freezeno].music, true, false);
+			}
+
 			for (int i = 0; i < 8; i++) {
 				if (data->freezes[data->freezeno].links[i].callback || data->freezes[data->freezeno].links[i].name) {
 					if (al_color_distance_ciede2000(data->freezes[data->freezeno].links[i].color, CheckMask(game, data->mask)) < 0.01) {
@@ -284,6 +311,16 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 								data->linked = true;
 								return;
 							}
+						}
+						if (data->freezes[data->freezeno].links[i].sound) {
+							char path[255] = {};
+							snprintf(path, 255, "sounds/%s.flac.opus", data->freezes[data->freezeno].links[i].sound);
+							ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, path), 4, 2048);
+							al_attach_audio_stream_to_mixer(sound, game->audio.music);
+							al_set_audio_stream_playing(sound, true);
+						}
+						if (data->freezes[data->freezeno].links[i].music) {
+							PlayMusic(game, data->freezes[data->freezeno].links[i].music, true, false);
 						}
 					}
 				}

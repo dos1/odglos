@@ -41,15 +41,15 @@ static bool RegalDmuchawa(struct Game* game, int frame, int* x, int* y, double* 
 }
 
 static bool Zakochani(struct Game* game, struct Character* character, void** data) {
-	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02a_zakochani", .freezes = {{16, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}});
-	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02b_muzykanci"});
+	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02a_zakochani", .sounds = {{8, "lawka/10"}, {12, "lawka/11"}, {15, "lawka/12"}}, .freezes = {{16, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}});
+	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02b_muzykanci", .sounds = {{0, "pudelko2"}}});
 
 	return true;
 }
 
 static bool Muzykanci(struct Game* game, struct Character* character, void** data) {
-	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02b_muzykanci", .freezes = {{26, "DSCF7440_maska2_z_zakochana_para", .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}});
-	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02a_zakochani"});
+	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02b_muzykanci", .sounds = {{0, "pudelko2"}}, .freezes = {{26, "DSCF7440_maska2_z_zakochana_para", .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}});
+	Enqueue(game, (struct SceneDefinition){"sowka_i_rzezby_02a_zakochani", .sounds = {{8, "lawka/10"}, {12, "lawka/11"}, {15, "lawka/12"}}});
 
 	return true;
 }
@@ -121,7 +121,7 @@ static bool DonicaLewa(struct Game* game, struct Character* character, void** da
 
 	DonicaSetup(game, &anim, data);
 	Enqueue(game, anim);
-	PlayMusic(game, (rand() % 2) ? "S LIST FX 00 50 07-001" : "S LIST FX 00 51 84-001", false, false);
+	PlayMusic(game, "S LIST FX 00 50 07-001", false, false);
 
 	return true;
 }
@@ -135,7 +135,7 @@ static bool DonicaPrawa(struct Game* game, struct Character* character, void** d
 
 	DonicaSetup(game, &anim, data);
 	Enqueue(game, anim);
-	PlayMusic(game, (rand() % 2) ? "S LIST FX 00 50 07-001" : "S LIST FX 00 51 84-001", false, false);
+	PlayMusic(game, "S LIST FX 00 51 84-001", false, false);
 
 	return true;
 }
@@ -160,6 +160,10 @@ static bool Dzwiek1(struct Game* game, struct Character* character, void** data)
 
 	*d = true;
 
+	ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, "lawka/19.flac.opus"), 4, 2048);
+	al_attach_audio_stream_to_mixer(sound, game->audio.music);
+	al_set_audio_stream_playing(sound, true);
+
 	if (!(*d && *(d + 1) && *(d + 2))) {
 		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek1", .freezes = {{25, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}, .callback_data = *data});
 	} else {
@@ -176,6 +180,10 @@ static bool Dzwiek2(struct Game* game, struct Character* character, void** data)
 
 	*(d + 1) = true;
 
+	ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, "lawka/6.flac.opus"), 4, 2048);
+	al_attach_audio_stream_to_mixer(sound, game->audio.music);
+	al_set_audio_stream_playing(sound, true);
+
 	if (!(*d && *(d + 1) && *(d + 2))) {
 		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek2", .freezes = {{45, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}, .callback_data = *data});
 	} else {
@@ -191,6 +199,10 @@ static bool Dzwiek3(struct Game* game, struct Character* character, void** data)
 	bool* d = *data;
 
 	*(d + 2) = true;
+
+	ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, "lawka/7.flac.opus"), 4, 2048);
+	al_attach_audio_stream_to_mixer(sound, game->audio.music);
+	al_set_audio_stream_playing(sound, true);
 
 	if (!(*d && *(d + 1) && *(d + 2))) {
 		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek3", .freezes = {{25, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}, .callback_data = *data});
@@ -306,7 +318,7 @@ static void Swiecznik(struct Game* game, void** data) {
 		Enqueue(game, (struct SceneDefinition){"DSCF2320"});
 		return;
 	}
-	Enqueue(game, (struct SceneDefinition){name, .callback_data = *data, .freezes = {{0, "DSCF2296_maska_oczy_ewentualnie", .links = {{{10.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikLewy}, {{20.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikPrawy}}}}});
+	Enqueue(game, (struct SceneDefinition){name, .callback_data = *data, .freezes = {{0, "DSCF2296_maska_oczy_ewentualnie", .links = {{{10.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikLewy, .sound = "switch"}, {{20.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikPrawy, .sound = "switch"}}}}});
 }
 
 static bool SwiecznikLewy(struct Game* game, struct Character* character, void** data) {
@@ -318,7 +330,6 @@ static bool SwiecznikLewy(struct Game* game, struct Character* character, void**
 	}
 	bool* d = *data;
 	*d = !*d;
-	PlayMusic(game, "switch", false, false);
 	Swiecznik(game, data);
 	return true;
 }
@@ -333,7 +344,6 @@ static bool SwiecznikPrawy(struct Game* game, struct Character* character, void*
 	bool* d = *data;
 	*(d + 1) = !*(d + 1);
 
-	PlayMusic(game, "switch", false, false);
 	Swiecznik(game, data);
 	return true;
 }
@@ -437,23 +447,8 @@ static bool Pac(struct Game* game, struct Character* character, void** data) {
 	return true;
 }
 
-static bool Silacz(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "S HEAD FX 17 06 27-001", false, false);
-	return true;
-}
-
 static bool Silacz1(struct Game* game, struct Character* character, void** data) {
 	PlayMusic(game, "K ROB FX 03 26 00-001", false, false);
-	return true;
-}
-
-static bool Silacz2(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "S RHAP FX 05 56 09-001", false, false);
-	return true;
-}
-
-static bool Silacz3(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "LASER SHOWER S LIST L 12 35 45", false, false);
 	return true;
 }
 
@@ -508,10 +503,10 @@ static struct SceneDefinition SCENES[] = {
 	{"wrzosy_kuzyn_i_sowka2", .music = {"DIGI DOGZ K NOR L 04 16 61", true}},
 	{"samochod_kominek", .music = {"LASER SHOWER S LIST L 12 35 45", true}},
 	{">byk"},
-	{"swiecznik_hover_ewentualnie", .freezes = {{2, "DSCF2296_maska_oczy_ewentualnie", .links = {{{10.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikLewy}, {{20.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikPrawy}}}}},
+	{"swiecznik_hover_ewentualnie", .music = {"ambient", true}, .freezes = {{2, "DSCF2296_maska_oczy_ewentualnie", .links = {{{10.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikLewy, .sound = "switch"}, {{20.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikPrawy, .sound = "switch"}}}}},
 	{"swiecznik3_TAK", .music = {"MAD CASPER SZ AGNT L 00 02 10 45 - 13 89", true}},
 	//{">swiecznik"},
-	{"samochody_w_lesie", .music = {"silence", true}, .freezes = {{0, "DSCF2433_maska", .callback = Flange}}},
+	{"samochody_w_lesie", .music = {"silence", true}, .freezes = {{0, "DSCF2433_maska", .callback = Flange}}, .sounds = {{37, "ULTRAFLANGE", .music = true}}},
 	{"aksamitki_samochod_sowka", .speed = 1.25, .music = {"PIXEL BUBBLES K ROB L 05 29 10 ", true}},
 	{"donice_02_samochod_duzy_jedzie_w_lewo", .music = {"donice1_points"}, .speed = 0.5},
 	{"donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej", .music = {"donice2_points", .layer = true}},
@@ -526,8 +521,8 @@ static struct SceneDefinition SCENES[] = {
 	{"skrzypce2_dzwiek4", .music = {"skrzypce5_orange", .layer = true}},
 	{"skrzypce2_dzwiek5", .music = {"skrzypce6_orange", .layer = true}},
 	{"skrzypce2_dzwiek6", .music = {"skrzypce4_orange", .layer = true}},
-	{"skrzypce2_animacja_koncowa", .repeats = 1, .music = {"skrzypce_orange", .layer = true}},
-	{"gawron_i_drewniany_medrzec", .music = {"gawron_poko", .layer = true, .loop = true}, .freezes = {{87, .footnote = 7}, {107, "DSCF2982_maska"}, {290, "DSCF3781_maska"}}},
+	{"skrzypce2_animacja_koncowa", .repeats = 1, .sounds = {{0, "skrzypce_orange"}}},
+	{"gawron_i_drewniany_medrzec", .sounds = {{187, "lawka/16"}, {192, "lawka/32"}, {195, "lawka/31"}, {200, "lawka/27"}, {210, "lawka/35"}, {217, "lawka/36"}, {223, "lawka/34"}, {228, "lawka/37"}, {253, "LASER SHOWER S LIST L 12 35 45"}}, .music = {"gawron_poko", .loop = true}, .freezes = {{87, .footnote = 7}, {107, "DSCF2982_maska", .sound = "drop_poko"}, {290, "DSCF3781_maska", .sound = "BIRDY K K LAP L 05 29 08"}}},
 	//{">przyciski"},
 	//{"przyciski_na_stacji_przycisk1", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
 	//{"przyciski_na_stacji_przycisk1_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
@@ -547,14 +542,13 @@ static struct SceneDefinition SCENES[] = {
 	//{"przyciski_na_kominie_przycisk_3_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
 	//{"przyciski_na_kominie_przycisk_3_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
 	//{"przyciski_na_kominie_przycisk_3_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	{"ciemna_trawa_samochod_sowka", .music = {"S LIST FX 01 37 00-001 S LIST FX 01 53 86-001"}, .speed = 1.25},
-	{"ciemna_trawa_waz", .music = {"S LIST FX 07 17 05-001"}, .speed = 1.25},
-	// TYMCZASOWO :(
-	//{"wchodzenie_po_schodach_samochod_sowka", .freezes = {{19, "maska_schodek1"}, {23, "maska_schodek2"}, {26, "maska_schodek3"}, {29, "maska_schodek4"}}},
-	//{"schodzenie_ze_schodow_waz"},
+	{"ciemna_trawa_samochod_sowka", .sounds = {{1, "S LIST FX 01 37 00-001 S LIST FX 01 53 86-001"}}, .speed = 1.25},
+	{"ciemna_trawa_waz", .sounds = {{2, "S LIST FX 07 17 05-001"}}, .speed = 1.25},
+	{"wchodzenie_po_schodach_samochod_sowka", .freezes = {{19, "maska_schodek1", .sound = "pac"}, {23, "maska_schodek2", .sound = "pac"}, {26, "maska_schodek3", .sound = "pac"}, {29, "maska_schodek4", .sound = "pac"}}},
+	{"schodzenie_ze_schodow_waz"},
 
 	{">lawka"},
-	{"animacja_silacz1", .freezes = {{0, "silacz_maska", .callback = Silacz3}, {22, "silacz_maska", .callback = Silacz2}, {46, "silacz_maska", .callback = Silacz}}},
+	{"animacja_silacz1", .sounds = {{59, "S LIST FX 07 17 05-001"}}, .music = {"silence", true}, .freezes = {{0, "silacz_maska", .sound = "LASER SHOWER S LIST L 12 35 45"}, {22, "silacz_maska", .sound = "S RHAP FX 05 56 09-001"}, {46, "silacz_maska", .sound = "S HEAD FX 17 06 27-001"}}},
 	{"donice_14_samochod_nadjezdza_z_prawej_i_wjezdza_do_donicy_z_lewej", .music = {"DIGI DOGZ K NOR L 04 16 61"}, .callback = Donice, .freezes = {{16, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .callback = DonicaLewa}, {{0.0, 1.0, 0.0}, .callback = DonicaPrawa}}}}},
 	{"donice_12_waz_idzie_w_prawo_i_wchodzi_do_prawej_donicy", .music = {"S LIST FX 07 17 05-001"}},
 	{"silacz2_maly_samochod_z_sowka_opuszcz_cien_rozny", .freezes = {{0, "silacz_maska", .callback = Silacz1}}},
@@ -563,7 +557,7 @@ static struct SceneDefinition SCENES[] = {
 	{"male_dziwne_cos", .music = {""}, .freezes = {{0, "DSCF8646_maska", .callback = Breath}}, .repeats = 1},
 	{"turkusowe_cos", .music = {""}, .freezes = {{0, "DSCF9030_maska", .callback = Rave}}},
 	{"rzezby_w_lazience_2_wyciszenie_sznureczka", .music = {"points", true}},
-	{"sowka_i_rzezby_01_sowka_przejezdza", .freezes = {{8, .footnote = 6}, {18, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .callback = Zakochani}, {{0.0, 1.0, 0.0}, .callback = Muzykanci}}}}},
+	{"sowka_i_rzezby_01_sowka_przejezdza", .sounds = {{12, "lawka/13"}}, .freezes = {{8, .footnote = 6}, {18, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .callback = Zakochani}, {{0.0, 1.0, 0.0}, .callback = Muzykanci}}}}},
 	{"031_donice_dom1", .music = {"S LIST FX 10 39 39-001"}},
 	{"donice_16_samochod_kartonowy_duzy_wjezdza_z_prawej", .music = {"donice4_points"}, .freezes = {{0, "donice_w_ogrodzie_maski", .callback = Donice2, .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}},
 	{"donice_22_sowka_srednia_whodzi_do_duzej_donicy_z_lewej", .music = {"donice3_points", .layer = true}, .freezes = {{7, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}},
@@ -577,7 +571,7 @@ static struct SceneDefinition SCENES[] = {
 	{"donica_w_hortensjach_06_waz", .freezes = {{0, "donica_w_hortensjach_maska", .callback = Waz}, {10, "donica_w_hortensjach_maska", .callback = Pac}}},
 
 	{"aksamitki_waz", .speed = 1.25, .music = {"waz_poko", true}},
-	{"waz_zmienia_sie_w_kostke", .freezes = {{14, "IMG_0770_maska", .callback = Waz}}, .music = {"waz2_poko", true}},
+	{"waz_zmienia_sie_w_kostke", .freezes = {{14, "IMG_0770_maska", .sound = "ELVES S LIST L 08 57 95"}}, .music = {"waz2_poko", true}},
 	{"sowka_wchodzi_do_miski_ciemniejsze", .music = {""}, .freezes = {{0, "DSCF1595_maska", .callback = Chill}}},
 	{"duza_sowka_na_drewnianym_kole", .music = {"K RESZT FX 03 27 28-001"}, .speed = 0.8, .freezes = {{13, "IMG_1010_maska", .callback = DrynDryn}}},
 	{"animacja_poczatkowa", .music = {"pergola_trickstar", .layer = true}, .repeats = 2, .callback = Pergola},
@@ -585,9 +579,9 @@ static struct SceneDefinition SCENES[] = {
 	{"pergola_animacja_koncowa2", .callback = Pergola2, .music = {"pergola2_trickstar", true}},
 	{"pergola_animacja_koncowa6", .freezes = {{9, .footnote = 3}}},
 	{"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .music = {"dwor", true}, .callback = Ul, .freezes = {{0, "IMG_0053_maska", .links = {{{0.0, 1.0, 0.0}, .callback = UlLewo}, {{1.0, 0.0, 0.0}, .callback = UlGora}, {{0.0, 0.0, 1.0}, .callback = UlDol}}}}},
-	{"ul_duzy_animacja_koncowa_samochod"},
-	{"pudelko_w_ogrodzie", .music = {""}, .freezes = {{22, "pudelko_w_ogrodzie_maska1", .callback = Pac}, {56, "pudelko_w_ogrodzie_maska3", .callback = Pac}, {93, "pudelko_w_ogrodzie_maska2", .callback = Pac}, {119, "pudelko_w_ogrodzie_maska3", .callback = Pac}, {157, "pudelko_w_ogrodzie_maska2", .callback = Pac}, {183, "pudelko_w_ogrodzie_maska3", .callback = Pac}, {195, .footnote = 8}}},
-	{"portal_ze_stolika_bialego", .freezes = {{9, "DSCF8382_maska", .callback = Pac}, {14, "DSCF8387_maska", .callback = Pac}}},
+	{"ul_duzy_animacja_koncowa_samochod", .sounds = {{0, "K ROB FX 03 26 00-001"}}},
+	{"pudelko_w_ogrodzie", .music = {"pienki"}, .freezes = {{22, "pudelko_w_ogrodzie_maska1", .sound = "pac"}, {56, "pudelko_w_ogrodzie_maska3", .sound = "pac"}, {93, "pudelko_w_ogrodzie_maska2", .sound = "pac"}, {119, "pudelko_w_ogrodzie_maska3", .sound = "pac"}, {157, "pudelko_w_ogrodzie_maska2", .sound = "pac"}, {183, "pudelko_w_ogrodzie_maska3", .sound = "pac"}, {195, .footnote = 8}}},
+	{"portal_ze_stolika_bialego", .freezes = {{9, "DSCF8382_maska", .sound = "pac"}, {14, "DSCF8387_maska", .sound = "pac"}}},
 	{"siatka_na_drzewie_myszka", .music = {"myszki", true}},
 	{"drzewko_kolorowe1_maskotki_podwojne_moze_lepsze_TAK"},
 	{">pudelka"},
@@ -632,6 +626,7 @@ static struct SceneDefinition SCENES[] = {
 	{"sowka2_zaluzje_nie_znika_TAK"},
 	{"sowka1_zaluzje"},
 	{"animacja_koncowa", .bg = "kosmos", .freezes = {{29, .footnote = 1}}},
+	{">myszka"},
 	{">blank"},
 	{"animacje_koncowe_rodzinki", .music = {"napisy_metrograph"}, .callback = Credits, .draw = DrawCredits, .speed = 0.5},
 	{">blank"},

@@ -12,6 +12,8 @@ struct FreezeLink {
 	char* name;
 	bool (*callback)(struct Game*, struct Character*, void**);
 	bool ignore;
+	char* sound;
+	char* music;
 };
 
 struct FreezeFrame {
@@ -20,6 +22,14 @@ struct FreezeFrame {
 	int footnote;
 	struct FreezeLink links[8];
 	bool (*callback)(struct Game*, struct Character*, void**);
+	char* sound;
+	char* music;
+};
+
+struct Sound {
+	int frame;
+	char* name;
+	bool music;
 };
 
 struct SceneDefinition {
@@ -40,6 +50,7 @@ struct SceneDefinition {
 	} character;
 	bool stay;
 	struct FreezeFrame freezes[16];
+	struct Sound sounds[16];
 
 	struct {
 		char* name;
