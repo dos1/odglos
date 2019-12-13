@@ -160,7 +160,7 @@ static bool Dzwiek1(struct Game* game, struct Character* character, void** data)
 
 	*d = true;
 
-	ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, "lawka/19.flac.opus"), 4, 2048);
+	ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, "sounds/lawka/19.flac.opus"), 4, 2048);
 	al_attach_audio_stream_to_mixer(sound, game->audio.music);
 	al_set_audio_stream_playing(sound, true);
 
@@ -180,7 +180,7 @@ static bool Dzwiek2(struct Game* game, struct Character* character, void** data)
 
 	*(d + 1) = true;
 
-	ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, "lawka/6.flac.opus"), 4, 2048);
+	ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, "sounds/lawka/6.flac.opus"), 4, 2048);
 	al_attach_audio_stream_to_mixer(sound, game->audio.music);
 	al_set_audio_stream_playing(sound, true);
 
@@ -200,7 +200,7 @@ static bool Dzwiek3(struct Game* game, struct Character* character, void** data)
 
 	*(d + 2) = true;
 
-	ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, "lawka/7.flac.opus"), 4, 2048);
+	ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, "sounds/lawka/7.flac.opus"), 4, 2048);
 	al_attach_audio_stream_to_mixer(sound, game->audio.music);
 	al_set_audio_stream_playing(sound, true);
 
@@ -580,7 +580,7 @@ static struct SceneDefinition SCENES[] = {
 	{"pergola_animacja_koncowa6", .freezes = {{9, .footnote = 3}}},
 	{"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .music = {"dwor", true}, .callback = Ul, .freezes = {{0, "IMG_0053_maska", .links = {{{0.0, 1.0, 0.0}, .callback = UlLewo}, {{1.0, 0.0, 0.0}, .callback = UlGora}, {{0.0, 0.0, 1.0}, .callback = UlDol}}}}},
 	{"ul_duzy_animacja_koncowa_samochod", .sounds = {{0, "K ROB FX 03 26 00-001"}}},
-	{"pudelko_w_ogrodzie", .music = {"pienki"}, .freezes = {{22, "pudelko_w_ogrodzie_maska1", .sound = "pac"}, {56, "pudelko_w_ogrodzie_maska3", .sound = "pac"}, {93, "pudelko_w_ogrodzie_maska2", .sound = "pac"}, {119, "pudelko_w_ogrodzie_maska3", .sound = "pac"}, {157, "pudelko_w_ogrodzie_maska2", .sound = "pac"}, {183, "pudelko_w_ogrodzie_maska3", .sound = "pac"}, {195, .footnote = 8}}},
+	{"pudelko_w_ogrodzie", .music = {"pienki", true}, .freezes = {{22, "pudelko_w_ogrodzie_maska1", .sound = "pac"}, {56, "pudelko_w_ogrodzie_maska3", .sound = "pac"}, {93, "pudelko_w_ogrodzie_maska2", .sound = "pac"}, {119, "pudelko_w_ogrodzie_maska3", .sound = "pac"}, {157, "pudelko_w_ogrodzie_maska2", .sound = "pac"}, {183, "pudelko_w_ogrodzie_maska3", .sound = "pac"}, {195, .footnote = 8}}},
 	{"portal_ze_stolika_bialego", .freezes = {{9, "DSCF8382_maska", .sound = "pac"}, {14, "DSCF8387_maska", .sound = "pac"}}},
 	{"siatka_na_drzewie_myszka", .music = {"myszki", true}},
 	{"drzewko_kolorowe1_maskotki_podwojne_moze_lepsze_TAK"},
