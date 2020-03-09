@@ -343,7 +343,155 @@ Firstly – Stalin has died. In many countries of the eastern bloc, this death b
       };
     </script>
 
-<script>var ASSERTIONS=0,dataURIPrefix="data:application/octet-stream;base64,";function isDataURI(e){return String.prototype.startsWith?e.startsWith(dataURIPrefix):0===e.indexOf(dataURIPrefix)}var decodeBase64="function"==typeof atob?atob:function(e){var r,t,a,n,o,i,f="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",s="",d=0;for(e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");r=f.indexOf(e.charAt(d++))<<2|(n=f.indexOf(e.charAt(d++)))>>4,t=(15&n)<<4|(o=f.indexOf(e.charAt(d++)))>>2,a=(3&o)<<6|(i=f.indexOf(e.charAt(d++))),s+=String.fromCharCode(r),64!==o&&(s+=String.fromCharCode(t)),64!==i&&(s+=String.fromCharCode(a)),d<e.length;);return s};function intArrayFromBase64(r){if("boolean"==typeof ENVIRONMENT_IS_NODE&&ENVIRONMENT_IS_NODE){var t;try{t=Buffer.from(r,"base64")}catch(e){t=new Buffer(r,"base64")}return new Uint8Array(t.buffer,t.byteOffset,t.byteLength)}try{for(var e=decodeBase64(r),a=new Uint8Array(e.length),n=0;n<e.length;++n)a[n]=e.charCodeAt(n);return a}catch(e){throw new Error("Converting base64 string to bytes failed.")}}function tryParseAsDataURI(e){if(isDataURI(e))return intArrayFromBase64(e.slice(dataURIPrefix.length))}function intArrayFromString(e,r,t){var a=0<t?t:lengthBytesUTF8(e)+1,n=new Array(a),o=stringToUTF8Array(e,n,0,n.length);return r&&(n.length=o),n}function intArrayToString(e){for(var r=[],t=0;t<e.length;t++){var a=e[t];255<a&&(ASSERTIONS&&assert(!1,"Character code "+a+" ("+String.fromCharCode(a)+")  at offset "+t+" not in 0x00-0xFF."),a&=255),r.push(String.fromCharCode(a))}return r.join("")}var emterpretURL="odglos.emterpret.js",emterpretXHR=new XMLHttpRequest;emterpretXHR.open("GET",emterpretURL,!0),emterpretXHR.responseType="arraybuffer",emterpretXHR.onload=function(){if(200===emterpretXHR.status||0===emterpretXHR.status)Module.emterpreterFile=emterpretXHR.response;else{var e=tryParseAsDataURI(emterpretURL);e&&(Module.emterpreterFile=e.buffer)}var r=document.createElement("script");r.src="odglos.js",document.body.appendChild(r)},emterpretXHR.send(null)</script>
+    <script>
+var ASSERTIONS = 0;
+// Copyright 2017 The Emscripten Authors.  All rights reserved.
+// Emscripten is available under two separate licenses, the MIT license and the
+// University of Illinois/NCSA Open Source License.  Both these licenses can be
+// found in the LICENSE file.
+
+// Prefix of data URIs emitted by SINGLE_FILE and related options.
+var dataURIPrefix = 'data:application/octet-stream;base64,';
+
+// Indicates whether filename is a base64 data URI.
+function isDataURI(filename) {
+  return String.prototype.startsWith ?
+      filename.startsWith(dataURIPrefix) :
+      filename.indexOf(dataURIPrefix) === 0;
+}
+
+
+
+// Copied from https://github.com/strophe/strophejs/blob/e06d027/src/polyfills.js#L149
+
+// This code was written by Tyler Akins and has been placed in the
+// public domain.  It would be nice if you left this header intact.
+// Base64 code from Tyler Akins -- http://rumkin.com
+
+/**
+ * Decodes a base64 string.
+ * @param {String} input The string to decode.
+ */
+var decodeBase64 = typeof atob === 'function' ? atob : function (input) {
+  var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
+  var output = '';
+  var chr1, chr2, chr3;
+  var enc1, enc2, enc3, enc4;
+  var i = 0;
+  // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+  input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
+  do {
+    enc1 = keyStr.indexOf(input.charAt(i++));
+    enc2 = keyStr.indexOf(input.charAt(i++));
+    enc3 = keyStr.indexOf(input.charAt(i++));
+    enc4 = keyStr.indexOf(input.charAt(i++));
+
+    chr1 = (enc1 << 2) | (enc2 >> 4);
+    chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+    chr3 = ((enc3 & 3) << 6) | enc4;
+
+    output = output + String.fromCharCode(chr1);
+
+    if (enc3 !== 64) {
+      output = output + String.fromCharCode(chr2);
+    }
+    if (enc4 !== 64) {
+      output = output + String.fromCharCode(chr3);
+    }
+  } while (i < input.length);
+  return output;
+};
+
+// Converts a string of base64 into a byte array.
+// Throws error on invalid input.
+function intArrayFromBase64(s) {
+  if (typeof ENVIRONMENT_IS_NODE === 'boolean' && ENVIRONMENT_IS_NODE) {
+    var buf;
+    try {
+      buf = Buffer.from(s, 'base64');
+    } catch (_) {
+      buf = new Buffer(s, 'base64');
+    }
+    return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+  }
+
+  try {
+    var decoded = decodeBase64(s);
+    var bytes = new Uint8Array(decoded.length);
+    for (var i = 0 ; i < decoded.length ; ++i) {
+      bytes[i] = decoded.charCodeAt(i);
+    }
+    return bytes;
+  } catch (_) {
+    throw new Error('Converting base64 string to bytes failed.');
+  }
+}
+
+// If filename is a base64 data URI, parses and returns data (Buffer on node,
+// Uint8Array otherwise). If filename is not a base64 data URI, returns undefined.
+function tryParseAsDataURI(filename) {
+  if (!isDataURI(filename)) {
+    return;
+  }
+
+  return intArrayFromBase64(filename.slice(dataURIPrefix.length));
+}
+
+
+// Copyright 2017 The Emscripten Authors.  All rights reserved.
+// Emscripten is available under two separate licenses, the MIT license and the
+// University of Illinois/NCSA Open Source License.  Both these licenses can be
+// found in the LICENSE file.
+
+/** @type {function(string, boolean=, number=)} */
+function intArrayFromString(stringy, dontAddNull, length) {
+  var len = length > 0 ? length : lengthBytesUTF8(stringy)+1;
+  var u8array = new Array(len);
+  var numBytesWritten = stringToUTF8Array(stringy, u8array, 0, u8array.length);
+  if (dontAddNull) u8array.length = numBytesWritten;
+  return u8array;
+}
+
+function intArrayToString(array) {
+  var ret = [];
+  for (var i = 0; i < array.length; i++) {
+    var chr = array[i];
+    if (chr > 0xFF) {
+      if (ASSERTIONS) {
+        assert(false, 'Character code ' + chr + ' (' + String.fromCharCode(chr) + ')  at offset ' + i + ' not in 0x00-0xFF.');
+      }
+      chr &= 0xFF;
+    }
+    ret.push(String.fromCharCode(chr));
+  }
+  return ret.join('');
+}
+
+
+
+          var emterpretURL = 'odglos.emterpret.js';
+          var emterpretXHR = new XMLHttpRequest();
+          emterpretXHR.open('GET', emterpretURL, true);
+          emterpretXHR.responseType = 'arraybuffer';
+          emterpretXHR.onload = function() {
+            if (emterpretXHR.status === 200 || emterpretXHR.status === 0) {
+              Module.emterpreterFile = emterpretXHR.response;
+            } else {
+              var emterpretURLBytes = tryParseAsDataURI(emterpretURL);
+              if (emterpretURLBytes) {
+                Module.emterpreterFile = emterpretURLBytes.buffer;
+              }
+            }
+
+          var script = document.createElement('script');
+          script.src = "odglos.js";
+          document.body.appendChild(script);
+
+          };
+          emterpretXHR.send(null);
+
+</script>
 
   </body>
 </html>

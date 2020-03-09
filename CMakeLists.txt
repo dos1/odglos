@@ -20,6 +20,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" "${CMAKE_SOURCE_DIR}/l
 
 include(libsuperderpy)
 
+find_package(WebP)
+find_package(WebPDemux)
+
 add_subdirectory(libsuperderpy)
 add_subdirectory(src)
 add_subdirectory(data)

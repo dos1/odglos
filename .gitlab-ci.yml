@@ -85,24 +85,6 @@ build:linux-flatpak-arm64:
     - cd utils
     - ./package_linux_flatpak_arm64.sh
 
-build:linux-flatpak-armv7:
-  extends: .build
-  only:
-    variables:
-      - $ENABLE_32BIT_FLATPAK
-  script:
-    - cd utils
-    - ./package_linux_flatpak_armv7.sh
-
-build:linux-flatpak-i686:
-  extends: .build
-  only:
-    variables:
-      - $ENABLE_32BIT_FLATPAK
-  script:
-    - cd utils
-    - ./package_linux_flatpak_i686.sh
-
 build:steamlink:
   extends: .build
   only:
@@ -198,34 +180,6 @@ deploy:itch:linux-flatpak-arm64:
   variables:
     DEPLOY_FILENAME_SUFFIX: -linux-arm64.flatpak
     DEPLOY_TARGET: ci-linux-flatpak-arm64
-
-deploy:itch:linux-flatpak-armv7:
-  extends: .butler-deploy
-  only:
-    variables:
-      - $ENABLE_32BIT_FLATPAK
-  environment:
-    name: itch-linux-flatpak-armv7
-  dependencies:
-    - meta
-    - build:linux-flatpak-armv7
-  variables:
-    DEPLOY_FILENAME_SUFFIX: -linux-armv7.flatpak
-    DEPLOY_TARGET: ci-linux-flatpak-armv7
-
-deploy:itch:linux-flatpak-i686:
-  extends: .butler-deploy
-  only:
-    variables:
-      - $ENABLE_32BIT_FLATPAK
-  environment:
-    name: itch-linux-flatpak-i686
-  dependencies:
-    - meta
-    - build:linux-flatpak-i686
-  variables:
-    DEPLOY_FILENAME_SUFFIX: -linux-i686.flatpak
-    DEPLOY_TARGET: ci-linux-flatpak-i686
 
 deploy:itch:html5:
   extends: .butler-deploy
