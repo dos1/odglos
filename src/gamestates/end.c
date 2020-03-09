@@ -30,6 +30,7 @@ int Gamestate_ProgressCount = 1;
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	LoadGamestate(game, "logo");
 	LoadGamestate(game, "anim");
+	LoadGamestate(game, "myszka");
 	LoadGamestate(game, "naparstki");
 	LoadGamestate(game, "naparstki2");
 	LoadGamestate(game, "end");

@@ -34,7 +34,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	// Here you should do all your game logic as if <delta> seconds have passed.
 	data->time += delta;
 	if (data->time > 1.0) {
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 }
 
@@ -44,11 +44,11 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
 		game->data->sceneid--;
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 }
 
