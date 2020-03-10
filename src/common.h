@@ -81,9 +81,22 @@ struct CommonResources {
 	ALLEGRO_FONT *font, *creditsfont;
 	ALLEGRO_BITMAP* banner;
 
-	ALLEGRO_AUDIO_STREAM* music;
+	ALLEGRO_AUDIO_STREAM* music; // deprecated
 
 	bool footnote;
+
+	struct {
+		ALLEGRO_AUDIO_STREAM* music;
+		struct {
+			ALLEGRO_AUDIO_STREAM* stream;
+			char* name;
+			bool persist;
+		} loops[32];
+		struct {
+			ALLEGRO_AUDIO_STREAM* stream;
+			char* name;
+		} sounds[32];
+	} audio;
 };
 
 bool Dispatch(struct Game* game);
@@ -115,7 +128,14 @@ void HideMouse(struct Game* game);
 void HideHTMLLoading(struct Game* game);
 #endif
 void ShowFootnote(struct Game* game, int id);
-void PlayMusic(struct Game* game, char* name, bool loop, bool layer);
 
 SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream);
 SPRITESHEET_STREAM(AnimationStream);
+
+void PlayMusic(struct Game* game, char* name);
+void StopMusic(struct Game* game);
+void PlaySound(struct Game* game, char* name);
+void StopSound(struct Game* game, char* name);
+void PlayLoop(struct Game* game, char* name, bool persist);
+void StopLoop(struct Game* game, char* name);
+void StopLoops(struct Game* game);

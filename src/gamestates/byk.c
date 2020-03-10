@@ -190,7 +190,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	// Called when this gamestate gets control. Good place for initializing state,
 	// playing music etc.
 	ShowMouse(game);
-	PlayMusic(game, "", false, false);
+	StopMusic(game);
 	al_set_audio_stream_playing(data->ambient, true);
 	al_play_sample_instance(data->sound);
 	SetCharacterPosition(game, data->byk, 775 * SCALE, 775 * SCALE, 0);

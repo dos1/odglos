@@ -39,8 +39,6 @@ struct GamestateResources {
 	bool pressed;
 	bool footnoted;
 
-	ALLEGRO_AUDIO_STREAM* stream[16];
-
 	int user;
 };
 
@@ -60,8 +58,10 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		//PrintConsole(game, "%d", data->current);
 		data->bmps[data->current] = al_clone_bitmap(GetAnimationFrame(data->animation));
 		if (data->current < 16) {
-			al_rewind_audio_stream(data->stream[data->current]);
-			al_set_audio_stream_playing(data->stream[data->current], true);
+			char path[255] = {};
+			snprintf(path, 255, "lawka/%d", data->current + 1);
+			StopSound(game, path);
+			PlaySound(game, path);
 		}
 	}
 
@@ -93,8 +93,10 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 			}
 
 			if (data->play < 16) {
-				al_rewind_audio_stream(data->stream[data->play]);
-				al_set_audio_stream_playing(data->stream[data->play], true);
+				char path[255] = {};
+				snprintf(path, 255, "lawka/%d", data->play + 1);
+				StopSound(game, path);
+				PlaySound(game, path);
 			}
 		}
 		if (data->success) {
@@ -141,8 +143,10 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			data->delay = 0.2;
 			data->pressed = true;
 			data->playing = true;
-			al_rewind_audio_stream(data->stream[data->play]);
-			al_set_audio_stream_playing(data->stream[data->play], true);
+			char path[255] = {};
+			snprintf(path, 255, "lawka/%d", data->play + 1);
+			StopSound(game, path);
+			PlaySound(game, path);
 
 			if (data->sequence[data->user] == data->play) {
 				data->user++;
@@ -173,14 +177,6 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->bmps[0] = al_clone_bitmap(GetAnimationFrame(data->animation));
 	progress(game);
 
-	for (int i = 0; i < 16; i++) {
-		char path[255] = {};
-		snprintf(path, 255, "sounds/lawka/%d.flac.opus", i + 1);
-		data->stream[i] = al_load_audio_stream(GetDataFilePath(game, path), 4, 2048);
-		al_set_audio_stream_playing(data->stream[i], false);
-		al_attach_audio_stream_to_mixer(data->stream[i], game->audio.fx);
-	}
-
 	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/lawka_w_parku_maski.mask"));
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 	return data;
@@ -192,15 +188,12 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 		al_destroy_bitmap(data->bmps[i]);
 	}
 	al_destroy_bitmap(data->mask);
-	for (int i = 0; i < 16; i++) {
-		//al_destroy_audio_stream(data->stream[i]);
-	}
 	free(data);
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	HideMouse(game);
-	PlayMusic(game, "", false, false);
+	StopMusic(game);
 	data->current = 0;
 	data->playing = false;
 	data->counter = 0;

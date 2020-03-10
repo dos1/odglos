@@ -128,7 +128,13 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	}
 
 	if (game->data->scene.music.name) {
-		PlayMusic(game, game->data->scene.music.name, game->data->scene.music.loop, game->data->scene.music.layer);
+		if (!game->data->scene.music.name[0]) {
+			StopMusic(game);
+		} else if (game->data->scene.music.loop) {
+			PlayMusic(game, game->data->scene.music.name);
+		} else {
+			PlaySound(game, game->data->scene.music.name);
+		}
 	}
 
 	ResetAnimation(data->anim);
@@ -139,6 +145,7 @@ static void HandleDispatch(struct Game* game, struct GamestateResources* data, v
 	if (!Dispatch(game)) {
 		SwitchCurrentGamestate(game, "end");
 	} else {
+		StopLoops(game);
 		if (game->data->scene.name[0] == '>') {
 			ChangeCurrentGamestate(game, game->data->scene.name + 1);
 		} else {
@@ -158,13 +165,9 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 
 	if (data->sounds[data->soundno].name && data->sounds[data->soundno].frame == frame) {
 		if (data->sounds[data->soundno].music) {
-			PlayMusic(game, data->sounds[data->soundno].name, true, false);
+			PlayMusic(game, data->sounds[data->soundno].name);
 		} else {
-			char path[255] = {};
-			snprintf(path, 255, "sounds/%s.flac.opus", data->sounds[data->soundno].name);
-			ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, path), 4, 2048);
-			al_attach_audio_stream_to_mixer(sound, game->audio.music);
-			al_set_audio_stream_playing(sound, true);
+			PlaySound(game, data->sounds[data->soundno].name);
 		}
 		data->soundno++;
 	}
@@ -285,14 +288,10 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	if (game->data->hover && (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
 		if (data->frozen && !data->linked) {
 			if (data->freezes[data->freezeno].sound) {
-				char path[255] = {};
-				snprintf(path, 255, "sounds/%s.flac.opus", data->freezes[data->freezeno].sound);
-				ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, path), 4, 2048);
-				al_attach_audio_stream_to_mixer(sound, game->audio.music);
-				al_set_audio_stream_playing(sound, true);
+				PlaySound(game, data->freezes[data->freezeno].sound);
 			}
 			if (data->freezes[data->freezeno].music) {
-				PlayMusic(game, data->freezes[data->freezeno].music, true, false);
+				PlayMusic(game, data->freezes[data->freezeno].music);
 			}
 
 			for (int i = 0; i < 8; i++) {
@@ -313,14 +312,10 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 							}
 						}
 						if (data->freezes[data->freezeno].links[i].sound) {
-							char path[255] = {};
-							snprintf(path, 255, "sounds/%s.flac.opus", data->freezes[data->freezeno].links[i].sound);
-							ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, path), 4, 2048);
-							al_attach_audio_stream_to_mixer(sound, game->audio.music);
-							al_set_audio_stream_playing(sound, true);
+							PlaySound(game, data->freezes[data->freezeno].links[i].sound);
 						}
 						if (data->freezes[data->freezeno].links[i].music) {
-							PlayMusic(game, data->freezes[data->freezeno].links[i].music, true, false);
+							PlayMusic(game, data->freezes[data->freezeno].links[i].music);
 						}
 					}
 				}

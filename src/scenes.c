@@ -121,7 +121,7 @@ static bool DonicaLewa(struct Game* game, struct Character* character, void** da
 
 	DonicaSetup(game, &anim, data);
 	Enqueue(game, anim);
-	PlayMusic(game, "S LIST FX 00 50 07-001", false, false);
+	PlaySound(game, "S LIST FX 00 50 07-001");
 
 	return true;
 }
@@ -135,7 +135,7 @@ static bool DonicaPrawa(struct Game* game, struct Character* character, void** d
 
 	DonicaSetup(game, &anim, data);
 	Enqueue(game, anim);
-	PlayMusic(game, "S LIST FX 00 51 84-001", false, false);
+	PlaySound(game, "S LIST FX 00 51 84-001");
 
 	return true;
 }
@@ -160,9 +160,7 @@ static bool Dzwiek1(struct Game* game, struct Character* character, void** data)
 
 	*d = true;
 
-	ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, "sounds/lawka/19.flac.opus"), 4, 2048);
-	al_attach_audio_stream_to_mixer(sound, game->audio.music);
-	al_set_audio_stream_playing(sound, true);
+	PlaySound(game, "lawka/19");
 
 	if (!(*d && *(d + 1) && *(d + 2))) {
 		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek1", .freezes = {{25, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}, .callback_data = *data});
@@ -180,9 +178,7 @@ static bool Dzwiek2(struct Game* game, struct Character* character, void** data)
 
 	*(d + 1) = true;
 
-	ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, "sounds/lawka/6.flac.opus"), 4, 2048);
-	al_attach_audio_stream_to_mixer(sound, game->audio.music);
-	al_set_audio_stream_playing(sound, true);
+	PlaySound(game, "lawka/6");
 
 	if (!(*d && *(d + 1) && *(d + 2))) {
 		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek2", .freezes = {{45, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}, .callback_data = *data});
@@ -200,9 +196,7 @@ static bool Dzwiek3(struct Game* game, struct Character* character, void** data)
 
 	*(d + 2) = true;
 
-	ALLEGRO_AUDIO_STREAM* sound = al_load_audio_stream(GetDataFilePath(game, "sounds/lawka/7.flac.opus"), 4, 2048);
-	al_attach_audio_stream_to_mixer(sound, game->audio.music);
-	al_set_audio_stream_playing(sound, true);
+	PlaySound(game, "lawka/7");
 
 	if (!(*d && *(d + 1) && *(d + 2))) {
 		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek3", .freezes = {{25, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}, .callback_data = *data});
@@ -404,86 +398,86 @@ static void DrawCredits(struct Game* game, int frame, void** data) {
 }
 
 static bool Wedrowka(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "wedrowka2_lapis", true, false);
+	PlayMusic(game, "wedrowka2_lapis");
 	return true;
 }
 
 static bool PlayDmuchawa(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "dmuchawa_metrographfuture", true, false);
+	PlayMusic(game, "dmuchawa_metrographfuture");
 	return true;
 }
 
 static bool Birdy(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "BIRDY K K LAP L 05 29 08", true, false);
+	PlayMusic(game, "BIRDY K K LAP L 05 29 08");
 	return true;
 }
 
 static bool Flange(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "MEGAFLANGE SZ POINTS1 L 00 04 48- 51 ", true, false);
+	PlayMusic(game, "MEGAFLANGE SZ POINTS1 L 00 04 48- 51 ");
 	return true;
 }
 
 static bool Metrograph(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "generator_metrographfuture", true, false);
+	PlayMusic(game, "generator_metrographfuture");
 	return true;
 }
 
 static bool Skrzypce1(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "skrzypce1_orange", false, true);
+	PlaySound(game, "skrzypce1_orange");
 	return true;
 }
 static bool Donice2(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "donice4_points", false, true);
+	PlaySound(game, "donice4_points");
 	return true;
 }
 
 static bool Waz(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "S LIST FX 07 17 05-001", false, false);
+	PlaySound(game, "S LIST FX 07 17 05-001");
 	return true;
 }
 
 static bool Pac(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "pac", false, true);
+	PlaySound(game, "pac");
 	return true;
 }
 
 static bool Silacz1(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "K ROB FX 03 26 00-001", false, false);
+	PlaySound(game, "K ROB FX 03 26 00-001");
 	return true;
 }
 
 static bool Rave(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "rave", true, false);
+	PlayMusic(game, "rave");
 	return true;
 }
 
 static bool Chill(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "chill", true, false);
+	PlayMusic(game, "chill");
 	return true;
 }
 
 static bool Breath(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "breath", true, false);
+	PlayMusic(game, "breath");
 	return true;
 }
 
 static bool Centauri(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "CENTAURI SZ MIRAC L 06 20 79 - 24 61", true, false);
+	PlayMusic(game, "CENTAURI SZ MIRAC L 06 20 79 - 24 61");
 	return true;
 }
 
 static bool DrynDryn(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "dryndryn", false, false);
+	PlaySound(game, "dryndryn");
 	return true;
 }
 
 static bool Jammin(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "JAMMIN K LAP L 18 10 23", true, false);
+	PlayMusic(game, "JAMMIN K LAP L 18 10 23");
 	return true;
 }
 
 static bool Pudelko3(struct Game* game, struct Character* character, void** data) {
-	PlayMusic(game, "pudelko3", false, false);
+	PlaySound(game, "pudelko3");
 	return true;
 }
 

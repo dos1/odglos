@@ -91,7 +91,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		}
 		if (game->data->mouseX < 0.333) {
 			if (data->left.type == BALL_TYPE_NONE) {
-				PlayMusic(game, "S LIST FX 13 58 55-001", false, false);
+				PlaySound(game, "S LIST FX 13 58 55-001");
 				switch (data->stack[--data->stackpos]) {
 					case BALL_TYPE_RED:
 						SelectSpritesheet(game, data->left.character, "pudelko_1_czer_r");
@@ -109,7 +109,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 						break;
 				}
 			} else {
-				PlayMusic(game, "S LIST FX 14 09 89-001", false, false);
+				PlaySound(game, "S LIST FX 14 09 89-001");
 				switch (data->left.type) {
 					case BALL_TYPE_RED:
 						SelectSpritesheet(game, data->left.character, "pudelko_1_czer");
@@ -129,7 +129,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		}
 
 		if (game->data->mouseX > 0.333 && game->data->mouseX < 0.666) {
-			PlayMusic(game, "S LIST FX 13 58 55-001", false, false);
+			PlaySound(game, "S LIST FX 13 58 55-001");
 			if (data->center.type == BALL_TYPE_NONE) {
 				switch (data->stack[--data->stackpos]) {
 					case BALL_TYPE_RED:
@@ -148,7 +148,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 						break;
 				}
 			} else {
-				PlayMusic(game, "S LIST FX 14 09 89-001", false, false);
+				PlaySound(game, "S LIST FX 14 09 89-001");
 				switch (data->center.type) {
 					case BALL_TYPE_RED:
 						SelectSpritesheet(game, data->center.character, "pudelko_2_czer");
@@ -168,7 +168,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		}
 
 		if (game->data->mouseX > 0.666) {
-			PlayMusic(game, "S LIST FX 13 58 55-001", false, false);
+			PlaySound(game, "S LIST FX 13 58 55-001");
 			if (data->right.type == BALL_TYPE_NONE) {
 				switch (data->stack[--data->stackpos]) {
 					case BALL_TYPE_RED:
@@ -187,7 +187,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 						break;
 				}
 			} else {
-				PlayMusic(game, "S LIST FX 14 09 89-001", false, false);
+				PlaySound(game, "S LIST FX 14 09 89-001");
 				switch (data->right.type) {
 					case BALL_TYPE_RED:
 						SelectSpritesheet(game, data->right.character, "pudelko_3_czer");
@@ -289,7 +289,7 @@ static void CheckWin(struct Game* game, struct GamestateResources* data) {
 		data->left.character->delta = 0;
 		data->center.character->delta = 0;
 		data->right.character->delta = 0;
-		PlayMusic(game, "pudelka_metrograph", true, false);
+		PlayMusic(game, "pudelka_metrograph");
 
 		EnqueueSpritesheet(game, data->center.character, "pudelka_tancowanie");
 	}
@@ -355,7 +355,8 @@ static CHARACTER_CALLBACK(HandleRight) {
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
-	PlayMusic(game, "K OLD O 00 13 75-001", false, false);
+	StopMusic(game);
+	PlaySound(game, "K OLD O 00 13 75-001");
 	SetCharacterPosition(game, data->left.character, 0, 0, 0);
 	SetCharacterPosition(game, data->center.character, 0, 0, 0);
 	SetCharacterPosition(game, data->right.character, 0, 0, 0);

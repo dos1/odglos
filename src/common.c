@@ -238,5 +238,20 @@ void DestroyGameData(struct Game* game) {
 	al_destroy_font(game->data->font);
 	al_destroy_font(game->data->creditsfont);
 	al_destroy_bitmap(game->data->banner);
+
+	if (game->data->audio.music) {
+		al_destroy_audio_stream(game->data->audio.music);
+	}
+	for (int i = 0; i < 32; i++) {
+		if (game->data->audio.sounds[i].stream) {
+			al_destroy_audio_stream(game->data->audio.sounds[i].stream);
+			free(game->data->audio.sounds[i].name);
+		}
+		if (game->data->audio.loops[i].stream) {
+			al_destroy_audio_stream(game->data->audio.loops[i].stream);
+			free(game->data->audio.loops[i].name);
+		}
+	}
+
 	free(game->data);
 }
