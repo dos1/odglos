@@ -1,5 +1,5 @@
 set(EXECUTABLE_SRC_LIST "main.c")
-set(SHARED_SRC_LIST "common.c" "scenes.c")
+set(SHARED_SRC_LIST "animation.c" "audio.c" "common.c" "scenes.c")
 
 include_directories(SYSTEM ${WEBP_INCLUDE_DIRS} ${WEBPDEMUX_INCLUDE_DIRS})
 

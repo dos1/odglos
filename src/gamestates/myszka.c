@@ -45,7 +45,7 @@ void Gamestate_Tick(struct Game* game, struct GamestateResources* data) {
 	if (data->pos >= 0.92) {
 		data->con++;
 		if (data->con > 20) {
-                        SwitchCurrentGamestate(game, "anim");
+			SwitchCurrentGamestate(game, "anim");
 		}
 	}
 }

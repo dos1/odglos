@@ -53,7 +53,8 @@ int main(int argc, char** argv) {
 		{
 			{"lowmem", no_argument, 0, 'l'},
 			{"nolowmem", no_argument, 0, 'n'},
-			{0, 0, 0, 0}};
+			{0, 0, 0, 0},
+		};
 	int c;
 	do {
 		c = getopt_long_only(argc, argv, "ln", long_options, NULL);
