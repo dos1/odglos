@@ -29,7 +29,7 @@ struct GamestateResources {
 	int x, y;
 	double scale;
 	struct FreezeFrame* freezes;
-	struct Sound* sounds;
+	struct AudioFrame* sounds;
 	bool finished;
 	bool stay;
 	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
@@ -91,7 +91,6 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	data->all_repeats = game->data->scene.repeats;
 	data->callback = game->data->scene.callback;
 	data->draw = game->data->scene.draw;
-	data->stay = game->data->scene.stay;
 	data->freezes = game->data->scene.freezes;
 	data->sounds = game->data->scene.sounds;
 	if (game->data->scene.character.name) {
@@ -127,15 +126,7 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 		}
 	}
 
-	if (game->data->scene.music.name) {
-		if (!game->data->scene.music.name[0]) {
-			StopMusic(game);
-		} else if (game->data->scene.music.loop) {
-			PlayMusic(game, game->data->scene.music.name);
-		} else {
-			PlaySound(game, game->data->scene.music.name);
-		}
-	}
+	HandleAudio(game, game->data->scene.audio);
 
 	ResetAnimation(data->anim);
 	//PrintConsole(game, "Loaded: %s", path);
@@ -147,6 +138,7 @@ static void HandleDispatch(struct Game* game, struct GamestateResources* data, v
 	} else {
 		StopLoops(game);
 		if (game->data->scene.name[0] == '>') {
+			HandleAudio(game, game->data->scene.audio);
 			ChangeCurrentGamestate(game, game->data->scene.name + 1);
 		} else {
 			LoadAnimation(game, data, progress);
@@ -163,12 +155,8 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	int frame = GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats);
 	game->data->debuginfo = frame;
 
-	if (data->sounds[data->soundno].name && data->sounds[data->soundno].frame == frame) {
-		if (data->sounds[data->soundno].music) {
-			PlayMusic(game, data->sounds[data->soundno].name);
-		} else {
-			PlaySound(game, data->sounds[data->soundno].name);
-		}
+	if (data->sounds[data->soundno].frame == frame) {
+		HandleAudio(game, data->sounds[data->soundno].audio);
 		data->soundno++;
 	}
 
@@ -287,12 +275,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 	if (game->data->hover && (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
 		if (data->frozen && !data->linked) {
-			if (data->freezes[data->freezeno].sound) {
-				PlaySound(game, data->freezes[data->freezeno].sound);
-			}
-			if (data->freezes[data->freezeno].music) {
-				PlayMusic(game, data->freezes[data->freezeno].music);
-			}
+			HandleAudio(game, data->freezes[data->freezeno].audio);
 
 			for (int i = 0; i < 8; i++) {
 				if (data->freezes[data->freezeno].links[i].callback || data->freezes[data->freezeno].links[i].name) {
@@ -311,12 +294,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 								return;
 							}
 						}
-						if (data->freezes[data->freezeno].links[i].sound) {
-							PlaySound(game, data->freezes[data->freezeno].links[i].sound);
-						}
-						if (data->freezes[data->freezeno].links[i].music) {
-							PlayMusic(game, data->freezes[data->freezeno].links[i].music);
-						}
+						HandleAudio(game, data->freezes[data->freezeno].links[i].audio);
 					}
 				}
 			}

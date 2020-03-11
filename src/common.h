@@ -7,13 +7,28 @@
 #define IS_EMSCRIPTEN 0
 #endif
 
+enum AUDIO_TYPE {
+	NO_AUDIO = 0,
+	SOUND,
+	MUSIC,
+	LOOP,
+	STOP_LOOP,
+	STOP_MUSIC,
+	STOP_SOUND
+};
+
+struct Audio {
+	enum AUDIO_TYPE type;
+	char* name;
+	bool persist;
+};
+
 struct FreezeLink {
 	ALLEGRO_COLOR color;
 	char* name;
 	bool (*callback)(struct Game*, struct Character*, void**);
 	bool ignore;
-	char* sound;
-	char* music;
+	struct Audio audio;
 };
 
 struct FreezeFrame {
@@ -22,14 +37,12 @@ struct FreezeFrame {
 	int footnote;
 	struct FreezeLink links[8];
 	bool (*callback)(struct Game*, struct Character*, void**);
-	char* sound;
-	char* music;
+	struct Audio audio;
 };
 
-struct Sound {
+struct AudioFrame {
 	int frame;
-	char* name;
-	bool music;
+	struct Audio audio;
 };
 
 struct SceneDefinition {
@@ -41,6 +54,7 @@ struct SceneDefinition {
 	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
 	void (*draw)(struct Game*, int, void**);
 	void* callback_data;
+
 	struct {
 		char* name;
 		char* spritesheets[8];
@@ -48,15 +62,11 @@ struct SceneDefinition {
 		bool hidden;
 		bool repeat;
 	} character;
-	bool stay;
-	struct FreezeFrame freezes[16];
-	struct Sound sounds[16];
 
-	struct {
-		char* name;
-		bool loop;
-		bool layer;
-	} music;
+	struct FreezeFrame freezes[16];
+	struct AudioFrame sounds[16];
+
+	struct Audio audio;
 };
 
 struct CommonResources {
@@ -80,8 +90,6 @@ struct CommonResources {
 
 	ALLEGRO_FONT *font, *creditsfont;
 	ALLEGRO_BITMAP* banner;
-
-	ALLEGRO_AUDIO_STREAM* music; // deprecated
 
 	bool footnote;
 
@@ -139,3 +147,4 @@ void StopSound(struct Game* game, char* name);
 void PlayLoop(struct Game* game, char* name, bool persist);
 void StopLoop(struct Game* game, char* name);
 void StopLoops(struct Game* game);
+void HandleAudio(struct Game* game, struct Audio audio);

@@ -129,8 +129,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		}
 
 		if (game->data->mouseX > 0.333 && game->data->mouseX < 0.666) {
-			PlaySound(game, "S LIST FX 13 58 55-001");
 			if (data->center.type == BALL_TYPE_NONE) {
+				PlaySound(game, "S LIST FX 13 58 55-001");
 				switch (data->stack[--data->stackpos]) {
 					case BALL_TYPE_RED:
 						SelectSpritesheet(game, data->center.character, "pudelko_2_czer_r");
@@ -168,8 +168,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		}
 
 		if (game->data->mouseX > 0.666) {
-			PlaySound(game, "S LIST FX 13 58 55-001");
 			if (data->right.type == BALL_TYPE_NONE) {
+				PlaySound(game, "S LIST FX 13 58 55-001");
 				switch (data->stack[--data->stackpos]) {
 					case BALL_TYPE_RED:
 						SelectSpritesheet(game, data->right.character, "pudelko_3_czer_r");

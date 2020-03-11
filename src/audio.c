@@ -113,3 +113,28 @@ void StopLoops(struct Game* game) {
 		}
 	}
 }
+
+void HandleAudio(struct Game* game, struct Audio audio) {
+	switch (audio.type) {
+		case NO_AUDIO:
+			return;
+		case SOUND:
+			PlaySound(game, audio.name);
+			return;
+		case MUSIC:
+			PlayMusic(game, audio.name);
+			return;
+		case LOOP:
+			PlayLoop(game, audio.name, audio.persist);
+			return;
+		case STOP_LOOP:
+			StopLoop(game, audio.name);
+			return;
+		case STOP_MUSIC:
+			StopMusic(game);
+			return;
+		case STOP_SOUND:
+			StopSound(game, audio.name);
+			return;
+	}
+}
