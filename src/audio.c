@@ -65,7 +65,7 @@ void StopSound(struct Game* game, char* name) {
 
 void PlayLoop(struct Game* game, char* name, bool persist) {
 	int i = 32;
-	for (int j = 31; j >= 0; j++) {
+	for (int j = 31; j >= 0; j--) {
 		if (game->data->audio.loops[j].name && strcmp(name, game->data->audio.loops[j].name) == 0) {
 			// already playing
 			return;
