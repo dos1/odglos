@@ -61,7 +61,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 			char path[255] = {};
 			snprintf(path, 255, "lawka/%d", data->current + 1);
 			StopSound(game, path);
-			PlaySound(game, path);
+			PlaySound(game, path, 1.0);
 		}
 	}
 
@@ -96,7 +96,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 				char path[255] = {};
 				snprintf(path, 255, "lawka/%d", data->play + 1);
 				StopSound(game, path);
-				PlaySound(game, path);
+				PlaySound(game, path, 1.0);
 			}
 		}
 		if (data->success) {
@@ -146,7 +146,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			char path[255] = {};
 			snprintf(path, 255, "lawka/%d", data->play + 1);
 			StopSound(game, path);
-			PlaySound(game, path);
+			PlaySound(game, path, 1.0);
 
 			if (data->sequence[data->user] == data->play) {
 				data->user++;

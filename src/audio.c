@@ -2,7 +2,7 @@
 #include "defines.h"
 #include <libsuperderpy.h>
 
-void PlayMusic(struct Game* game, char* name) {
+void PlayMusic(struct Game* game, char* name, float volume) {
 	StopMusic(game);
 	char path[255] = {};
 	snprintf(path, 255, "sounds/%s.flac.opus", name);
@@ -10,6 +10,7 @@ void PlayMusic(struct Game* game, char* name) {
 	game->data->audio.music = al_load_audio_stream(GetDataFilePath(game, path), 4, 2048);
 	al_attach_audio_stream_to_mixer(game->data->audio.music, game->audio.music);
 	al_set_audio_stream_playmode(game->data->audio.music, ALLEGRO_PLAYMODE_LOOP);
+	al_set_audio_stream_gain(game->data->audio.music, volume);
 	al_set_audio_stream_playing(game->data->audio.music, true);
 }
 
@@ -21,7 +22,7 @@ void StopMusic(struct Game* game) {
 	PrintConsole(game, "Music stopped.");
 }
 
-void PlaySound(struct Game* game, char* name) {
+void PlaySound(struct Game* game, char* name, float volume) {
 	int i;
 	for (i = 0; i <= 32; i++) {
 		if (i == 32) {
@@ -48,6 +49,7 @@ void PlaySound(struct Game* game, char* name) {
 	game->data->audio.sounds[i].stream = al_load_audio_stream(GetDataFilePath(game, path), 4, 2048);
 	al_attach_audio_stream_to_mixer(game->data->audio.sounds[i].stream, game->audio.fx);
 	al_set_audio_stream_playmode(game->data->audio.sounds[i].stream, ALLEGRO_PLAYMODE_ONCE);
+	al_set_audio_stream_gain(game->data->audio.sounds[i].stream, volume);
 	al_set_audio_stream_playing(game->data->audio.sounds[i].stream, true);
 }
 
@@ -63,7 +65,7 @@ void StopSound(struct Game* game, char* name) {
 	}
 }
 
-void PlayLoop(struct Game* game, char* name, bool persist) {
+void PlayLoop(struct Game* game, char* name, float volume, bool persist) {
 	int i = 32;
 	for (int j = 31; j >= 0; j--) {
 		if (game->data->audio.loops[j].name && strcmp(name, game->data->audio.loops[j].name) == 0) {
@@ -86,6 +88,7 @@ void PlayLoop(struct Game* game, char* name, bool persist) {
 	game->data->audio.loops[i].persist = persist;
 	al_attach_audio_stream_to_mixer(game->data->audio.loops[i].stream, game->audio.fx);
 	al_set_audio_stream_playmode(game->data->audio.loops[i].stream, ALLEGRO_PLAYMODE_LOOP);
+	al_set_audio_stream_gain(game->data->audio.loops[i].stream, volume);
 	al_set_audio_stream_playing(game->data->audio.loops[i].stream, true);
 }
 
@@ -115,17 +118,25 @@ void StopLoops(struct Game* game) {
 }
 
 void HandleAudio(struct Game* game, struct Audio audio) {
+	float volume = audio.volume;
+	if (volume == 0.0) {
+		// default to full volume when not specified in struct initializer
+		volume = 1.0;
+	}
+	if (audio.stop_music) {
+		StopMusic(game);
+	}
 	switch (audio.type) {
 		case NO_AUDIO:
 			return;
 		case SOUND:
-			PlaySound(game, audio.name);
+			PlaySound(game, audio.name, volume);
 			return;
 		case MUSIC:
-			PlayMusic(game, audio.name);
+			PlayMusic(game, audio.name, volume);
 			return;
 		case LOOP:
-			PlayLoop(game, audio.name, audio.persist);
+			PlayLoop(game, audio.name, volume, audio.persist);
 			return;
 		case STOP_LOOP:
 			StopLoop(game, audio.name);

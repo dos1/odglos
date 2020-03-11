@@ -38,7 +38,7 @@ static CHARACTER_CALLBACK(GoForwardCb) {
 }
 
 static CHARACTER_CALLBACK(OutroCb) {
-	PlayMusic(game, "odwilz_trickstar");
+	PlayMusic(game, "odwilz_trickstar", 1.0);
 	SelectSpritesheet(game, character, "naparstki_10b_KONCOWKA_chodaki_owce");
 	character->callback = GoForwardCb;
 }

@@ -127,7 +127,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 					data->hint = 255;
 					c->j = 0;
 				}
-				PlaySound(game, "S LIST FX 08 40 33-001");
+				PlaySound(game, "S LIST FX 08 40 33-001", 1.0);
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_DOWN) {
 				c->j += 1;
@@ -135,7 +135,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 					data->hint = 255;
 					c->j = 3;
 				}
-				PlaySound(game, "S LIST FX 08 00 42-001");
+				PlaySound(game, "S LIST FX 08 00 42-001", 1.0);
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_LEFT) {
 				c->i -= 1;
@@ -143,7 +143,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 					data->hint = 255;
 					c->i = 0;
 				}
-				PlaySound(game, "S LIST FX 08 07 74-001");
+				PlaySound(game, "S LIST FX 08 07 74-001", 1.0);
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_RIGHT) {
 				c->i += 1;
@@ -151,11 +151,11 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 					data->hint = 255;
 					c->i = 3;
 				}
-				PlaySound(game, "S LIST FX 08 18 20-001");
+				PlaySound(game, "S LIST FX 08 18 20-001", 1.0);
 			}
 			if (ev->keyboard.keycode == ALLEGRO_KEY_ENTER) {
 				data->mode = !data->mode;
-				PlaySound(game, "S LIST FX 09 42 19-001");
+				PlaySound(game, "S LIST FX 09 42 19-001", 1.0);
 				if (!IsCompleted(game, data)) {
 					data->hint = 255;
 				}
@@ -227,7 +227,7 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
-	PlayMusic(game, "silence");
+	PlayMusic(game, "silence", 1.0);
 	ShowMouse(game);
 	data->left.i = 0;
 	data->left.j = 0;

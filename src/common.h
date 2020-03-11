@@ -21,6 +21,8 @@ struct Audio {
 	enum AUDIO_TYPE type;
 	char* name;
 	bool persist;
+	float volume;
+	bool stop_music;
 };
 
 struct FreezeLink {
@@ -140,11 +142,11 @@ void ShowFootnote(struct Game* game, int id);
 SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream);
 SPRITESHEET_STREAM(AnimationStream);
 
-void PlayMusic(struct Game* game, char* name);
+void PlayMusic(struct Game* game, char* name, float volume);
 void StopMusic(struct Game* game);
-void PlaySound(struct Game* game, char* name);
+void PlaySound(struct Game* game, char* name, float volume);
 void StopSound(struct Game* game, char* name);
-void PlayLoop(struct Game* game, char* name, bool persist);
+void PlayLoop(struct Game* game, char* name, float volume, bool persist);
 void StopLoop(struct Game* game, char* name);
 void StopLoops(struct Game* game);
 void HandleAudio(struct Game* game, struct Audio audio);

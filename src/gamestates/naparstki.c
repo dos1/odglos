@@ -65,7 +65,7 @@ int Gamestate_ProgressCount = 61;
 
 static CHARACTER_CALLBACK(ShowMouseCb) {
 	ShowMouse(game);
-	PlayMusic(game, "ambient");
+	PlayMusic(game, "ambient", 1.0);
 }
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
@@ -95,7 +95,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		if (nr < 17) {
 			if (nr > data->enabled) {
 				SelectSpritesheet(game, data->bg, ANIMS_EMPTY[nr]);
-				PlaySound(game, "K STUD 01 25 13-001");
+				PlaySound(game, "K STUD 01 25 13-001", 1.0);
 			} else {
 				if (nr == 9) {
 					SwitchCurrentGamestate(game, "naparstki2");
@@ -105,7 +105,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				if (nr == data->enabled) {
 					data->enabled++;
 				}
-				PlaySound(game, "K STUD 01 39 48-001");
+				PlaySound(game, "K STUD 01 39 48-001", 1.0);
 				if (nr == 0) {
 					if (data->jaszczur == 1) {
 						SelectSpritesheet(game, data->bg, "naparstki_01_kapelusz_jaszczurka_wersja1");

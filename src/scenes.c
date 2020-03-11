@@ -121,7 +121,7 @@ static bool DonicaLewa(struct Game* game, struct Character* character, void** da
 
 	DonicaSetup(game, &anim, data);
 	Enqueue(game, anim);
-	PlaySound(game, "S LIST FX 00 50 07-001");
+	PlaySound(game, "S LIST FX 00 50 07-001", 1.0);
 
 	return true;
 }
@@ -135,7 +135,7 @@ static bool DonicaPrawa(struct Game* game, struct Character* character, void** d
 
 	DonicaSetup(game, &anim, data);
 	Enqueue(game, anim);
-	PlaySound(game, "S LIST FX 00 51 84-001");
+	PlaySound(game, "S LIST FX 00 51 84-001", 1.0);
 
 	return true;
 }
@@ -160,7 +160,7 @@ static bool Dzwiek1(struct Game* game, struct Character* character, void** data)
 
 	*d = true;
 
-	PlaySound(game, "lawka/19");
+	PlaySound(game, "lawka/19", 1.0);
 
 	if (!(*d && *(d + 1) && *(d + 2))) {
 		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek1", .freezes = {{25, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}, .callback_data = *data});
@@ -178,7 +178,7 @@ static bool Dzwiek2(struct Game* game, struct Character* character, void** data)
 
 	*(d + 1) = true;
 
-	PlaySound(game, "lawka/6");
+	PlaySound(game, "lawka/6", 1.0);
 
 	if (!(*d && *(d + 1) && *(d + 2))) {
 		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek2", .freezes = {{45, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}, .callback_data = *data});
@@ -196,7 +196,7 @@ static bool Dzwiek3(struct Game* game, struct Character* character, void** data)
 
 	*(d + 2) = true;
 
-	PlaySound(game, "lawka/7");
+	PlaySound(game, "lawka/7", 1.0);
 
 	if (!(*d && *(d + 1) && *(d + 2))) {
 		Enqueue(game, (struct SceneDefinition){"04statki_szyszki_tasmy_gra_dzwiek3", .freezes = {{25, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}, .callback_data = *data});
@@ -415,7 +415,6 @@ static struct SceneDefinition SCENES[] = {
 	{">byk"},
 	{"swiecznik_hover_ewentualnie", .audio = {MUSIC, "ambient"}, .freezes = {{2, "DSCF2296_maska_oczy_ewentualnie", .links = {{{10.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikLewy, .audio = {SOUND, "switch"}}, {{20.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikPrawy, .audio = {SOUND, "switch"}}}}}},
 	{"swiecznik3_TAK", .audio = {MUSIC, "MAD CASPER SZ AGNT L 00 02 10 45 - 13 89"}},
-	//{">swiecznik"},
 	{"samochody_w_lesie", .audio = {MUSIC, "silence"}, .freezes = {{0, "DSCF2433_maska", .audio = {MUSIC, "MEGAFLANGE SZ POINTS1 L 00 04 48- 51 "}}}, .sounds = {{37, {MUSIC, "ULTRAFLANGE"}}}},
 	{"aksamitki_samochod_sowka", .speed = 1.25, .audio = {LOOP, "PIXEL BUBBLES K ROB L 05 29 10 "}},
 	{"donice_02_samochod_duzy_jedzie_w_lewo", .audio = {SOUND, "donice1_points"}, .speed = 0.5},
@@ -433,6 +432,7 @@ static struct SceneDefinition SCENES[] = {
 	{"skrzypce2_dzwiek6", .audio = {SOUND, "skrzypce4_orange"}},
 	{"skrzypce2_animacja_koncowa", .repeats = 1, .sounds = {{0, {SOUND, "skrzypce_orange"}}}},
 	{"gawron_i_drewniany_medrzec", .sounds = {{187, {SOUND, "lawka/16"}}, {192, {SOUND, "lawka/32"}}, {195, {SOUND, "lawka/31"}}, {200, {SOUND, "lawka/27"}}, {210, {SOUND, "lawka/35"}}, {217, {SOUND, "lawka/36"}}, {223, {SOUND, "lawka/34"}}, {228, {SOUND, "lawka/37"}}, {253, {SOUND, "LASER SHOWER S LIST L 12 35 45"}}}, .audio = {MUSIC, "gawron_poko"}, .freezes = {{87, .footnote = 7}, {107, "DSCF2982_maska", .audio = {SOUND, "drop_poko"}}, {290, "DSCF3781_maska", .audio = {SOUND, "BIRDY K K LAP L 05 29 08"}}}},
+
 	//{">przyciski"},
 	//{"przyciski_na_stacji_przycisk1", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
 	//{"przyciski_na_stacji_przycisk1_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
@@ -452,6 +452,7 @@ static struct SceneDefinition SCENES[] = {
 	//{"przyciski_na_kominie_przycisk_3_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
 	//{"przyciski_na_kominie_przycisk_3_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
 	//{"przyciski_na_kominie_przycisk_3_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
+
 	{"ciemna_trawa_samochod_sowka", .audio = {STOP_MUSIC}, .sounds = {{1, {SOUND, "S LIST FX 01 37 00-001 S LIST FX 01 53 86-001"}}}, .speed = 1.25},
 	{"ciemna_trawa_waz", .sounds = {{2, {SOUND, "S LIST FX 07 17 05-001"}}}, .speed = 1.25},
 	{"wchodzenie_po_schodach_samochod_sowka", .freezes = {{19, "maska_schodek1", .audio = {SOUND, "pac"}}, {23, "maska_schodek2", .audio = {SOUND, "pac"}}, {26, "maska_schodek3", .audio = {SOUND, "pac"}}, {29, "maska_schodek4", .audio = {SOUND, "pac"}}}},
