@@ -161,6 +161,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	}
 
 	if (!data->frozen && data->freezes[data->freezeno].frame == frame) {
+		HandleAudio(game, data->freezes[data->freezeno].pre_audio);
 		if (data->freezes[data->freezeno].mask) {
 			data->frozen = true;
 			ShowMouse(game);

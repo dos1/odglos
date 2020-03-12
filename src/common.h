@@ -39,7 +39,7 @@ struct FreezeFrame {
 	int footnote;
 	struct FreezeLink links[8];
 	bool (*callback)(struct Game*, struct Character*, void**);
-	struct Audio audio;
+	struct Audio audio, pre_audio;
 };
 
 struct AudioFrame {
@@ -65,8 +65,8 @@ struct SceneDefinition {
 		bool repeat;
 	} character;
 
-	struct FreezeFrame freezes[16];
-	struct AudioFrame sounds[16];
+	struct FreezeFrame freezes[64];
+	struct AudioFrame sounds[64];
 
 	struct Audio audio;
 };
