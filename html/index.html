@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" href="https://adobe-fonts.github.io/source-sans-pro/source-sans-pro.css" />
     <title>ODGŁOS</title>
+    <link rel="stylesheet" href="https://adobe-fonts.github.io/source-sans-pro/source-sans-pro.css" />
+    <link rel="stylesheet" href="simplebar.css" />
     <style>
       body { background-color: black; margin:0; padding: 0;}
       .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
@@ -21,9 +22,8 @@
   box-sizing: border-box;
   font-size: 16pt;
   background: linear-gradient(to bottom, rgba(0.0, 0.0, 0.0, 0.8), rgba(0.0, 0.0, 0.0, 0.8) 65%, rgba(0.0, 0.0, 0.0, 0.0) 78%);
-  font-family: "comic sans ms";
-font-family: 'Source Sans Pro', sans;
-            font-feature-settings: "kern" 1,"liga" 1;
+  font-family: 'Source Sans Pro', sans;
+  font-feature-settings: "kern" 1,"liga" 1;
   text-align: justify;
 }
 .footnote-title {
@@ -32,7 +32,6 @@ font-family: 'Source Sans Pro', sans;
 }
 .footnote-content {
   max-height: 56%;
-  overflow-y: auto;
   margin-right: 14%;
   padding-right: 3%;
   padding-top: 0;
@@ -120,7 +119,11 @@ font-family: 'Source Sans Pro', sans;
   display: none;
 }
 
+.simplebar-scrollbar:before {
+  background: white;
+}
     </style>
+    <script src="simplebar.min.js"></script>
   </head>
   <body>
     <div class="emscripten_border" id="wrapper">
@@ -132,7 +135,8 @@ font-family: 'Source Sans Pro', sans;
       <div class="footnote">
         <div class="footnote-close" onclick="window.ODGLOS.footnote = false; document.getElementById('wrapper').classList.remove('withFootnote');"><img src="x2.png" /></div>
         <div class="footnote-title">Lorem ipsum</div>
-        <div class="footnote-content">
+        <div class="footnote-content" data-simplebar data-simplebar-auto-hide="false">
+<div class="footnote-content-inner">
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris tempor elit ac erat ultricies ornare. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed id lacinia tortor. Mauris et urna cursus, pretium velit mattis, tempor nunc. Duis elementum auctor rhoncus. Pellentesque vel venenatis augue, eget mollis neque. Duis feugiat massa ac metus vulputate, non vulputate dui molestie.</p>
 
 <p>Ut ac erat nec urna blandit dignissim. Sed ultrices eleifend cursus. Suspendisse potenti. Phasellus feugiat convallis justo a rhoncus. Duis purus nisi, pretium eu congue vel, lacinia quis tortor. Aliquam elementum sodales dictum. Praesent tortor ligula, semper tincidunt felis quis, hendrerit consectetur turpis. Suspendisse potenti. Morbi urna ante, egestas at risus sit amet, gravida mollis purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi sed elementum odio.</p>
@@ -142,6 +146,7 @@ font-family: 'Source Sans Pro', sans;
 <p>Sed a leo ex. Integer tempor condimentum libero, sed mattis magna fermentum eget. Quisque tempus nulla lectus, ac pharetra libero congue id. Donec dignissim egestas tortor, eu laoreet turpis laoreet in. In et nisl sem. Integer et facilisis quam. Praesent gravida tortor convallis mattis eleifend. Nullam accumsan, ligula eu tempus interdum, metus lectus pharetra dui, in ullamcorper urna augue sed nibh. Sed a leo tempor, auctor ante et, elementum turpis. Quisque euismod arcu id quam imperdiet imperdiet sit amet ac nunc. Aenean bibendum eleifend bibendum. Integer in arcu metus. Nunc suscipit sit amet lacus eu auctor. Fusce iaculis neque lobortis libero tristique pharetra. Nam faucibus, ligula sed ultricies rutrum, orci eros pharetra tellus, ac aliquam nunc metus sit amet ex. Donec sagittis orci ac dui sagittis consequat.</p>
 
 <p>Vestibulum ut auctor purus. Sed ac laoreet tellus. Pellentesque imperdiet scelerisque pulvinar. Morbi vestibulum convallis elit eu tempor. Praesent nibh arcu, condimentum tincidunt magna eu, imperdiet laoreet urna. Curabitur at nulla tincidunt, auctor nunc vestibulum, rutrum tortor. Vestibulum ut tempus arcu. Fusce pharetra, turpis id auctor vestibulum, dui odio efficitur augue, dictum ultrices felis quam dapibus velit. Quisque sed rhoncus magna. Sed sagittis, nulla et placerat elementum, orci libero luctus lacus, non sollicitudin erat risus id tellus. Nunc eu vulputate arcu. In vel sagittis lectus, et bibendum massa. Phasellus enim tortor, ultrices non nisi non, tempus rutrum eros.</p>
+</div>
         </div>
       </div>
     </div>
@@ -263,7 +268,7 @@ Firstly – Stalin has died. In many countries of the eastern bloc, this death b
           var title = template.querySelector('.title').innerHTML;
           var content = template.querySelector('.content').innerHTML;
           document.querySelector('.footnote-title').innerHTML = title;
-          document.querySelector('.footnote-content').innerHTML = content;
+          document.querySelector('.footnote-content-inner').innerHTML = content;
           document.getElementById('wrapper').classList.add('withFootnote');
           window.ODGLOS.footnote = true;
           document.querySelector('.footnote-content').scrollTop = 0;
