@@ -24,6 +24,7 @@ struct GamestateResources {
 	float delay;
 
 	bool munching;
+	bool footnoted;
 };
 
 int Gamestate_ProgressCount = 8; // number of loading steps as reported by Gamestate_Load; 0 when missing
@@ -53,10 +54,17 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	// Here you should do all your game logic as if <delta> seconds have passed.
 	if (data->munching) {
 		AnimateCharacter(game, data->byk, delta, 1.0);
-		al_set_sample_instance_gain(data->sound, 0.75);
 		data->delay += delta;
 		if (data->delay > 6.0) {
-			SwitchScene(game, "anim");
+			if (!data->footnoted) {
+				al_set_sample_instance_gain(data->sound, 0.0);
+				ShowFootnote(game, 4);
+				data->footnoted = true;
+			} else {
+				SwitchScene(game, "anim");
+			}
+		} else {
+			al_set_sample_instance_gain(data->sound, 0.75);
 		}
 		return;
 	}

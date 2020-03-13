@@ -25,7 +25,7 @@ struct GamestateResources {
 	// This struct is for every resource allocated and used by your gamestate.
 	// It gets created on load and then gets passed around to all other function calls.
 
-	double time; // just so the struct is not 0 size, remove me when adding something
+	double time;
 };
 
 int Gamestate_ProgressCount = 1; // number of loading steps as reported by Gamestate_Load; 0 when missing

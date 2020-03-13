@@ -430,7 +430,7 @@ static struct SceneDefinition SCENES[] = {
 	{"skrzypce2_dzwiek4", .audio = {SOUND, "skrzypce5_orange"}}, //
 	{"skrzypce2_dzwiek5", .audio = {SOUND, "skrzypce6_orange"}}, //
 	{"skrzypce2_dzwiek6", .audio = {SOUND, "skrzypce4_orange"}}, //
-	{"skrzypce2_animacja_koncowa", .repeats = 1, .sounds = {{0, {SOUND, "skrzypce_orange"}}}}, //
+	{"skrzypce2_animacja_koncowa", .repeats = 1, .freezes = {{0, .footnote = 3}}, .sounds = {{1, {SOUND, "skrzypce_orange"}}}}, //
 	{"gawron_i_drewniany_medrzec",
 		.audio = {MUSIC, "gawron_poko"},
 		.sounds = {
@@ -535,7 +535,7 @@ static struct SceneDefinition SCENES[] = {
 	{"animacja_poczatkowa", .audio = {SOUND, "pergola_trickstar"}, .repeats = 2, .callback = Pergola}, //
 	{">pergola"}, //
 	{"pergola_animacja_koncowa2", .callback = Pergola2, .audio = {MUSIC, "pergola2_trickstar"}}, //
-	{"pergola_animacja_koncowa6", .freezes = {{9, .footnote = 3}}}, //
+	{"pergola_animacja_koncowa6"}, //, .freezes = {{9, .footnote = 3}}}, //
 	{"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .audio = {MUSIC, "dwor"}, .callback = Ul, .freezes = {{0, "IMG_0053_maska", .links = {{{0.0, 1.0, 0.0}, .callback = UlLewo}, {{1.0, 0.0, 0.0}, .callback = UlGora}, {{0.0, 0.0, 1.0}, .callback = UlDol}}}}}, //
 	{"ul_duzy_animacja_koncowa_samochod", .sounds = {{0, {SOUND, "K ROB FX 03 26 00-001"}}}}, //
 	{"pudelko_w_ogrodzie", .audio = {MUSIC, "pienki"}, .freezes = {{22, "pudelko_w_ogrodzie_maska1", .audio = {SOUND, "pac"}}, {56, "pudelko_w_ogrodzie_maska3", .audio = {SOUND, "pac"}}, {93, "pudelko_w_ogrodzie_maska2", .audio = {SOUND, "pac"}}, {119, "pudelko_w_ogrodzie_maska3", .audio = {SOUND, "pac"}}, {157, "pudelko_w_ogrodzie_maska2", .audio = {SOUND, "pac"}}, {183, "pudelko_w_ogrodzie_maska3", .audio = {SOUND, "pac"}}, {195, .footnote = 8}}}, //
@@ -546,7 +546,7 @@ static struct SceneDefinition SCENES[] = {
 	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}}, //
 	{">naparstki"}, //
 	{"01statki_szyszki_tasmy_animacja1"}, //
-	{"02statki_szyszki_tasmy_animacja2", .freezes = {{11, .footnote = 4}}}, //
+	{"02statki_szyszki_tasmy_animacja2"}, // .freezes = {{11, .footnote = 4}}}, //
 	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}}, //
 	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska"}}}, //
 	{"06statki_szyszki_tasmy_animacja5"}, //
