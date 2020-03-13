@@ -634,6 +634,13 @@ bool Dispatch(struct Game* game) {
 	} while (!SCENES[game->data->sceneid].name);
 	game->data->scene = SCENES[game->data->sceneid];
 	PrintConsole(game, "Dispatch: %s", game->data->scene.name);
+	if (game->data->sceneid) {
+		char val[255];
+		snprintf(val, 255, "%d", game->data->sceneid);
+		SetConfigOption(game, LIBSUPERDERPY_GAMENAME, "scene", val);
+	} else {
+		DeleteConfigOption(game, LIBSUPERDERPY_GAMENAME, "scene");
+	}
 	return true;
 }
 
