@@ -52,6 +52,16 @@ void ShowFootnote(struct Game* game, int id) {
 #endif
 }
 
+void HideFootnote(struct Game* game) {
+#ifdef __EMSCRIPTEN__
+	EM_ASM({
+		window.ODGLOS.hideFootnote();
+	});
+#else
+	game->data->footnote = false;
+#endif
+}
+
 ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap) {
 	// TODO: apply distortion coming from compositor
 	ALLEGRO_COLOR color = al_get_pixel(bitmap, (int)(game->data->mouseX * al_get_bitmap_width(bitmap)), (int)(game->data->mouseY * al_get_bitmap_height(bitmap)));
@@ -160,6 +170,13 @@ void DrawBuildInfo(struct Game* game) {
 bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_M)) {
 		ToggleMute(game);
+	}
+
+	if (game->data->footnote) {
+		if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) {
+			HideFootnote(game);
+		}
+		return true;
 	}
 
 	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_F)) { // || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)) {

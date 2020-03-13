@@ -136,7 +136,7 @@
       <canvas id="loading-canvas" width="1280" height="720"></canvas>
 </div>
       <div class="footnote">
-        <div class="footnote-close" onclick="window.ODGLOS.footnote = false; document.getElementById('wrapper').classList.remove('withFootnote');"><img src="x2.png" /></div>
+        <div class="footnote-close" onclick="window.ODGLOS.hideFootnote()"><img src="x2.png" /></div>
         <div class="footnote-title">Lorem ipsum</div>
         <div class="footnote-content" data-simplebar data-simplebar-auto-hide="false">
 <div class="footnote-content-inner">
@@ -276,6 +276,10 @@
           document.getElementById('wrapper').classList.add('withFootnote');
           window.ODGLOS.footnote = true;
           document.querySelector('.footnote-content').scrollTop = 0;
+        },
+        hideFootnote: function() {
+          window.ODGLOS.footnote = false;
+          document.getElementById('wrapper').classList.remove('withFootnote');
         }
       };
 
