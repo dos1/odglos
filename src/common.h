@@ -106,6 +106,7 @@ struct CommonResources {
 			ALLEGRO_AUDIO_STREAM* stream;
 			char* name;
 		} sounds[32];
+		bool paused;
 	} audio;
 };
 
@@ -150,3 +151,5 @@ void PlayLoop(struct Game* game, char* name, float volume, bool persist);
 void StopLoop(struct Game* game, char* name);
 void StopLoops(struct Game* game);
 void HandleAudio(struct Game* game, struct Audio audio);
+void PauseAudio(struct Game* game);
+void ResumeAudio(struct Game* game);

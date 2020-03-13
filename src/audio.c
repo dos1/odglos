@@ -2,6 +2,22 @@
 #include "defines.h"
 #include <libsuperderpy.h>
 
+static void CollectStreams(struct Game* game) {
+	if (game->data->audio.paused) {
+		return;
+	}
+	for (int i = 0; i <= 32; i++) {
+		if (game->data->audio.sounds[i].stream) {
+			if (!al_get_audio_stream_playing(game->data->audio.sounds[i].stream)) {
+				al_destroy_audio_stream(game->data->audio.sounds[i].stream);
+				free(game->data->audio.sounds[i].name);
+				game->data->audio.sounds[i].stream = NULL;
+				game->data->audio.sounds[i].name = NULL;
+			}
+		}
+	}
+}
+
 void PlayMusic(struct Game* game, char* name, float volume) {
 	StopMusic(game);
 	char path[255] = {};
@@ -24,21 +40,13 @@ void StopMusic(struct Game* game) {
 
 void PlaySound(struct Game* game, char* name, float volume) {
 	int i;
+	CollectStreams(game);
 	for (i = 0; i <= 32; i++) {
 		if (i == 32) {
 			PrintConsole(game, "ERROR: All sound slots already taken!");
 			return;
 		}
-		if (game->data->audio.sounds[i].stream) {
-			if (!al_get_audio_stream_playing(game->data->audio.sounds[i].stream)) {
-				// TODO: make sure it works under emscripten
-				PrintConsole(game, "DESTROY!!!");
-				al_destroy_audio_stream(game->data->audio.sounds[i].stream);
-				free(game->data->audio.sounds[i].name);
-				game->data->audio.sounds[i].stream = NULL;
-				game->data->audio.sounds[i].name = NULL;
-			}
-		} else {
+		if (!game->data->audio.sounds[i].stream) {
 			break;
 		}
 	}
@@ -148,4 +156,41 @@ void HandleAudio(struct Game* game, struct Audio audio) {
 			StopSound(game, audio.name);
 			return;
 	}
+}
+
+void PauseAudio(struct Game* game) {
+	if (game->data->audio.paused) {
+		return;
+	}
+	CollectStreams(game);
+	if (game->data->audio.music) {
+		al_set_audio_stream_playing(game->data->audio.music, false);
+	}
+	for (int i = 0; i < 32; i++) {
+		if (game->data->audio.sounds[i].stream) {
+			al_set_audio_stream_playing(game->data->audio.sounds[i].stream, false);
+		}
+		if (game->data->audio.loops[i].stream) {
+			al_set_audio_stream_playing(game->data->audio.loops[i].stream, false);
+		}
+	}
+	game->data->audio.paused = true;
+}
+
+void ResumeAudio(struct Game* game) {
+	if (!game->data->audio.paused) {
+		return;
+	}
+	if (game->data->audio.music) {
+		al_set_audio_stream_playing(game->data->audio.music, true);
+	}
+	for (int i = 0; i < 32; i++) {
+		if (game->data->audio.sounds[i].stream) {
+			al_set_audio_stream_playing(game->data->audio.sounds[i].stream, true);
+		}
+		if (game->data->audio.loops[i].stream) {
+			al_set_audio_stream_playing(game->data->audio.loops[i].stream, true);
+		}
+	}
+	game->data->audio.paused = false;
 }

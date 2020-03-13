@@ -28,6 +28,9 @@ void PreLogic(struct Game* game, double delta) {
 #else
 		game->data->footnote = false; // not implemented yet
 #endif
+		if (!game->data->footnote && game->data->audio.paused) {
+			ResumeAudio(game);
+		}
 	}
 }
 
@@ -165,8 +168,10 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 
 	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_SPACE || ev->keyboard.keycode == ALLEGRO_KEY_P)) {
 		if (!game->data->pause) {
+			PauseAudio(game);
 			PauseAllGamestates(game);
 		} else {
+			ResumeAudio(game);
 			ResumeAllGamestates(game);
 		}
 		game->data->pause = !game->data->pause;
