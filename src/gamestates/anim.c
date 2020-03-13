@@ -176,8 +176,8 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		}
 		if (data->freezes[data->freezeno].footnote) {
 			ShowFootnote(game, data->freezes[data->freezeno].footnote);
-			data->freezeno++;
 			PrintConsole(game, "Footnote: %d (frame: %d)", data->freezes[data->freezeno].footnote, frame);
+			data->freezeno++;
 		}
 	}
 
