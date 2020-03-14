@@ -83,20 +83,19 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 		al_draw_tinted_scaled_bitmap(data->right.controls, al_map_rgba(255 - frame * 4, 255 - frame * 4, 255 - frame * 4, 255),
 			0, 0, al_get_bitmap_width(data->right.controls), al_get_bitmap_height(data->right.controls),
 			0, 0, game->viewport.width, game->viewport.height, 0);
-
-		al_draw_tinted_scaled_rotated_bitmap(data->right.hint, al_map_rgba_f(hint, hint, hint, hint),
-			al_get_bitmap_width(data->right.hint) / 2.0, al_get_bitmap_height(data->right.hint) / 2.0,
-			655, 353, 1355.0 / 1280.0, 1355.0 / 1280.0, 0, 0);
 	} else {
 		int frame = GetAnimationFrameNo(data->left.animations[data->left.j][data->left.i]) + data->left.j + data->left.i;
 		al_draw_tinted_scaled_bitmap(data->left.controls, al_map_rgba(255 - frame * 4, 255 - frame * 4, 255 - frame * 4, 255),
 			0, 0, al_get_bitmap_width(data->left.controls), al_get_bitmap_height(data->left.controls),
 			0, 0, game->viewport.width, game->viewport.height, 0);
-
-		al_draw_tinted_scaled_bitmap(data->left.hint, al_map_rgba_f(hint, hint, hint, hint),
-			0, 0, al_get_bitmap_width(data->left.hint), al_get_bitmap_height(data->left.hint),
-			0, 0, game->viewport.width, game->viewport.height, 0);
 	}
+
+	al_draw_tinted_scaled_bitmap(data->left.hint, al_map_rgba_f(hint, hint, hint, hint),
+		0, 0, al_get_bitmap_width(data->left.hint), al_get_bitmap_height(data->left.hint),
+		0, 0, game->viewport.width, game->viewport.height, 0);
+	al_draw_tinted_scaled_rotated_bitmap(data->right.hint, al_map_rgba_f(hint, hint, hint, hint),
+		al_get_bitmap_width(data->right.hint) / 2.0, al_get_bitmap_height(data->right.hint) / 2.0,
+		655, 353, 1355.0 / 1280.0, 1355.0 / 1280.0, 0, 0);
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
