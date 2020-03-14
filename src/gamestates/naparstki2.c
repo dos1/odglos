@@ -72,15 +72,18 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		if (game->data->hover) {
 			if (data->step == 0) {
 				SelectSpritesheet(game, data->bg, "naparstki_10a_latarnia_pusta_sowka_piana_czesc1");
+				PlaySound(game, "K STUD 01 39 48-001", 1.0);
 			}
 			if (data->step == 1) {
 				SelectSpritesheet(game, data->bg, "naparstki_10a_latarnia_pusta_sowka_piana_czesc2");
+				PlaySound(game, "pudelko2", 1.0);
 			}
 			HideMouse(game);
 			data->bg->callback = ShowMouseCb;
 			if (data->step == 2) {
 				SelectSpritesheet(game, data->bg, "naparstki_10a_latarnia_pusta_sowka_piana_czesc3");
 				data->bg->callback = OutroCb;
+				PlaySound(game, "pudelko3", 1.0);
 			}
 			data->step++;
 		}
