@@ -2,21 +2,6 @@
 #include "defines.h"
 #include <libsuperderpy.h>
 
-void SwitchScene(struct Game* game, char* name) {
-	PrintConsole(game, "switching to %s", name);
-	if (game->data->next) {
-		free(game->data->next);
-	}
-	game->data->next = strdup(name);
-	LoadGamestate(game, name);
-	StopCurrentGamestate(game);
-	if (game->data->lowmem) {
-		UnloadCurrentGamestate(game);
-	}
-	StartGamestate(game, name);
-	//StartGamestate(game, "myszka");
-}
-
 void PreLogic(struct Game* game, double delta) {
 	game->data->hover = false;
 
@@ -304,9 +289,6 @@ struct CommonResources* CreateGameData(struct Game* game) {
 }
 
 void DestroyGameData(struct Game* game) {
-	if (game->data->next) {
-		free(game->data->next);
-	}
 	DestroyShader(game, game->data->grain);
 	al_destroy_bitmap(game->data->cursorbmp);
 	al_destroy_bitmap(game->data->cursorhover);

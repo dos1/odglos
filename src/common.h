@@ -76,7 +76,6 @@ struct CommonResources {
 	// Fill in with common data accessible from all gamestates.
 	ALLEGRO_SHADER* grain;
 	double mouseX, mouseY;
-	char* next;
 	bool cursor;
 	bool hover;
 	double start_time;
@@ -128,7 +127,6 @@ bool IsAnimationComplete(struct AnimationDecoder* anim);
 int GetAnimationFrameCount(struct AnimationDecoder* anim);
 
 void DrawBuildInfo(struct Game* game);
-void SwitchScene(struct Game* game, char* name);
 void PreLogic(struct Game* game, double delta);
 void PostLogic(struct Game* game, double delta);
 ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap);

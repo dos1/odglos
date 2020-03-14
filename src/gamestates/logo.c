@@ -21,7 +21,7 @@ void Gamestate_Tick(struct Game* game, struct GamestateResources* data) {
 	if (game->data->footnote) { return; }
 	data->counter++;
 	if (data->counter > 460) {
-		SwitchScene(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 }
 
@@ -66,7 +66,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	// Called for each event in Allegro event queue.
 	// Here you can handle user input, expiring timers etc.
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP || ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
-		SwitchScene(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 }
 

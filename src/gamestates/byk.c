@@ -61,7 +61,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 				ShowFootnote(game, 4);
 				data->footnoted = true;
 			} else {
-				SwitchScene(game, "anim");
+				ChangeCurrentGamestate(game, "anim");
 			}
 		} else {
 			al_set_sample_instance_gain(data->sound, 0.75);
