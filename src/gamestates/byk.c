@@ -211,6 +211,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->pos = 0;
 	data->delay = 0;
 	data->munching = false;
+	data->footnoted = false;
 	UpdateState(game, data);
 }
 
