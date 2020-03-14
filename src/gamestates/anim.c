@@ -30,6 +30,7 @@ struct GamestateResources {
 	double scale;
 	struct FreezeFrame* freezes;
 	struct AudioFrame* sounds;
+	bool loaded;
 	bool finished;
 	bool stay;
 	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
@@ -130,10 +131,14 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	HandleAudio(game, game->data->scene.audio);
 
 	ResetAnimation(data->anim);
+	data->loaded = true;
 	//PrintConsole(game, "Loaded: %s", path);
 }
 
 static void HandleDispatch(struct Game* game, struct GamestateResources* data, void (*progress)(struct Game*)) {
+	if (game->data->scene.name && game->data->scene.name[0] == '>') {
+		data->loaded = false;
+	}
 	if (!Dispatch(game)) {
 		SwitchCurrentGamestate(game, "end");
 	} else {
@@ -253,6 +258,10 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
+	if (!data->loaded) {
+		return;
+	}
+
 	ALLEGRO_BITMAP* bitmap;
 	if (data->bg) {
 		bitmap = data->bg;
