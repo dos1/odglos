@@ -94,6 +94,8 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
+	if (game->data->footnote) { return; }
+
 	if (game->data->cursor &&
 		(((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_SPACE)) ||
 			(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) ||

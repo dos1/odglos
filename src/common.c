@@ -197,7 +197,7 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 		if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) {
 			HideFootnote(game);
 		}
-		return true;
+		return false;
 	}
 
 #ifdef __EMSCRIPTEN__
