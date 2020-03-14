@@ -288,7 +288,11 @@ struct CommonResources* CreateGameData(struct Game* game) {
 	data->menu2 = al_load_bitmap(GetDataFilePath(game, "menu_przycisk2_hover.png"));
 	data->start_time = al_get_time();
 	data->lowmem = false;
+#ifdef __EMSCRIPTEN__
 	data->sceneid = strtol(GetConfigOptionDefault(game, LIBSUPERDERPY_GAMENAME, "scene", "0"), NULL, 10) - 1;
+#else
+	data->sceneid = -1;
+#endif
 	data->pause = false;
 	data->font = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 42, 0);
 	data->creditsfont = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 24, 0);
