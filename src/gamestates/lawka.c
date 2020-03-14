@@ -68,6 +68,8 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	if (IsAnimationComplete(data->animation) && !data->buffered) {
 		ShowMouse(game);
 		data->buffered = true;
+		data->delay = 1.0;
+		data->playing = true;
 	}
 
 	if (data->playing) {
@@ -128,7 +130,7 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (game->data->footnote) { return; }
 
-	if (IsAnimationComplete(data->animation) && game->data->hover) {
+	if (IsAnimationComplete(data->animation) && game->data->hover && data->play == 16 && !data->success) {
 		if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) ||
 			(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) ||
 			(ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
@@ -152,6 +154,9 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				data->user++;
 			} else {
 				data->user = 0;
+				if (data->sequence[data->user] == data->play) {
+					data->user++;
+				}
 			}
 			if (data->user == 3) {
 				data->success = true;
@@ -196,8 +201,10 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	StopMusic(game);
 	data->current = 0;
 	data->playing = false;
+	data->play = 16;
 	data->counter = 0;
 	data->footnoted = false;
+	data->user = 0;
 	for (int i = 0; i < 4; i++) {
 		data->sequence[i] = rand() % 16;
 		if (i > 0) {
