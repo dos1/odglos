@@ -735,11 +735,14 @@
           if (m && now - Module.setStatus.last.time < 30) return; // if this is a progress update, skip it if too soon
           Module.setStatus.last.time = now;
           Module.setStatus.last.text = text;
-          Module.canvasContext.fillStyle = 'white';
+          Module.canvasContext.clearRect(0, 0, 1280, 720);
+          Module.canvasContext.fillStyle = 'rgba(255,255,255,0.1255)';
+          Module.canvasContext.fillRect(0, 720/2 - 7, 1280, 14);
+          Module.canvasContext.fillStyle = 'rgba(255,255,255,0.5)';
           if (m) {
             text = m[1];
             console.log(parseInt(m[2])*100, parseInt(m[4])*100);
-            Module.canvasContext.fillRect(0, 720/2 - 5, 1280 * parseInt(m[2]) / parseInt(m[4]), 10);
+            Module.canvasContext.fillRect(0, 720/2 - 7, 1280 * parseInt(m[2]) / parseInt(m[4]), 14);
           } else {
             console.log('---');
           }
