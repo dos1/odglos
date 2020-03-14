@@ -95,7 +95,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		ALLEGRO_COLOR color = CheckMask(game, data->mask);
 		int nr = round(((color.r * 255) + (color.g * 255) + (color.b * 255)) / 40.0);
 		if (nr < 17) {
-			if (nr > data->enabled) {
+			if ((nr != data->enabled) && (nr != data->enabled - 1)) {
 				SelectSpritesheet(game, data->bg, ANIMS_EMPTY[nr]);
 				PlaySound(game, "K STUD 01 25 13-001", 1.0);
 			} else {
