@@ -56,12 +56,13 @@ static char* ANIMS_EMPTY[] = {
 struct GamestateResources {
 	struct Character* bg;
 	ALLEGRO_BITMAP* mask;
+	ALLEGRO_BITMAP *kokardki[9], *tasiemki[9];
 	int enabled;
 	int jaszczur;
 	bool first;
 };
 
-int Gamestate_ProgressCount = 61;
+int Gamestate_ProgressCount = 79;
 
 static CHARACTER_CALLBACK(ShowMouseCb) {
 	ShowMouse(game);
@@ -74,7 +75,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	AnimateCharacter(game, data->bg, delta, 1.0);
 	ALLEGRO_COLOR color = CheckMask(game, data->mask);
 	int nr = round(((color.r * 255) + (color.g * 255) + (color.b * 255)) / 40.0);
-	game->data->hover = nr < 17;
+	game->data->hover = nr < 17 && nr >= data->enabled - 1;
 
 	if (data->first && game->data->cursor) {
 		data->first = false;
@@ -84,6 +85,12 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	SetCharacterPosition(game, data->bg, game->viewport.width / 2.0, game->viewport.height / 2.0, 0);
 	DrawCharacter(game, data->bg);
+	if (game->data->cursor && data->enabled > 0) {
+		for (int i = 0; i < data->enabled - 1; i++) {
+			al_draw_bitmap(data->tasiemki[i], 0, 0, 0);
+		}
+		al_draw_bitmap(data->kokardki[data->enabled - 1], 0, 0, 0);
+	}
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
@@ -94,7 +101,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			(ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
 		ALLEGRO_COLOR color = CheckMask(game, data->mask);
 		int nr = round(((color.r * 255) + (color.g * 255) + (color.b * 255)) / 40.0);
-		if (nr < 17) {
+		if (nr < 17 && nr >= data->enabled - 1) {
 			if ((nr != data->enabled) && (nr != data->enabled - 1)) {
 				SelectSpritesheet(game, data->bg, ANIMS_EMPTY[nr]);
 				PlaySound(game, "K STUD 01 25 13-001", 1.0);
@@ -186,6 +193,13 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	}
 	LoadSpritesheets(game, data->bg, progress);
 
+	for (int i = 0; i < 9; i++) {
+		data->kokardki[i] = al_load_bitmap(GetDataFilePath(game, PunchNumber(game, "naparstki/kokardkaX.png", 'X', i + 1)));
+		progress(game);
+		data->tasiemki[i] = al_load_bitmap(GetDataFilePath(game, PunchNumber(game, "naparstki/tasiemkaX.png", 'X', i + 1)));
+		progress(game);
+	}
+
 	data->mask = al_load_bitmap(GetDataFilePath(game, "naparstki.png"));
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 	return data;
@@ -194,6 +208,10 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	DestroyCharacter(game, data->bg);
 	al_destroy_bitmap(data->mask);
+	for (int i = 0; i < 9; i++) {
+		al_destroy_bitmap(data->kokardki[i]);
+		al_destroy_bitmap(data->tasiemki[i]);
+	}
 	free(data);
 }
 
