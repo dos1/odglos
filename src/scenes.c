@@ -578,7 +578,8 @@ static struct SceneDefinition SCENES[] = {
 	//{"altanka_samochod"},
 	//{"zamiana_myszki_w_bramie"},
 	//{"sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK"},
-	{"sowka2_klika_konsole_prawa", .freezes = {{0, "DSCF0286_maska"}}}, {"sowka2_klika_konsole_lewa", .freezes = {{0, "DSCF0286_maska"}}}, //
+	{"sowka2_klika_konsole_prawa", .freezes = {{0, "DSCF0286_maska"}}}, //
+	{"sowka2_klika_konsole_lewa", .freezes = {{0, "DSCF0286_maska"}}}, //
 	//{"buzia_01_bez_niczego"},
 	//{"buzia_02_sowa"},
 	//{"buzia_03_kuzyn"},

@@ -36,7 +36,7 @@ struct GamestateResources {
 	void (*draw)(struct Game*, int, void**);
 	struct Character* character;
 
-	int freezeno, soundno;
+	int freezeno, soundno, freezeplayed;
 	ALLEGRO_BITMAP* mask;
 	bool frozen, linked;
 	char *bgname, *fgname, *maskname;
@@ -118,6 +118,7 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	data->scale = 1.0;
 	data->freezeno = 0;
 	data->soundno = 0;
+	data->freezeplayed = -1;
 	data->linked = false;
 	data->callback_data = game->data->scene.callback_data;
 	if (data->callback) {
@@ -155,13 +156,16 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	int frame = GetAnimationFrameNo(data->anim) + GetAnimationFrameCount(data->anim) * (data->all_repeats - data->repeats);
 	game->data->debuginfo = frame;
 
-	if (data->sounds[data->soundno].frame == frame) {
+	if (data->sounds[data->soundno].audio.type && data->sounds[data->soundno].frame == frame) {
 		HandleAudio(game, data->sounds[data->soundno].audio);
 		data->soundno++;
 	}
 
 	if (!data->frozen && data->freezes[data->freezeno].frame == frame) {
-		HandleAudio(game, data->freezes[data->freezeno].pre_audio);
+		if (data->freezeplayed != data->freezeno) {
+			HandleAudio(game, data->freezes[data->freezeno].pre_audio);
+			data->freezeplayed = data->freezeno;
+		}
 		if (data->freezes[data->freezeno].mask) {
 			data->frozen = true;
 			ShowMouse(game);
