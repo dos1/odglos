@@ -38,6 +38,12 @@ void StopMusic(struct Game* game) {
 	PrintConsole(game, "Music stopped.");
 }
 
+void EnsureMusic(struct Game* game, char* name, float volume) {
+	if (!game->data->audio.music) {
+		PlayMusic(game, name, volume);
+	}
+}
+
 void PlaySound(struct Game* game, char* name, float volume) {
 	int i;
 	CollectStreams(game);
@@ -154,6 +160,9 @@ void HandleAudio(struct Game* game, struct Audio audio) {
 			return;
 		case STOP_SOUND:
 			StopSound(game, audio.name);
+			return;
+		case ENSURE_MUSIC:
+			EnsureMusic(game, audio.name, volume);
 			return;
 	}
 }

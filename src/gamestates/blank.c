@@ -32,6 +32,7 @@ int Gamestate_ProgressCount = 1; // number of loading steps as reported by Games
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	// Here you should do all your game logic as if <delta> seconds have passed.
+	if (game->data->footnote) { return; }
 	data->time += delta;
 	if (data->time > 1.0) {
 		ChangeCurrentGamestate(game, "anim");

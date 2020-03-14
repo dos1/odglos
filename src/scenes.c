@@ -2,6 +2,16 @@
 #include "defines.h"
 #include <libsuperderpy.h>
 
+static bool IsCheckpoint(struct Game* game, int scene) {
+	int checkpoints[] = {0, 7, 11, 14, 15, 17, 18, 23, 31, 34, 36, 37, 42, 45, 48, 57, 60, 62, 66, 68, 72, 73, 75, 84};
+	for (unsigned int i = 0; i < sizeof(checkpoints) / sizeof(int); i++) {
+		if (checkpoints[i] == scene) {
+			return true;
+		}
+	}
+	return false;
+}
+
 static bool Pergola(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
 	*x = 655 - 1355 / 2;
 	*y = 353 - 762 / 2;
@@ -545,7 +555,7 @@ static struct SceneDefinition SCENES[] = {
 	{">pudelka"}, //
 	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}}, //
 	{">naparstki"}, //
-	{"01statki_szyszki_tasmy_animacja1"}, //
+	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar", 1.0}}, //
 	{"02statki_szyszki_tasmy_animacja2"}, // .freezes = {{11, .footnote = 4}}}, //
 	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}}, //
 	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska"}}}, //
@@ -642,6 +652,27 @@ bool Dispatch(struct Game* game) {
 		DeleteConfigOption(game, LIBSUPERDERPY_GAMENAME, "scene");
 	}
 	return true;
+}
+
+void StartInitialGamestate(struct Game* game) {
+	if (game->data->sceneid < 0) {
+		game->data->sceneid = -1;
+	}
+	if (game->data->sceneid >= (int)((sizeof(SCENES) / sizeof(struct SceneDefinition)) - 1)) {
+		game->data->sceneid = sizeof(SCENES) / sizeof(struct SceneDefinition) - 2;
+	}
+	while (!IsCheckpoint(game, game->data->sceneid + 1)) {
+		game->data->sceneid--;
+	}
+	if (game->data->sceneid > 0) {
+		game->data->menu_requested = true;
+	}
+	if (SCENES[game->data->sceneid + 1].name[0] == '>') {
+		StartGamestate(game, SCENES[game->data->sceneid + 1].name + 1);
+		Dispatch(game);
+		return;
+	}
+	StartGamestate(game, "anim");
 }
 
 void Enqueue(struct Game* game, struct SceneDefinition scene) {

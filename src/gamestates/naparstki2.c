@@ -44,6 +44,7 @@ static CHARACTER_CALLBACK(OutroCb) {
 }
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
+	if (game->data->footnote) { return; }
 	AnimateCharacter(game, data->bg, delta, 1.0);
 	ALLEGRO_COLOR color = CheckMask(game, data->mask);
 	int val = 0.0;

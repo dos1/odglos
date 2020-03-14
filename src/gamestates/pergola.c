@@ -43,6 +43,7 @@ static bool IsCompleted(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
+	if (game->data->footnote) { return; }
 	TM_Process(data->timeline, delta);
 	data->counter += delta;
 	data->hint -= delta * 100;

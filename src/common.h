@@ -14,7 +14,8 @@ enum AUDIO_TYPE {
 	LOOP,
 	STOP_LOOP,
 	STOP_MUSIC,
-	STOP_SOUND
+	STOP_SOUND,
+	ENSURE_MUSIC
 };
 
 struct Audio {
@@ -91,9 +92,10 @@ struct CommonResources {
 	int queue_handled;
 
 	ALLEGRO_FONT *font, *creditsfont;
-	ALLEGRO_BITMAP* banner;
+	ALLEGRO_BITMAP *banner, *menu, *menu2;
 
 	bool footnote;
+	bool menu_requested;
 
 	struct {
 		ALLEGRO_AUDIO_STREAM* music;
@@ -112,6 +114,7 @@ struct CommonResources {
 
 bool Dispatch(struct Game* game);
 void Enqueue(struct Game* game, struct SceneDefinition scene);
+void StartInitialGamestate(struct Game* game);
 
 struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename, bool repeat);
 bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp);
@@ -127,6 +130,7 @@ int GetAnimationFrameCount(struct AnimationDecoder* anim);
 void DrawBuildInfo(struct Game* game);
 void SwitchScene(struct Game* game, char* name);
 void PreLogic(struct Game* game, double delta);
+void PostLogic(struct Game* game, double delta);
 ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap);
 void DrawTexturedRectangle(float x1, float y1, float x2, float y2, ALLEGRO_COLOR color);
 struct CommonResources* CreateGameData(struct Game* game);
@@ -140,12 +144,14 @@ void HideHTMLLoading(struct Game* game);
 #endif
 void ShowFootnote(struct Game* game, int id);
 void HideFootnote(struct Game* game);
+void ShowMenu(struct Game* game);
 
 SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream);
 SPRITESHEET_STREAM(AnimationStream);
 
 void PlayMusic(struct Game* game, char* name, float volume);
 void StopMusic(struct Game* game);
+void EnsureMusic(struct Game* game, char* name, float volume);
 void PlaySound(struct Game* game, char* name, float volume);
 void StopSound(struct Game* game, char* name);
 void PlayLoop(struct Game* game, char* name, float volume, bool persist);

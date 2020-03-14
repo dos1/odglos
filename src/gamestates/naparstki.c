@@ -69,6 +69,8 @@ static CHARACTER_CALLBACK(ShowMouseCb) {
 }
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
+	if (game->data->footnote) { return; }
+
 	AnimateCharacter(game, data->bg, delta, 1.0);
 	ALLEGRO_COLOR color = CheckMask(game, data->mask);
 	int nr = round(((color.r * 255) + (color.g * 255) + (color.b * 255)) / 40.0);
@@ -201,6 +203,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->bg->callback = ShowMouseCb;
 	data->enabled = 0;
 	data->first = true;
+	EnsureMusic(game, "JAMMIN K LAP L 18 10 23", 1.0);
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}

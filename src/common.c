@@ -23,7 +23,7 @@ void PreLogic(struct Game* game, double delta) {
 	if (game->data->footnote) {
 #ifdef __EMSCRIPTEN__
 		game->data->footnote = EM_ASM_INT({
-			return window.ODGLOS && window.ODGLOS.footnote;
+			return window.ODGLOS && (window.ODGLOS.footnote || window.ODGLOS.menu);
 		});
 #else
 		game->data->footnote = false; // not implemented yet
@@ -31,6 +31,13 @@ void PreLogic(struct Game* game, double delta) {
 		if (!game->data->footnote && game->data->audio.paused) {
 			ResumeAudio(game);
 		}
+	}
+}
+
+void PostLogic(struct Game* game, double delta) {
+	if (game->data->menu_requested) {
+		ShowMenu(game);
+		game->data->menu_requested = false;
 	}
 }
 
@@ -44,6 +51,9 @@ void HideHTMLLoading(struct Game* game) {
 
 void ShowFootnote(struct Game* game, int id) {
 	game->data->footnote = true;
+	char buf[255];
+	snprintf(buf, 255, "footnote%d", id);
+	SetConfigOption(game, LIBSUPERDERPY_GAMENAME, buf, "1");
 #ifdef __EMSCRIPTEN__
 	EM_ASM({
 		window.ODGLOS.showFootnote($0);
@@ -55,10 +65,24 @@ void ShowFootnote(struct Game* game, int id) {
 void HideFootnote(struct Game* game) {
 #ifdef __EMSCRIPTEN__
 	EM_ASM({
-		window.ODGLOS.hideFootnote();
+		if (window.ODGLOS.footnote) {
+			window.ODGLOS.hideFootnote();
+		} else if (window.ODGLOS.menu) {
+			window.ODGLOS.hideMenu();
+		}
 	});
 #else
 	game->data->footnote = false;
+#endif
+}
+
+void ShowMenu(struct Game* game) {
+	game->data->footnote = true;
+	PauseAudio(game);
+#ifdef __EMSCRIPTEN__
+	EM_ASM({
+		window.ODGLOS.showMenu();
+	});
 #endif
 }
 
@@ -143,8 +167,20 @@ void Compositor(struct Game* game) {
 		al_draw_text(game->data->font, al_map_rgb(255, 255, 255), game->clip_rect.x + game->clip_rect.w / 2.0, game->clip_rect.y + game->clip_rect.h / 2.0, ALLEGRO_ALIGN_CENTER, "PAUSED");
 	}
 
-	if (game->data->cursor) {
-		al_draw_scaled_rotated_bitmap(game->data->hover ? game->data->cursorhover : game->data->cursorbmp, 9, 4, game->data->mouseX * game->clip_rect.w + game->clip_rect.x, game->data->mouseY * game->clip_rect.h + game->clip_rect.y, game->clip_rect.w / (double)game->viewport.width * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, game->clip_rect.h / (double)game->viewport.height * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, 0, 0);
+	if (game->data->cursor && !game->data->footnote) {
+		bool hover = game->data->hover;
+
+#ifdef __EMSCRIPTEN__
+		ALLEGRO_BITMAP* menu = game->data->menu;
+		if (game->data->mouseX > 0.94 && game->data->mouseY > 0.90 && game->data->mouseX < 0.98 && game->data->mouseY < 0.98) {
+			hover = true;
+			menu = game->data->menu2;
+		}
+
+		al_draw_scaled_rotated_bitmap(menu, 25, 28, game->clip_rect.w * 1227.0 / 1280.0, game->clip_rect.h * 669.0 / 720.0, game->clip_rect.w / (double)game->viewport.width / LIBSUPERDERPY_IMAGE_SCALE, game->clip_rect.h / (double)game->viewport.height / LIBSUPERDERPY_IMAGE_SCALE, 0.0, 0);
+#endif
+
+		al_draw_scaled_rotated_bitmap(hover ? game->data->cursorhover : game->data->cursorbmp, 9, 4, game->data->mouseX * game->clip_rect.w + game->clip_rect.x, game->data->mouseY * game->clip_rect.h + game->clip_rect.y, game->clip_rect.w / (double)game->viewport.width * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, game->clip_rect.h / (double)game->viewport.height * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, 0, 0);
 	}
 }
 
@@ -159,7 +195,7 @@ void DrawBuildInfo(struct Game* game) {
 		snprintf(revs, 255, "%s-%s", LIBSUPERDERPY_GAME_GIT_REV, LIBSUPERDERPY_GIT_REV);
 		DrawTextWithShadow(game->_priv.font_console, al_map_rgb(255, 255, 255), w - 10, h * 0.965, ALLEGRO_ALIGN_RIGHT, revs);
 
-		snprintf(revs, 255, "%s (%d)", game->data->scene.name, game->data->debuginfo);
+		snprintf(revs, 255, "[%d] %s (%d)", game->data->sceneid, game->data->scene.name, game->data->debuginfo);
 		DrawTextWithShadow(game->_priv.font_console, al_map_rgb(255, 255, 255), 10, h * 0.965, ALLEGRO_ALIGN_LEFT, revs);
 
 		al_hold_bitmap_drawing(false);
@@ -178,6 +214,15 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 		}
 		return true;
 	}
+
+#ifdef __EMSCRIPTEN__
+	if (game->data->cursor && game->data->mouseX > 0.94 && game->data->mouseY > 0.90 && game->data->mouseX < 0.98 && game->data->mouseY < 0.98) {
+		if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
+			ShowMenu(game);
+			return true;
+		}
+	}
+#endif
 
 	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_F)) { // || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)) {
 		ToggleFullscreen(game);
@@ -204,11 +249,14 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 		game->data->mouseY = Clamp(0, 1, (ev->touch.y - game->clip_rect.y) / (double)game->clip_rect.h);
 	}
 
-#ifndef __EMSCRIPTEN__
 	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) {
+#ifndef __EMSCRIPTEN__
 		UnloadAllGamestates(game);
-	}
+#else
+		ShowMenu(game);
 #endif
+		return true;
+	}
 
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
 		game->data->sceneid--;
@@ -236,9 +284,11 @@ struct CommonResources* CreateGameData(struct Game* game) {
 	data->cursor = false;
 	data->cursorbmp = al_load_bitmap(GetDataFilePath(game, "kursor_standby.png"));
 	data->cursorhover = al_load_bitmap(GetDataFilePath(game, "kursor_hover.png"));
+	data->menu = al_load_bitmap(GetDataFilePath(game, "menu_przycisk1_standby.png"));
+	data->menu2 = al_load_bitmap(GetDataFilePath(game, "menu_przycisk2_hover.png"));
 	data->start_time = al_get_time();
 	data->lowmem = false;
-	data->sceneid = -1;
+	data->sceneid = strtol(GetConfigOptionDefault(game, LIBSUPERDERPY_GAMENAME, "scene", "0"), NULL, 10) - 1;
 	data->pause = false;
 	data->font = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 42, 0);
 	data->creditsfont = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 24, 0);
@@ -257,6 +307,8 @@ void DestroyGameData(struct Game* game) {
 	al_destroy_bitmap(game->data->cursorbmp);
 	al_destroy_bitmap(game->data->cursorhover);
 	al_destroy_bitmap(game->data->gradient);
+	al_destroy_bitmap(game->data->menu);
+	al_destroy_bitmap(game->data->menu2);
 	al_destroy_font(game->data->font);
 	al_destroy_font(game->data->creditsfont);
 	al_destroy_bitmap(game->data->banner);

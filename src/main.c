@@ -28,6 +28,7 @@ int main(int argc, char** argv) {
 				.event = GlobalEventHandler,
 				.destroy = DestroyGameData,
 				.prelogic = PreLogic,
+				.postlogic = PostLogic,
 				.compositor = Compositor,
 				.postdraw = DrawBuildInfo,
 			},
@@ -72,7 +73,6 @@ int main(int argc, char** argv) {
 		PrintConsole(game, "Low memory mode enabled");
 	} else {
 		LoadGamestate(game, "logo");
-		LoadGamestate(game, "anim");
 		LoadGamestate(game, "myszka");
 		LoadGamestate(game, "naparstki");
 		LoadGamestate(game, "naparstki2");
@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
 		LoadGamestate(game, "armata");
 	}
 
-	StartGamestate(game, "anim");
+	StartInitialGamestate(game);
 
 	al_hide_mouse_cursor(game->display);
 

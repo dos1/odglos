@@ -32,6 +32,7 @@ struct GamestateResources {
 int Gamestate_ProgressCount = 7;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
+	if (game->data->footnote) { return; }
 	data->counter -= delta;
 	if (data->counter < 0) {
 		data->angle = sin(game->time / 2.0) / 16.0;

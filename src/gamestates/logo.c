@@ -14,6 +14,7 @@ int Gamestate_ProgressCount = 5; // number of loading steps as reported by Games
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	// Here you should do all your game logic as if <delta> seconds have passed.
+	if (game->data->footnote) { return; }
 }
 
 void Gamestate_Tick(struct Game* game, struct GamestateResources* data) {
