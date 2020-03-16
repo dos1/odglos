@@ -5,7 +5,6 @@ struct GamestateResources {
 	// This struct is for every resource allocated and used by your gamestate.
 	// It gets created on load and then gets passed around to all other function calls.
 	ALLEGRO_BITMAP *logo, *chodnik, *gradient, *by;
-	ALLEGRO_AUDIO_STREAM* music;
 
 	int counter;
 };
@@ -91,9 +90,6 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->by = al_load_bitmap(GetDataFilePath(game, "byholypangolin.png"));
 	progress(game);
 
-	data->music = al_load_audio_stream(GetDataFilePath(game, "logo.flac"), 4, 2048);
-	al_set_audio_stream_playing(data->music, false);
-	al_attach_audio_stream_to_mixer(data->music, game->audio.music);
 	return data;
 }
 
@@ -104,7 +100,6 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	al_destroy_bitmap(data->gradient);
 	al_destroy_bitmap(data->logo);
 	al_destroy_bitmap(data->by);
-	al_destroy_audio_stream(data->music);
 	free(data);
 }
 
@@ -112,14 +107,14 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	// Called when this gamestate gets control. Good place for initializing state,
 	// playing music etc.
 	StopMusic(game);
-	al_set_audio_stream_playing(data->music, true);
+	PlaySound(game, "logo", 1.0);
 	data->counter = 0;
 	HideMouse(game);
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
 	// Called when gamestate gets stopped. Stop timers, music etc. here.
-	al_set_audio_stream_playing(data->music, false);
+	StopSound(game, "logo");
 }
 
 // Optional endpoints:
@@ -132,12 +127,10 @@ void Gamestate_PostLoad(struct Game* game, struct GamestateResources* data) {
 void Gamestate_Pause(struct Game* game, struct GamestateResources* data) {
 	// Called when gamestate gets paused (so only Draw is being called, no Logic nor ProcessEvent)
 	// Pause your timers and/or sounds here.
-	al_set_audio_stream_playing(data->music, false);
 }
 
 void Gamestate_Resume(struct Game* game, struct GamestateResources* data) {
 	// Called when gamestate gets resumed. Resume your timers and/or sounds here.
-	al_set_audio_stream_playing(data->music, true);
 }
 
 void Gamestate_Reload(struct Game* game, struct GamestateResources* data) {

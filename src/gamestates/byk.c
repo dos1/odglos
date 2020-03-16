@@ -8,15 +8,9 @@ struct GamestateResources {
 
 	ALLEGRO_BITMAP *bg, *gradient, *leaf;
 
-	ALLEGRO_AUDIO_STREAM* ambient;
-
-	ALLEGRO_SAMPLE_INSTANCE* music;
-	ALLEGRO_SAMPLE* loop;
-
 	ALLEGRO_SAMPLE_INSTANCE* sound;
 	ALLEGRO_SAMPLE* sample;
 
-	float pos;
 	int state;
 	bool volup;
 	float vol;
@@ -27,7 +21,7 @@ struct GamestateResources {
 	bool footnoted;
 };
 
-int Gamestate_ProgressCount = 8; // number of loading steps as reported by Gamestate_Load; 0 when missing
+int Gamestate_ProgressCount = 6; // number of loading steps as reported by Gamestate_Load; 0 when missing
 
 #define SCALE 0.66666
 
@@ -117,7 +111,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		if (data->state == 0 && !data->munching) {
 			SelectSpritesheet(game, data->byk, "chew");
 			data->munching = true;
-			al_set_sample_instance_playing(data->music, true);
+			PlayLoop(game, "funky", 1.0, false);
 			HideMouse(game);
 		}
 	}
@@ -149,20 +143,6 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->leaf = al_load_bitmap(GetDataFilePath(game, "byk/lisc.png"));
 	progress(game);
 
-	data->ambient = al_load_audio_stream(GetDataFilePath(game, "byk/dwor.flac"), 4, 2048);
-	al_set_audio_stream_playing(data->ambient, false);
-	al_set_audio_stream_playmode(data->ambient, ALLEGRO_PLAYMODE_LOOP);
-	al_set_audio_stream_gain(data->ambient, 0.666);
-	al_attach_audio_stream_to_mixer(data->ambient, game->audio.music);
-	progress(game);
-
-	data->loop = al_load_sample(GetDataFilePath(game, "byk/funky.flac"));
-	data->music = al_create_sample_instance(data->loop);
-	al_attach_sample_instance_to_mixer(data->music, game->audio.music);
-	al_set_sample_instance_gain(data->music, 1.0);
-	al_set_sample_instance_playmode(data->music, ALLEGRO_PLAYMODE_LOOP);
-	progress(game);
-
 	data->sample = al_load_sample(GetDataFilePath(game, "byk/crunch.flac"));
 	data->sound = al_create_sample_instance(data->sample);
 	al_attach_sample_instance_to_mixer(data->sound, game->audio.fx);
@@ -182,12 +162,9 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	// Called when the gamestate library is being unloaded.
 	// Good place for freeing all allocated memory and resources.
-	al_destroy_audio_stream(data->ambient);
 	DestroyCharacter(game, data->byk);
 	al_destroy_sample_instance(data->sound);
 	al_destroy_sample(data->sample);
-	al_destroy_sample_instance(data->music);
-	al_destroy_sample(data->loop);
 	al_destroy_bitmap(data->bg);
 	al_destroy_bitmap(data->gradient);
 	al_destroy_bitmap(data->leaf);
@@ -199,7 +176,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	// playing music etc.
 	ShowMouse(game);
 	StopMusic(game);
-	al_set_audio_stream_playing(data->ambient, true);
+	PlayMusic(game, "dwor", 1.0);
 	al_play_sample_instance(data->sound);
 	SetCharacterPosition(game, data->byk, 775 * SCALE, 775 * SCALE, 0);
 	SelectSpritesheet(game, data->byk, "open");
@@ -208,7 +185,6 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->volup = false;
 	data->byk->scaleX = SCALE;
 	data->byk->scaleY = SCALE;
-	data->pos = 0;
 	data->delay = 0;
 	data->munching = false;
 	data->footnoted = false;
@@ -217,9 +193,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
 	// Called when gamestate gets stopped. Stop timers, music etc. here.
-	al_set_sample_instance_playing(data->music, false);
 	al_set_sample_instance_playing(data->sound, false);
-	al_set_audio_stream_playing(data->ambient, false);
 }
 
 // Optional endpoints:
@@ -232,20 +206,12 @@ void Gamestate_PostLoad(struct Game* game, struct GamestateResources* data) {
 void Gamestate_Pause(struct Game* game, struct GamestateResources* data) {
 	// Called when gamestate gets paused (so only Draw is being called, no Logic nor ProcessEvent)
 	// Pause your timers and/or sounds here.
-	data->pos = al_get_sample_instance_position(data->music);
-	al_set_sample_instance_playing(data->music, false);
 	al_set_sample_instance_playing(data->sound, false);
-	al_set_audio_stream_playing(data->ambient, false);
 }
 
 void Gamestate_Resume(struct Game* game, struct GamestateResources* data) {
 	// Called when gamestate gets resumed. Resume your timers and/or sounds here.
-	if (data->munching) {
-		al_set_sample_instance_playing(data->music, true);
-		al_set_sample_instance_position(data->music, data->pos);
-	}
 	al_set_sample_instance_playing(data->sound, true);
-	al_set_audio_stream_playing(data->ambient, true);
 }
 
 void Gamestate_Reload(struct Game* game, struct GamestateResources* data) {

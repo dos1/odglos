@@ -409,7 +409,7 @@ static void DrawCredits(struct Game* game, int frame, void** data) {
 
 static struct SceneDefinition SCENES[] = {
 	{"kostki_animacja02_cwierc_obrotu_zapetlic", .repeats = 3, .freezes = {{23, ""}}, .bg = "ekran_startowy_tlo_przyciete"}, //
-	{"kostki_animacja03_waz", .audio = {MUSIC, "odlot"}, .bg = "ekran_startowy_tlo_przyciete"}, //
+	{"kostki_animacja03_waz", .audio = {LOOP, "odlot"}, .bg = "ekran_startowy_tlo_przyciete"}, //
 	{">logo"}, //
 	{"wedrowka_rodzinki_po_trawce", .audio = {MUSIC, "wedrowka_lapis"}, .freezes = {{30, .footnote = 9}}}, //
 	{"rodzinka_jak_wiewiorki", .freezes = {{20, "DSCF8146_maska", .audio = {MUSIC, "wedrowka2_lapis"}}}}, //
