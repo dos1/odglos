@@ -59,27 +59,27 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	switch (data->myszol) {
 		case MYSZOL_RIGHT:
 			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				2500 * SCALE * data->pos, 1080 * SCALE / 2.0 + data->rand * 1080 * SCALE, 0.5, 0.5, data->angle * 0.2 - 0.1, 0);
+				(2500 * SCALE * data->pos) * 0.6666, (1080 * SCALE / 2.0 + data->rand * 1080 * SCALE) * 0.666, 0.25, 0.25, data->angle * 0.2 - 0.1, 0);
 			break;
 		case MYSZOL_LEFT:
 			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				2500 * SCALE * (1.0 - data->pos) - 500 * SCALE, 1080 * SCALE / 2.0 + data->rand * 1080 * SCALE, 0.5, 0.5, data->angle * 0.2 - 0.1, 0);
+				(2500 * SCALE * (1.0 - data->pos) - 500 * SCALE) * 0.666, (1080 * SCALE / 2.0 + data->rand * 1080 * SCALE) * 0.666, 0.25, 0.25, data->angle * 0.2 - 0.1, 0);
 			break;
 		case MYSZOL_TOP:
 			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				1920 * SCALE / 2.0 + 1920 * data->rand, 1300 * SCALE * (1.0 - data->pos) - 200 * SCALE, 0.5, 0.5, data->angle * 0.2 - 0.1, 0);
+				(1920 * SCALE / 2.0 + 1920 * data->rand) * 0.666, (1300 * SCALE * (1.0 - data->pos) - 200 * SCALE) * 0.666, 0.25, 0.25, data->angle * 0.2 - 0.1, 0);
 			break;
 		case MYSZOL_BOTTOM:
 			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				1920 * SCALE / 2.0 + 1920 * data->rand, 1300 * SCALE * data->pos, 0.5, 0.5, data->angle * 0.2 - 0.1, 0);
+				(1920 * SCALE / 2.0 + 1920 * data->rand) * 0.666, (1300 * SCALE * data->pos) * 0.666, 0.25, 0.25, data->angle * 0.2 - 0.1, 0);
 			break;
 		case MYSZOL_BOTTOM_LEFT:
 			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				2500 * SCALE * (1.0 - data->pos) - 500 * SCALE, 1300 * SCALE * data->pos, 0.5, 0.5, data->angle * 0.2 - 0.1, 0);
+				(2500 * SCALE * (1.0 - data->pos) - 500 * SCALE) * 0.666, (1300 * SCALE * data->pos) * 0.666, 0.25, 0.25, data->angle * 0.2 - 0.1, 0);
 			break;
 		case MYSZOL_TOP_RIGHT:
 			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				2500 * SCALE * data->pos, 1300 * SCALE * (1.0 - data->pos) - 200 * SCALE, 0.5, 0.5, data->angle * 0.2 - 0.1, 0);
+				(2500 * SCALE * data->pos) * 0.666, (1300 * SCALE * (1.0 - data->pos) - 200 * SCALE) * 0.666, 0.25, 0.25, data->angle * 0.2 - 0.1, 0);
 			break;
 	}
 }
@@ -150,6 +150,8 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	// Called when this gamestate gets control. Good place for initializing state,
 	// playing music etc.
 	HideMouse(game);
+	StopMusic(game);
+	PlaySound(game, "przejscie2", 1.5);
 	data->counter = 0;
 	data->con = 0;
 	data->pos = 0;
