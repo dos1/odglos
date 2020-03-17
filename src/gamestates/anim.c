@@ -33,6 +33,7 @@ struct GamestateResources {
 	bool loaded;
 	bool finished;
 	bool stay;
+	bool started;
 	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
 	void (*draw)(struct Game*, int, void**);
 	struct Character* character;
@@ -128,7 +129,9 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 		}
 	}
 
-	HandleAudio(game, game->data->scene.audio);
+	if (data->started) {
+		HandleAudio(game, game->data->scene.audio);
+	}
 
 	ResetAnimation(data->anim);
 	data->loaded = true;
@@ -369,10 +372,15 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
+	data->started = true;
 	if (data->finished) {
 		HandleDispatch(game, data, NULL);
+	} else {
+		HandleAudio(game, game->data->scene.audio);
 	}
 	data->delay = 0;
 }
 
-void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
+void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
+	data->started = false;
+}
