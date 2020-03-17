@@ -489,25 +489,6 @@ static struct SceneDefinition SCENES[] = {
 			{107, "DSCF2982_maska", .audio = {MUSIC, "gawron_poko_mini"}},
 			{290, "DSCF3781_maska", .pre_audio = {STOP_LOOP, "LASER SHOWER S LIST L 12 35 45"}, .audio = {LOOP, "BIRDY K K LAP L 05 29 08"}},
 		}}, //
-	//{">przyciski"},
-	//{"przyciski_na_stacji_przycisk1", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	//{"przyciski_na_stacji_przycisk1_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	//{"przyciski_na_stacji_przycisk1_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	//{"przyciski_na_stacji_przycisk2", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	//{"przyciski_na_stacji_przycisk2_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	//{"przyciski_na_stacji_przycisk2_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	//{"przyciski_na_stacji_przycisk3", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	//{"przyciski_na_stacji_przycisk3_samo_wlaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	//{"przyciski_na_stacji_przycisk3_samo_wylaczenie", .bg = "przyciski_na_stacji_tlo", .fg = "przyciski_na_stacji_wierzch"},
-	//{"przyciski_na_kominie_przycisk_1_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	//{"przyciski_na_kominie_przycisk_1_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	//{"przyciski_na_kominie_przycisk_1_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	//{"przyciski_na_kominie_przycisk_2_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	//{"przyciski_na_kominie_przycisk_2_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	//{"przyciski_na_kominie_przycisk_2_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	//{"przyciski_na_kominie_przycisk_3_calosc", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	//{"przyciski_na_kominie_przycisk_3_samo_wlaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
-	//{"przyciski_na_kominie_przycisk_3_samo_wylaczanie", .bg = "przyciski_na_kominie_tlo", .fg = "przyciski_na_kominie_warstwa_wierzchnia"},
 
 	{"ciemna_trawa_samochod_sowka", .sounds = {{1, {SOUND, "S LIST FX 01 37 00-001 S LIST FX 01 53 86-001"}}}, .speed = 1.25}, //
 	{"ciemna_trawa_waz", .sounds = {{2, {SOUND, "S LIST FX 07 17 05-001"}}}, .speed = 1.25}, //
@@ -599,31 +580,6 @@ static struct SceneDefinition SCENES[] = {
 	{"animacje_koncowe_rodzinki", .audio = {SOUND, "napisy_metrograph"}, .callback = Credits, .draw = DrawCredits, .speed = 0.5}, //
 	{">blank", .audio = {STOP_SOUND, "napisy_metrograph"}}, //
 	{"donice_13_tasma", .speed = 0.5, .freezes = {{0, "donice_w_ogrodzie_maski", .audio = {SOUND, "pudelko3"}, .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}}, //
-	//
-	//{"sowka_na_trawie"},
-	//{"kuzyn_na_galeziach_podwojne"},
-	//{"winorosle1_ciemnoniebieski_TAK"},
-	//{"winorosle2_jasnoniebieski_bez_samych_lisciTAK"},
-	//{"winorosle3_zolty_TAK"},
-	//{"ule_jesienne"},
-	//{"czerwona_sciana_z_winorosli"},
-	//{"donica_w_hortensjach_05_samochod_z_sowka_wjezdza"},
-	//{"donica_w_hortensjach_03_sowka_srednia_wychodzi"},
-	//{"donica_w_hortensjach_02_sowka_srednia_wchodzi"},
-	//{"donica_w_hortensjach_04_samochod_z_sowka_wyjezdza"},
-	//{"myszkowanie_w_wiklinie"},
-	//{"duch_portalu_animacja_oczu_osobno_lewe_TAK_DO_GRY", .callback = DuchPortalu},
-	//{"duch_portalu_animacja_oczu_osobno_prawe_TAK_DO_GRY", .callback = DuchPortalu},
-	//{"stolik_animacja", .freezes = {{0, ""}}, .bg = "stolik_tlo", .fg = "stolik_drzewa_na_przedzie"},
-	//{"donice_28_sowka_duza_wchodzi_do_lewej_donicy"},
-	//{"sucha_trawa_aksamitki_waz_stary"},
-	//{"donice_29_sowka_srednia_wychodzi_z_prawej_donicy"},
-	//{"sowka_idzie_w_lesie"},
-	//{"kuzyn_w_lesie"},
-	//{"donice_02_samochod_duzy_jedzie_w_lewo", .speed = 0.75},
-	//{"donice_07_sowka_srednia_wjezdza_do_donicy_z_lewej"},
-	//{"donice_20_samochod_maly_bez_sowki_wjezdza_z_prawej"},
-	//{"donica_w_hortensjach_01_donica_sie_pojawia"},
 };
 
 bool Dispatch(struct Game* game) {
