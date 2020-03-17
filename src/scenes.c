@@ -209,6 +209,111 @@ static bool Dzwiek3(struct Game* game, struct Character* character, void** data)
 	return true;
 }
 
+static bool Skrzypce(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
+	if (!*data) {
+		*data = malloc(sizeof(bool) * 6);
+		bool* d = *data;
+		for (int i = 0; i < 6; i++) {
+			*(d + i) = false;
+		}
+	}
+	return false;
+}
+
+static bool Skrzypce1(struct Game* game, struct Character* character, void** data);
+static bool Skrzypce2(struct Game* game, struct Character* character, void** data);
+static bool Skrzypce3(struct Game* game, struct Character* character, void** data);
+static bool Skrzypce4(struct Game* game, struct Character* character, void** data);
+static bool Skrzypce5(struct Game* game, struct Character* character, void** data);
+static bool Skrzypce6(struct Game* game, struct Character* character, void** data);
+
+static bool SkrzypceCheck(struct Game* game, void** data) {
+	bool* d = *data;
+	for (int i = 0; i < 6; i++) {
+		PrintConsole(game, "checking skrzypce %d", i);
+		if (!*(d + i)) {
+			PrintConsole(game, "skrzypce %d is false", i);
+			Enqueue(game, (struct SceneDefinition) //
+				{"skrzypce2_animacja_przerywnikowa", //
+					.freezes = {{3, "skrzypce_maski_DSCF9053", //
+						.links = {
+							{{0.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce1},
+							{{10.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce2},
+							{{20.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce3},
+							{{30.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce4},
+							{{40.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce5},
+							{{50.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce6},
+						}}},
+					.callback_data = *data});
+			return false;
+		}
+	}
+	free(*data);
+	*data = NULL;
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_animacja_przerywnikowa", .freezes = {{3, .footnote = 3}}});
+	return true;
+}
+
+static bool Skrzypce1(struct Game* game, struct Character* character, void** data) {
+	bool* d = *data;
+	*(d + 0) = true;
+
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_dzwiek1", .callback_data = *data, .audio = {SOUND, "skrzypce1_orange"}});
+	SkrzypceCheck(game, data);
+
+	return true;
+}
+
+static bool Skrzypce2(struct Game* game, struct Character* character, void** data) {
+	bool* d = *data;
+	*(d + 1) = true;
+
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_dzwiek2", .callback_data = *data, .audio = {SOUND, "skrzypce2_orange"}});
+	SkrzypceCheck(game, data);
+
+	return true;
+}
+
+static bool Skrzypce3(struct Game* game, struct Character* character, void** data) {
+	bool* d = *data;
+	*(d + 2) = true;
+
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_dzwiek3", .callback_data = *data, .audio = {SOUND, "skrzypce3_orange"}});
+	SkrzypceCheck(game, data);
+
+	return true;
+}
+
+static bool Skrzypce4(struct Game* game, struct Character* character, void** data) {
+	bool* d = *data;
+	*(d + 3) = true;
+
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_dzwiek4", .callback_data = *data, .audio = {SOUND, "skrzypce5_orange"}});
+	SkrzypceCheck(game, data);
+
+	return true;
+}
+
+static bool Skrzypce5(struct Game* game, struct Character* character, void** data) {
+	bool* d = *data;
+	*(d + 4) = true;
+
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_dzwiek5", .callback_data = *data, .audio = {SOUND, "skrzypce6_orange"}});
+	SkrzypceCheck(game, data);
+
+	return true;
+}
+
+static bool Skrzypce6(struct Game* game, struct Character* character, void** data) {
+	bool* d = *data;
+	*(d + 5) = true;
+
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_dzwiek6", .callback_data = *data, .audio = {SOUND, "skrzypce4_orange"}});
+	SkrzypceCheck(game, data);
+
+	return true;
+}
+
 static bool Ul(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
 	if (!*data) {
 		*data = malloc(sizeof(bool) * 3);
@@ -422,17 +527,29 @@ static struct SceneDefinition SCENES[] = {
 
 	{"donice_01_samochod_duzy_jedzie_w_prawo", .audio = {SOUND, "donice3_points"}, .freezes = {{18, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}}, //
 	{"donice_08_mala_sowka_z_samochodem_wyjezdza_w_przod", .audio = {SOUND, "donice4_points"}}, //
-	//{">skrzypce"},
-	{"skrzypce2_animacja_przerywnikowa", .audio = {SOUND, "S RHAP FX 05 56 09-001"}, .checkpoint = true}, //
-	{"skrzypce2_dzwiek1", .freezes = {{0, "skrzypce_maski_DSCF9053", .audio = {SOUND, "skrzypce1_orange"}}}}, //
+
+	{"skrzypce2_animacja_przerywnikowa",
+		.callback = Skrzypce,
+		.audio = {SOUND, "S RHAP FX 05 56 09-001"},
+		.freezes = {{3, "skrzypce_maski_DSCF9053",
+			.links = {
+				{{0.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce1},
+				{{10.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce2},
+				{{20.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce3},
+				{{30.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce4},
+				{{40.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce5},
+				{{50.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce6},
+			}}},
+		.checkpoint = true}, //
+	{"skrzypce2_dzwiek1", .audio = {SOUND, "skrzypce1_orange"}}, //
 	{"skrzypce2_dzwiek2", .audio = {SOUND, "skrzypce2_orange"}}, //
 	{"skrzypce2_dzwiek3", .audio = {SOUND, "skrzypce3_orange"}}, //
 	{"skrzypce2_dzwiek4", .audio = {SOUND, "skrzypce5_orange"}}, //
 	{"skrzypce2_dzwiek5", .audio = {SOUND, "skrzypce6_orange"}}, //
 	{"skrzypce2_dzwiek6", .audio = {SOUND, "skrzypce4_orange"}}, //
-	{"skrzypce2_animacja_koncowa", .repeats = 1, .freezes = {{0, .footnote = 3}}, .sounds = {{1, {SOUND, "skrzypce_orange"}}}}, //
-	{"gawron_i_drewniany_medrzec",
-		.audio = {MUSIC, "gawron_poko"},
+	{"skrzypce2_animacja_koncowa", .repeats = 1, .sounds = {{1, {SOUND, "skrzypce_orange"}}}}, //
+
+	{"gawron_i_drewniany_medrzec", .audio = {MUSIC, "gawron_poko"}, //
 		.sounds = {
 			{4, {LOOP, "CRICKET GOSSIP S VIEW L 03 49 48", .volume = 0.9}},
 			{18, {STOP_LOOP, "CRICKET GOSSIP S VIEW L 03 49 48"}},
@@ -442,16 +559,16 @@ static struct SceneDefinition SCENES[] = {
 			{107, {STOP_LOOP, "CRICKET GOSSIP S VIEW L 03 49 48"}},
 			{108, {SOUND, "drop_poko", .volume = 1.5}},
 			{115, {SOUND, "lawka/13", .volume = 1.5}},
-			{123, {SOUND, "lawka/14"}}, //
+			{123, {SOUND, "lawka/14"}},
 			{124, {LOOP, "DRUNK DRONE K NOR L 15 31 2"}},
 			{187, {SOUND, "lawka/16"}},
-			{188, {SOUND, "lawka/19"}}, //
-			{189, {SOUND, "lawka/5"}}, //
-			{190, {SOUND, "lawka/25"}}, //
-			{191, {SOUND, "lawka/29"}}, //
+			{188, {SOUND, "lawka/19"}},
+			{189, {SOUND, "lawka/5"}},
+			{190, {SOUND, "lawka/25"}},
+			{191, {SOUND, "lawka/29"}},
 			{192, {SOUND, "lawka/32"}},
-			{193, {SOUND, "lawka/33"}}, //
-			{194, {SOUND, "lawka/21"}}, //
+			{193, {SOUND, "lawka/33"}},
+			{194, {SOUND, "lawka/21"}},
 			{195, {SOUND, "lawka/31"}},
 			{199, {STOP_LOOP, "DRUNK DRONE K NOR L 15 31 2"}},
 			{200, {SOUND, "lawka/27"}},
@@ -516,7 +633,7 @@ static struct SceneDefinition SCENES[] = {
 	{"animacja_poczatkowa", .audio = {SOUND, "pergola_trickstar"}, .repeats = 2, .callback = Pergola, .checkpoint = true}, //
 	{">pergola"}, //
 	{"pergola_animacja_koncowa2", .callback = Pergola2, .audio = {MUSIC, "pergola2_trickstar"}}, //
-	{"pergola_animacja_koncowa6"}, //, .freezes = {{9, .footnote = 3}}}, //
+	{"pergola_animacja_koncowa6"}, //
 	{"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .audio = {MUSIC, "dwor"}, .callback = Ul, .freezes = {{0, "IMG_0053_maska", .links = {{{0.0, 1.0, 0.0}, .callback = UlLewo}, {{1.0, 0.0, 0.0}, .callback = UlGora}, {{0.0, 0.0, 1.0}, .callback = UlDol}}}}, .checkpoint = true}, //
 	{"ul_duzy_animacja_koncowa_samochod", .sounds = {{0, {SOUND, "K ROB FX 03 26 00-001"}}}}, //
 	{"pudelko_w_ogrodzie", .audio = {MUSIC, "pienki"}, .freezes = {{22, "pudelko_w_ogrodzie_maska1", .audio = {SOUND, "pac"}}, {56, "pudelko_w_ogrodzie_maska3", .audio = {SOUND, "pac"}}, {93, "pudelko_w_ogrodzie_maska2", .audio = {SOUND, "pac"}}, {119, "pudelko_w_ogrodzie_maska3", .audio = {SOUND, "pac"}}, {157, "pudelko_w_ogrodzie_maska2", .audio = {SOUND, "pac"}}, {183, "pudelko_w_ogrodzie_maska3", .audio = {SOUND, "pac"}}, {195, .footnote = 8}}, .checkpoint = true}, //
@@ -527,7 +644,7 @@ static struct SceneDefinition SCENES[] = {
 	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}, .checkpoint = true}, //
 	{">naparstki"}, //
 	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar", 1.0}, .checkpoint = true}, //
-	{"02statki_szyszki_tasmy_animacja2"}, // .freezes = {{11, .footnote = 4}}}, //
+	{"02statki_szyszki_tasmy_animacja2"}, //
 	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}}, //
 	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska"}}}, //
 	{"06statki_szyszki_tasmy_animacja5"}, //
