@@ -6,7 +6,7 @@ static void CollectStreams(struct Game* game) {
 	if (game->data->audio.paused) {
 		return;
 	}
-	for (int i = 0; i <= 32; i++) {
+	for (int i = 0; i < 32; i++) {
 		if (game->data->audio.sounds[i].stream) {
 			if (!al_get_audio_stream_playing(game->data->audio.sounds[i].stream)) {
 				al_destroy_audio_stream(game->data->audio.sounds[i].stream);
