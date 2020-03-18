@@ -73,6 +73,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	// Called when this gamestate gets control. Good place for initializing state,
 	// playing music etc.
 	StopMusic(game);
+	data->time = 0;
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
