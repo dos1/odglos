@@ -164,9 +164,9 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			}
 
 			if (data->mode) {
-				ResetAnimation(data->right.animations[data->right.j][data->right.i]);
+				ResetAnimation(data->right.animations[data->right.j][data->right.i], true);
 			} else {
-				ResetAnimation(data->left.animations[data->left.j][data->left.i]);
+				ResetAnimation(data->left.animations[data->left.j][data->left.i], true);
 			}
 		}
 	}

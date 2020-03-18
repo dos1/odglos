@@ -98,7 +98,7 @@ struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename
 	return anim;
 }
 
-void ResetAnimation(struct AnimationDecoder* anim) {
+void ResetAnimation(struct AnimationDecoder* anim, bool reset_bitmap) {
 	if (anim->position == 0) {
 		return;
 	}
@@ -109,14 +109,16 @@ void ResetAnimation(struct AnimationDecoder* anim) {
 	}
 	WebPAnimDecoderReset(anim->decoder);
 
-	ALLEGRO_LOCKED_REGION* lock = al_lock_bitmap(anim->bitmap, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
 	uint8_t* buf;
 	WebPAnimDecoderGetNext(anim->decoder, &buf, &anim->timestamp);
-	for (int i = 0; i < al_get_bitmap_height(anim->bitmap); i++) {
-		memcpy(lock->data + i * lock->pitch, buf + i * al_get_bitmap_width(anim->bitmap) * al_get_pixel_size(lock->format),
-			al_get_bitmap_width(anim->bitmap) * lock->pixel_size);
+	if (reset_bitmap) {
+		ALLEGRO_LOCKED_REGION* lock = al_lock_bitmap(anim->bitmap, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
+		for (int i = 0; i < al_get_bitmap_height(anim->bitmap); i++) {
+			memcpy(lock->data + i * lock->pitch, buf + i * al_get_bitmap_width(anim->bitmap) * al_get_pixel_size(lock->format),
+				al_get_bitmap_width(anim->bitmap) * lock->pixel_size);
+		}
+		al_unlock_bitmap(anim->bitmap);
 	}
-	al_unlock_bitmap(anim->bitmap);
 
 	anim->duration = anim->timestamp;
 	anim->old_timestamp = anim->timestamp;
@@ -131,7 +133,7 @@ void ResetAnimation(struct AnimationDecoder* anim) {
 
 bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 	if (!anim->initialized) {
-		ResetAnimation(anim);
+		ResetAnimation(anim, true);
 	}
 
 	anim->position += timestamp * 1000;
@@ -141,7 +143,7 @@ bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 		anim->shouldload = false;
 		if (!WebPAnimDecoderHasMoreFrames(anim->decoder)) {
 			if (anim->repeat) {
-				ResetAnimation(anim);
+				ResetAnimation(anim, true);
 				return true;
 			}
 			anim->done = true;
@@ -180,7 +182,7 @@ bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 
 ALLEGRO_BITMAP* GetAnimationFrame(struct AnimationDecoder* anim) {
 	if (!anim->initialized) {
-		ResetAnimation(anim);
+		ResetAnimation(anim, true);
 	}
 	return anim->bitmap;
 }
@@ -199,7 +201,7 @@ int GetAnimationFrameCount(struct AnimationDecoder* anim) {
 
 float GetAnimationFrameDuration(struct AnimationDecoder* anim) {
 	if (!anim->initialized) {
-		ResetAnimation(anim);
+		ResetAnimation(anim, true);
 	}
 	return (float)anim->duration / 1000.0;
 }
@@ -233,13 +235,13 @@ SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream) {
 
 SPRITESHEET_STREAM(AnimationStream) {
 	bool complete = !UpdateAnimation(data, delta);
-	ALLEGRO_BITMAP* bitmap = al_clone_bitmap(GetAnimationFrame(data));
+	ALLEGRO_BITMAP* bitmap = GetAnimationFrame(data);
 	double duration = GetAnimationFrameDuration(data);
 	int frame = GetAnimationFrameNo(data);
 	//PrintConsole(game, "STREAM: frame %d duration %f delta %f", frame, GetAnimationFrameDuration(data), delta);
 	if (complete) {
 		PrintConsole(game, "[AnimationStream] %s: complete", GetAnimationName(data));
-		ResetAnimation(data);
+		ResetAnimation(data, false);
 	}
 	return (struct SpritesheetFrame){
 		.bitmap = bitmap,
@@ -258,5 +260,6 @@ SPRITESHEET_STREAM(AnimationStream) {
 		.start = frame == 0,
 		.end = complete,
 		.shared = false,
+		.owned = false,
 	};
 }

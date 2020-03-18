@@ -133,7 +133,7 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 		HandleAudio(game, game->data->scene.audio);
 	}
 
-	ResetAnimation(data->anim);
+	ResetAnimation(data->anim, true);
 	data->loaded = true;
 	//PrintConsole(game, "Loaded: %s", path);
 }
@@ -230,7 +230,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 				if (!data->repeats) {
 					HandleDispatch(game, data, NULL);
 				} else {
-					ResetAnimation(data->anim);
+					ResetAnimation(data->anim, true);
 					data->repeats--;
 				}
 			}
