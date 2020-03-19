@@ -614,7 +614,7 @@ static struct SceneDefinition SCENES[] = {
 	{"turkusowe_cos", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF9030_maska", .audio = {MUSIC, "rave"}}}}, //
 	{"rzezby_w_lazience_2_wyciszenie_sznureczka", .audio = {MUSIC, "points"}, .checkpoint = true}, //
 	{"sowka_i_rzezby_01_sowka_przejezdza", .sounds = {{12, {SOUND, "lawka/13"}}}, .freezes = {{8, .footnote = 6}, {18, "DSCF7440_maska2_z_zakochana_para", .links = {{{1.0, 0.0, 0.0}, .callback = Zakochani}, {{0.0, 1.0, 0.0}, .callback = Muzykanci}}}}}, //
-	{"031_donice_dom1", .audio = {SOUND, "S LIST FX 10 39 39-001", .stop_music = true}}, //
+	{"031_donice_dom1", .audio = {STOP_MUSIC}, .sounds = {{4, {SOUND, "S LIST FX 10 39 39-001"}}}, .speed = 1.25}, //
 	{"donice_16_samochod_kartonowy_duzy_wjezdza_z_prawej", .freezes = {{0, "donice_w_ogrodzie_maski", .audio = {SOUND, "donice4_points"}, .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}, .checkpoint = true}, //
 	{"donice_22_sowka_srednia_whodzi_do_duzej_donicy_z_lewej", .audio = {SOUND, "donice3_points"}, .freezes = {{7, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}}, //
 	{"donice_15_maly_samochodzik_kartonowy_wyjezdza", .audio = {SOUND, "donice1_points"}}, //
