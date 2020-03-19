@@ -43,9 +43,7 @@ static CHARACTER_CALLBACK(OutroCb) {
 	character->callback = GoForwardCb;
 }
 
-void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
-	if (game->data->footnote) { return; }
-	AnimateCharacter(game, data->bg, delta, 1.0);
+static void CheckHover(struct Game* game, struct GamestateResources* data) {
 	ALLEGRO_COLOR color = CheckMask(game, data->mask);
 	int val = 0.0;
 	if (data->step == 0 || data->step == 1) {
@@ -58,6 +56,12 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	game->data->hover = val > 0.5;
 }
 
+void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
+	if (game->data->footnote) { return; }
+	AnimateCharacter(game, data->bg, delta, 1.0);
+	CheckHover(game, data);
+}
+
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	SetCharacterPosition(game, data->bg, game->viewport.width / 2.0, game->viewport.height / 2.0, 0);
 	DrawCharacter(game, data->bg);
@@ -65,6 +69,8 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (game->data->footnote) { return; }
+
+	CheckHover(game, data);
 
 	if (game->data->cursor &&
 		(((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_SPACE)) ||

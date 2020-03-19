@@ -130,12 +130,12 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (game->data->footnote) { return; }
 
+	ALLEGRO_COLOR color = CheckMask(game, data->mask);
+
 	if (IsAnimationComplete(data->animation) && game->data->hover && data->play == 16 && !data->success) {
 		if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) ||
 			(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) ||
 			(ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
-			ALLEGRO_COLOR color = CheckMask(game, data->mask);
-
 			int pos = round(color.r * 255 / 10.0);
 			PrintConsole(game, "%d", pos);
 			if (pos > 15) {

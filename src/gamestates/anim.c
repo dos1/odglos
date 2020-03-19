@@ -156,6 +156,29 @@ static void HandleDispatch(struct Game* game, struct GamestateResources* data, v
 	}
 }
 
+static void CheckHover(struct Game* game, struct GamestateResources* data) {
+	if (data->mask) {
+		ALLEGRO_COLOR color = CheckMask(game, data->mask);
+		for (int i = 0; i < 8; i++) {
+			if (al_color_distance_ciede2000(data->freezes[data->freezeno].links[i].color, color) < 0.01) {
+				if (data->freezes[data->freezeno].links[i].ignore) {
+					game->data->hover = false;
+				}
+				break;
+			}
+		}
+	} else {
+		ALLEGRO_BITMAP* bitmap = GetAnimationFrame(data->anim);
+		int x = game->data->mouseX * game->viewport.width;
+		int y = game->data->mouseY * game->viewport.height;
+		x -= data->x;
+		y -= data->y;
+
+		ALLEGRO_COLOR color = al_get_pixel(bitmap, x, y);
+		game->data->hover = (color.a > 0.5);
+	}
+}
+
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	if (game->data->footnote) { return; }
 
@@ -194,26 +217,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	}
 
 	if (data->frozen) {
-		if (data->mask) {
-			ALLEGRO_COLOR color = CheckMask(game, data->mask);
-			for (int i = 0; i < 8; i++) {
-				if (al_color_distance_ciede2000(data->freezes[data->freezeno].links[i].color, color) < 0.01) {
-					if (data->freezes[data->freezeno].links[i].ignore) {
-						game->data->hover = false;
-					}
-					break;
-				}
-			}
-		} else {
-			ALLEGRO_BITMAP* bitmap = GetAnimationFrame(data->anim);
-			int x = game->data->mouseX * game->viewport.width;
-			int y = game->data->mouseY * game->viewport.height;
-			x -= data->x;
-			y -= data->y;
-
-			ALLEGRO_COLOR color = al_get_pixel(bitmap, x, y);
-			game->data->hover = (color.a > 0.5);
-		}
+		CheckHover(game, data);
 
 		if (data->character && data->linked) {
 			AnimateCharacter(game, data->character, delta, modifier);
@@ -289,6 +293,10 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (game->data->footnote) { return; }
+
+	if (data->frozen) {
+		CheckHover(game, data);
+	}
 
 	if (game->data->hover && (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
 		if (data->frozen && !data->linked) {

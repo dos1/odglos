@@ -97,6 +97,8 @@ struct CommonResources {
 	bool footnote;
 	bool menu_requested;
 
+	bool touch;
+
 	struct {
 		ALLEGRO_AUDIO_STREAM* music;
 		struct {

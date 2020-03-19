@@ -101,6 +101,10 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (game->data->footnote) { return; }
 
+	struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
+	ALLEGRO_COLOR color = CheckMask(game, c->controls);
+	game->data->hover = color.a > 0.5;
+
 	if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN || ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) {
 		if (game->data->hover) {
 			ev->keyboard.type = ALLEGRO_EVENT_KEY_DOWN;
