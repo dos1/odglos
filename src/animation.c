@@ -234,11 +234,12 @@ SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream) {
 }
 
 SPRITESHEET_STREAM(AnimationStream) {
+	if (frame == 0) {
+		ResetAnimation(data, true);
+	}
 	bool complete = !UpdateAnimation(data, delta);
 	ALLEGRO_BITMAP* bitmap = GetAnimationFrame(data);
 	double duration = GetAnimationFrameDuration(data);
-	int frame = GetAnimationFrameNo(data);
-	//PrintConsole(game, "STREAM: frame %d duration %f delta %f", frame, GetAnimationFrameDuration(data), delta);
 	if (complete) {
 		PrintConsole(game, "[AnimationStream] %s: complete", GetAnimationName(data));
 		ResetAnimation(data, false);
