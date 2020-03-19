@@ -28,6 +28,7 @@ struct GamestateResources {
 
 	bool playing;
 	bool buffered;
+	int loaded_frame;
 	int play;
 	double delay;
 	double counter;
@@ -56,7 +57,10 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	if (GetAnimationFrameNo(data->animation) != data->current) {
 		data->current = GetAnimationFrameNo(data->animation);
 		//PrintConsole(game, "%d", data->current);
-		data->bmps[data->current] = al_clone_bitmap(GetAnimationFrame(data->animation));
+		if (data->loaded_frame < data->current) {
+			data->bmps[data->current] = al_clone_bitmap(GetAnimationFrame(data->animation));
+			data->loaded_frame = data->current;
+		}
 		if (data->current < 16) {
 			char path[255] = {};
 			snprintf(path, 255, "lawka/%d", data->current + 1);
@@ -110,7 +114,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 			data->footnoted = true;
 			ShowFootnote(game, 5);
 		} else {
-			SwitchCurrentGamestate(game, "anim");
+			ChangeCurrentGamestate(game, "anim");
 		}
 	}
 
@@ -166,11 +170,11 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	}
 
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
 		game->data->sceneid--;
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 }
 
@@ -184,6 +188,8 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 
 	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/lawka_w_parku_maski.mask"));
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
+
+	data->loaded_frame = 0;
 	return data;
 }
 
@@ -205,6 +211,12 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->counter = 0;
 	data->footnoted = false;
 	data->user = 0;
+	data->buffered = false;
+	data->delay = 0;
+	data->timeout = 0;
+	data->success = false;
+	data->position = 0;
+	data->pressed = false;
 	for (int i = 0; i < 4; i++) {
 		data->sequence[i] = rand() % 16;
 		if (i > 0) {
@@ -213,6 +225,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 			}
 		}
 	}
+	ResetAnimation(data->animation, true);
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}

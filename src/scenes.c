@@ -683,7 +683,7 @@ static struct SceneDefinition SCENES[] = {
 	{"sowka1_zaluzje"}, //
 	{"animacja_koncowa", .bg = "kosmos", .freezes = {{29, .footnote = 1}}}, //
 	{">myszka"}, //
-	{">blank"}, //
+	{">blank", .audio = {STOP_SOUND, "napisy_metrograph"}}, //
 	{"animacje_koncowe_rodzinki", .audio = {SOUND, "napisy_metrograph"}, .callback = Credits, .draw = DrawCredits, .speed = 0.5}, //
 	{">blank", .audio = {STOP_SOUND, "napisy_metrograph"}}, //
 	{"donice_13_tasma", .speed = 0.5, .freezes = {{0, "donice_w_ogrodzie_maski", .audio = {SOUND, "pudelko3"}, .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}}, //

@@ -56,7 +56,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		UpdateAnimation(data->left.animations[data->left.j][data->left.i], delta);
 	}
 	if (IsCompleted(game, data)) {
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 
 	struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
@@ -176,11 +176,11 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	}
 
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
 		game->data->sceneid--;
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 }
 

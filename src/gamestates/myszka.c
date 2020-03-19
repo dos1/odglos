@@ -46,7 +46,7 @@ void Gamestate_Tick(struct Game* game, struct GamestateResources* data) {
 	if (data->pos >= 0.92) {
 		data->con++;
 		if (data->con > 20) {
-			SwitchCurrentGamestate(game, "anim");
+			ChangeCurrentGamestate(game, "anim");
 		}
 	}
 }
@@ -87,7 +87,11 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	// Called for each event in Allegro event queue.
 	// Here you can handle user input, expiring timers etc.
-	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP || ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
+	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
+		ChangeCurrentGamestate(game, "anim");
+	}
+	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
+		game->data->sceneid--;
 		ChangeCurrentGamestate(game, "anim");
 	}
 }
@@ -185,6 +189,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
 	// Called when gamestate gets stopped. Stop timers, music etc. here.
+	StopSound(game, "przejscie2");
 }
 
 // Optional endpoints:

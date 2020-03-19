@@ -210,11 +210,11 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	}
 
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
 		game->data->sceneid--;
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 }
 
@@ -337,7 +337,7 @@ static CHARACTER_CALLBACK(HandleCenter) {
 		CheckWin(game, data);
 	}
 	if (old && strcmp("pudelka_waz", old->name) == 0) {
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 }
 

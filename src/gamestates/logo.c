@@ -66,7 +66,11 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	// Here you can handle user input, expiring timers etc.
 	if (game->data->footnote) { return; }
 
-	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP || ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
+	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
+		ChangeCurrentGamestate(game, "anim");
+	}
+	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
+		game->data->sceneid--;
 		ChangeCurrentGamestate(game, "anim");
 	}
 }

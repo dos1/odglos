@@ -46,7 +46,11 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (game->data->footnote) { return; }
 
-	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP || ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
+	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
+		ChangeCurrentGamestate(game, "anim");
+	}
+	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
+		game->data->sceneid--;
 		ChangeCurrentGamestate(game, "anim");
 	}
 }

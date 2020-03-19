@@ -56,7 +56,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 		}
 
 		if (pos && !data->makieta->pos) { // XXX: this may break!
-			SwitchCurrentGamestate(game, "anim");
+			ChangeCurrentGamestate(game, "anim");
 		}
 	}
 
@@ -92,11 +92,11 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	}
 
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
 		game->data->sceneid--;
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 }
 
@@ -141,6 +141,10 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->makieta->scaleY = 0.333;
 	data->angle = sin(game->time / 2.0) / 16.0;
 	data->counter = 0.1;
+	data->clicked = false;
+	data->finished = false;
+	SelectSpritesheet(game, data->makieta, "makieta");
+	ResetAnimation(data->anim, true);
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}

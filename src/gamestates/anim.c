@@ -143,7 +143,7 @@ static void HandleDispatch(struct Game* game, struct GamestateResources* data, v
 		data->loaded = false;
 	}
 	if (!Dispatch(game)) {
-		SwitchCurrentGamestate(game, "end");
+		ChangeCurrentGamestate(game, "end");
 	} else {
 		StopLoops(game);
 		if (game->data->scene.name[0] == '>') {

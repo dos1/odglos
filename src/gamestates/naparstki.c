@@ -109,7 +109,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				PlaySound(game, "K STUD 01 25 13-001", 1.0);
 			} else {
 				if (nr == 9) {
-					SwitchCurrentGamestate(game, "naparstki2");
+					ChangeCurrentGamestate(game, "naparstki2");
 					return;
 				}
 				SelectSpritesheet(game, data->bg, ANIMS[nr]);
@@ -136,11 +136,11 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	}
 
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
-		SwitchCurrentGamestate(game, "naparstki2");
+		ChangeCurrentGamestate(game, "naparstki2");
 	}
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
 		game->data->sceneid--;
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 }
 

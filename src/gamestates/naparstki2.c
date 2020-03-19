@@ -34,7 +34,7 @@ static CHARACTER_CALLBACK(ShowMouseCb) {
 }
 
 static CHARACTER_CALLBACK(GoForwardCb) {
-	SwitchCurrentGamestate(game, "anim");
+	ChangeCurrentGamestate(game, "anim");
 }
 
 static CHARACTER_CALLBACK(OutroCb) {
@@ -98,11 +98,11 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	}
 
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
-		SwitchCurrentGamestate(game, "anim");
+		ChangeCurrentGamestate(game, "anim");
 	}
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
 		game->data->sceneid++;
-		SwitchCurrentGamestate(game, "naparstki");
+		ChangeCurrentGamestate(game, "naparstki");
 	}
 }
 
@@ -141,6 +141,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	HideMouse(game);
 	SelectSpritesheet(game, data->bg, "naparstki_10_latarnia_zbija_wszystko");
 	data->bg->callback = ShowMouseCb;
+	data->step = 0;
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
