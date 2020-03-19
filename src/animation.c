@@ -125,7 +125,9 @@ void ResetAnimation(struct AnimationDecoder* anim, bool reset_bitmap) {
 
 	anim->shouldload = true;
 
-	anim->position = 0;
+	if (reset_bitmap) {
+		anim->position = 0;
+	}
 	anim->frame = 0;
 	anim->done = false;
 	anim->initialized = true;

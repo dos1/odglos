@@ -362,9 +362,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	SetCharacterPosition(game, data->left.character, 0, 0, 0);
 	SetCharacterPosition(game, data->center.character, 0, 0, 0);
 	SetCharacterPosition(game, data->right.character, 0, 0, 0);
-	//SelectSpritesheet(game, data->left.character, "pudelka_poczatek");
 	SelectSpritesheet(game, data->center.character, "pudelka_poczatek");
-	//SelectSpritesheet(game, data->right.character, "pudelka_poczatek");
 	EnqueueSpritesheet(game, data->center.character, "pudelko_2_czer_r");
 	//data->left.character->pos = 1;
 	//data->left.character->delta = 120;
