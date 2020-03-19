@@ -122,6 +122,7 @@ static void LoadAnimation(struct Game* game, struct GamestateResources* data, vo
 	data->soundno = 0;
 	data->freezeplayed = -1;
 	data->linked = false;
+	data->frozen = false;
 	data->callback_data = game->data->scene.callback_data;
 	if (data->callback) {
 		if (data->callback(game, 0, &data->x, &data->y, &data->scale, data->character, &data->callback_data)) {
@@ -381,6 +382,10 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->started = true;
+	if (game->data->force_anim_reload) {
+		data->finished = true;
+		game->data->force_anim_reload = false;
+	}
 	if (data->finished) {
 		HandleDispatch(game, data, NULL);
 	} else {

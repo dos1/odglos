@@ -24,6 +24,8 @@ void PostLogic(struct Game* game, double delta) {
 		ShowMenu(game);
 		game->data->menu_requested = false;
 	}
+
+	DrawSceneToolbox(game);
 }
 
 #ifdef __EMSCRIPTEN__
@@ -188,6 +190,10 @@ void DrawBuildInfo(struct Game* game) {
 		al_hold_bitmap_drawing(false);
 	}
 	SUPPRESS_END
+
+	if (game->data->pause) {
+		DrawSceneToolbox(game);
+	}
 }
 
 bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
@@ -249,11 +255,26 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 		return true;
 	}
 
-	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
-		game->data->sceneid--;
-		if (game->data->sceneid < -1) {
-			game->data->sceneid = -1;
+	if (game->show_console) {
+		if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA)) {
+			game->data->sceneid--;
+			if (game->data->sceneid < -1) {
+				game->data->sceneid = -1;
+			}
 		}
+
+#ifdef LIBSUPERDERPY_IMGUI
+		if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && ev->mouse.button == 2) {
+			PrintConsole(game, "Debug interface toggled.");
+			game->data->toolbox = !game->data->toolbox;
+			if (game->data->toolbox) {
+				al_show_mouse_cursor(game->display);
+			} else {
+				al_hide_mouse_cursor(game->display);
+			}
+			return true;
+		}
+#endif
 	}
 
 	return false;

@@ -98,6 +98,8 @@ struct CommonResources {
 	bool menu_requested;
 
 	bool touch;
+	bool toolbox;
+	bool force_anim_reload;
 
 	struct {
 		ALLEGRO_AUDIO_STREAM* music;
@@ -117,6 +119,7 @@ struct CommonResources {
 bool Dispatch(struct Game* game);
 void Enqueue(struct Game* game, struct SceneDefinition scene);
 void StartInitialGamestate(struct Game* game);
+void DrawSceneToolbox(struct Game* game);
 
 struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename, bool repeat);
 bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp);
@@ -155,6 +158,7 @@ void StopMusic(struct Game* game);
 void EnsureMusic(struct Game* game, char* name, float volume);
 void PlaySound(struct Game* game, char* name, float volume);
 void StopSound(struct Game* game, char* name);
+void StopSounds(struct Game* game);
 void PlayLoop(struct Game* game, char* name, float volume, bool persist);
 void StopLoop(struct Game* game, char* name);
 void StopLoops(struct Game* game);

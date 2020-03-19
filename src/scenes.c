@@ -744,3 +744,33 @@ void Enqueue(struct Game* game, struct SceneDefinition scene) {
 	game->data->queue[game->data->queue_pos] = scene;
 	game->data->queue_pos++;
 }
+
+void DrawSceneToolbox(struct Game* game) {
+#ifdef LIBSUPERDERPY_IMGUI
+	if (!game->data->toolbox) {
+		return;
+	}
+
+	igSetNextWindowSize((ImVec2){1024, 700}, ImGuiCond_FirstUseEver);
+	igBegin("Scene Selector", NULL, 0);
+	for (unsigned int i = 0; i < sizeof(SCENES) / sizeof(struct SceneDefinition); i++) {
+		char name[255];
+		snprintf(name, 255, "%d: %s", i, SCENES[i].name);
+		if (igSelectable(name, game->data->sceneid == (int)i, 0, (ImVec2){0, 0})) {
+			StopLoops(game);
+			StopMusic(game);
+			StopSounds(game);
+			game->data->sceneid = i;
+			game->data->scene = SCENES[i];
+			game->data->force_anim_reload = true;
+			if (game->data->scene.name[0] != '>') {
+				game->data->sceneid--;
+				ChangeCurrentGamestate(game, "anim");
+			} else {
+				ChangeCurrentGamestate(game, game->data->scene.name + 1);
+			}
+		}
+	}
+	igEnd();
+#endif
+}

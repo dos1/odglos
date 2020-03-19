@@ -41,6 +41,7 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = malloc(sizeof(struct GamestateResources));
 	data->bg = al_load_bitmap(GetDataFilePath(game, "ekran_startowy_tlo_przyciete.png"));
+
 	return data;
 }
 
@@ -53,5 +54,12 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 #ifdef __EMSCRIPTEN__
 	HideHTMLLoading(game);
 #endif
+
+	// HACK
+#ifdef LIBSUPERDERPY_IMGUI
+	ImGuiIO* io = igGetIO();
+	io->ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+#endif
 }
+
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}

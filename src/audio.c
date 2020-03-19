@@ -131,6 +131,17 @@ void StopLoops(struct Game* game) {
 	}
 }
 
+void StopSounds(struct Game* game) {
+	for (int i = 0; i < 32; i++) {
+		if (game->data->audio.sounds[i].stream) {
+			al_destroy_audio_stream(game->data->audio.sounds[i].stream);
+			free(game->data->audio.sounds[i].name);
+			game->data->audio.sounds[i].stream = NULL;
+			game->data->audio.sounds[i].name = NULL;
+		}
+	}
+}
+
 void HandleAudio(struct Game* game, struct Audio audio) {
 	float volume = audio.volume;
 	if (volume == 0.0) {
