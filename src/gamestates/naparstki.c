@@ -154,9 +154,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 		"naparstki_01_kapelusz_jaszczurka_wersja2",
 		"naparstki_01_kapelusz_jaszczurka_wersja3_najlepsza",
 		"naparstki_02_jaszczurka_kredki",
-		//naparstki_02_jaszczurka_statki_DO_SKROCONEJ_GRY_W_1.ini
 		"naparstki_03_paski_okno",
-		//naparstki_03_paski_statki_DO_SKROCONEJ_GRY_W_2.ini
 		"naparstki_04_dzwoneczek_kwiatki",
 		"naparstki_05_kwiatki_czarno_biale",
 		"naparstki_06_czarno_bialy_bambus",
