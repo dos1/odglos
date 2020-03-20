@@ -16,6 +16,24 @@ void PreLogic(struct Game* game, double delta) {
 		if (!game->data->footnote && game->data->audio.paused) {
 			ResumeAudio(game);
 		}
+	} else {
+		if (game->data->w) {
+			game->data->mouseY -= 0.5 * delta;
+		}
+		if (game->data->a) {
+			game->data->mouseX -= 0.33 * delta;
+		}
+		if (game->data->s) {
+			game->data->mouseY += 0.5 * delta;
+		}
+		if (game->data->d) {
+			game->data->mouseX += 0.33 * delta;
+		}
+		if (game->data->w || game->data->a || game->data->s || game->data->d) {
+			game->data->touch = false;
+			game->data->mouseX = Clamp(0.0, 1.0, game->data->mouseX);
+			game->data->mouseY = Clamp(0.0, 1.0, game->data->mouseY);
+		}
 	}
 }
 
@@ -196,6 +214,165 @@ void DrawBuildInfo(struct Game* game) {
 	}
 }
 
+void HandlePointerEmulation(struct Game* game, ALLEGRO_EVENT* ev) {
+	struct CommonResources* data = game->data;
+
+	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_W)) {
+		data->w = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_KEY_UP) && (ev->keyboard.keycode == ALLEGRO_KEY_W)) {
+		data->w = false;
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_A)) {
+		data->a = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_KEY_UP) && (ev->keyboard.keycode == ALLEGRO_KEY_A)) {
+		data->a = false;
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_S)) {
+		data->s = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_KEY_UP) && (ev->keyboard.keycode == ALLEGRO_KEY_S)) {
+		data->s = false;
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_D)) {
+		data->d = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_KEY_UP) && (ev->keyboard.keycode == ALLEGRO_KEY_D)) {
+		data->d = false;
+	}
+
+#ifdef __SWITCH__
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 13)) {
+		data->w = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP) && (ev->joystick.button == 13)) {
+		data->w = false;
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 12)) {
+		data->a = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP) && (ev->joystick.button == 12)) {
+		data->a = false;
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 15)) {
+		data->s = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP) && (ev->joystick.button == 15)) {
+		data->s = false;
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 14)) {
+		data->d = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP) && (ev->joystick.button == 14)) {
+		data->d = false;
+	}
+#endif
+
+#ifdef ALLEGRO_MACOSX
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 11)) {
+		data->w = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP) && (ev->joystick.button == 11)) {
+		data->w = false;
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 13)) {
+		data->a = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP) && (ev->joystick.button == 13)) {
+		data->a = false;
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 12)) {
+		data->s = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP) && (ev->joystick.button == 12)) {
+		data->s = false;
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 14)) {
+		data->d = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP) && (ev->joystick.button == 14)) {
+		data->d = false;
+	}
+#endif
+
+#ifdef ALLEGRO_WINDOWS
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 13)) {
+		data->w = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP) && (ev->joystick.button == 13)) {
+		data->w = false;
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 11)) {
+		data->a = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP) && (ev->joystick.button == 11)) {
+		data->a = false;
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 12)) {
+		data->s = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP) && (ev->joystick.button == 12)) {
+		data->s = false;
+	}
+
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 10)) {
+		data->d = true;
+	}
+	if ((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP) && (ev->joystick.button == 10)) {
+		data->d = false;
+	}
+#endif
+
+#ifdef ALLEGRO_WITH_XWINDOWS
+	if (ev->type == ALLEGRO_EVENT_JOYSTICK_AXIS && (ev->joystick.stick == 0 || ev->joystick.stick == 3)) {
+#else
+	if (ev->type == ALLEGRO_EVENT_JOYSTICK_AXIS && ev->joystick.stick == 0) {
+#endif
+		if (ev->joystick.axis == 1) {
+			if (ev->joystick.pos < -0.25) {
+				data->w = true;
+			} else {
+				data->w = false;
+			}
+			if (ev->joystick.pos > 0.25) {
+				data->s = true;
+			} else {
+				data->s = false;
+			}
+		}
+		if (ev->joystick.axis == 0) {
+			if (ev->joystick.pos < -0.25) {
+				data->a = true;
+			} else {
+				data->a = false;
+			}
+			if (ev->joystick.pos > 0.25) {
+				data->d = true;
+			} else {
+				data->d = false;
+			}
+		}
+	}
+
+	if (((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 0)) ||
+		((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ENTER))) {
+		ev->type = ALLEGRO_EVENT_MOUSE_BUTTON_DOWN;
+		ev->mouse.button = 1;
+	}
+}
+
 bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_M)) {
 		ToggleMute(game);
@@ -276,6 +453,8 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 		}
 #endif
 	}
+
+	HandlePointerEmulation(game, ev);
 
 	return false;
 }

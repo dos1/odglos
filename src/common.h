@@ -101,6 +101,8 @@ struct CommonResources {
 	bool toolbox;
 	bool force_anim_reload;
 
+	bool w, a, s, d;
+
 	struct {
 		ALLEGRO_AUDIO_STREAM* music;
 		struct {
