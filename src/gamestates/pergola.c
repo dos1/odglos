@@ -110,7 +110,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			ev->keyboard.type = ALLEGRO_EVENT_KEY_DOWN;
 			int pos = game->data->mouseY * 720;
 			if (pos > 520) {
-				ev->keyboard.keycode = ALLEGRO_KEY_ENTER;
+				ev->keyboard.keycode = ALLEGRO_KEY_RSHIFT;
 			} else if (pos > 410) {
 				ev->keyboard.keycode = ALLEGRO_KEY_LEFT;
 			} else if (pos > 305) {
@@ -124,9 +124,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	}
 
 	if (!IsCompleted(game, data)) {
-		struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
-
 		if (ev->type == ALLEGRO_EVENT_KEY_DOWN) {
+			bool action = true;
 			if (ev->keyboard.keycode == ALLEGRO_KEY_UP) {
 				c->j -= 1;
 				if (c->j < 0) {
@@ -134,43 +133,43 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 					c->j = 0;
 				}
 				PlaySound(game, "S LIST FX 08 40 33-001", 1.0);
-			}
-			if (ev->keyboard.keycode == ALLEGRO_KEY_DOWN) {
+			} else if (ev->keyboard.keycode == ALLEGRO_KEY_DOWN) {
 				c->j += 1;
 				if (c->j > 3) {
 					data->hint = 255;
 					c->j = 3;
 				}
 				PlaySound(game, "S LIST FX 08 00 42-001", 1.0);
-			}
-			if (ev->keyboard.keycode == ALLEGRO_KEY_LEFT) {
+			} else if (ev->keyboard.keycode == ALLEGRO_KEY_LEFT) {
 				c->i -= 1;
 				if (c->i < 0) {
 					data->hint = 255;
 					c->i = 0;
 				}
 				PlaySound(game, "S LIST FX 08 07 74-001", 1.0);
-			}
-			if (ev->keyboard.keycode == ALLEGRO_KEY_RIGHT) {
+			} else if (ev->keyboard.keycode == ALLEGRO_KEY_RIGHT) {
 				c->i += 1;
 				if (c->i > 3) {
 					data->hint = 255;
 					c->i = 3;
 				}
 				PlaySound(game, "S LIST FX 08 18 20-001", 1.0);
-			}
-			if (ev->keyboard.keycode == ALLEGRO_KEY_ENTER) {
+			} else if (ev->keyboard.keycode == ALLEGRO_KEY_RSHIFT) {
 				data->mode = !data->mode;
 				PlaySound(game, "S LIST FX 09 42 19-001", 1.0);
 				if (!IsCompleted(game, data)) {
 					data->hint = 255;
 				}
+			} else {
+				action = false;
 			}
 
-			if (data->mode) {
-				ResetAnimation(data->right.animations[data->right.j][data->right.i], true);
-			} else {
-				ResetAnimation(data->left.animations[data->left.j][data->left.i], true);
+			if (action) {
+				if (data->mode) {
+					ResetAnimation(data->right.animations[data->right.j][data->right.i], true);
+				} else {
+					ResetAnimation(data->left.animations[data->left.j][data->left.i], true);
+				}
 			}
 		}
 	}
