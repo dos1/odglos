@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 
 	srand(time(NULL));
 
-	al_set_org_name("Holy Pangolin");
+	al_set_org_name(LIBSUPERDERPY_VENDOR);
 	al_set_app_name(LIBSUPERDERPY_GAMENAME_PRETTY);
 
 	struct Game* game = libsuperderpy_init(argc, argv, LIBSUPERDERPY_GAMENAME,
