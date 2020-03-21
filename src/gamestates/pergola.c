@@ -109,16 +109,30 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		if (game->data->hover) {
 			ev->keyboard.type = ALLEGRO_EVENT_KEY_DOWN;
 			int pos = game->data->mouseY * 720;
-			if (pos > 520) {
-				ev->keyboard.keycode = ALLEGRO_KEY_RSHIFT;
-			} else if (pos > 410) {
-				ev->keyboard.keycode = ALLEGRO_KEY_LEFT;
-			} else if (pos > 305) {
-				ev->keyboard.keycode = ALLEGRO_KEY_DOWN;
-			} else if (pos > 210) {
-				ev->keyboard.keycode = ALLEGRO_KEY_RIGHT;
+			if (!data->mode) {
+				if (pos > 450) {
+					ev->keyboard.keycode = ALLEGRO_KEY_RSHIFT;
+				} else if (pos > 345) {
+					ev->keyboard.keycode = ALLEGRO_KEY_DOWN;
+				} else if (pos > 250) {
+					ev->keyboard.keycode = ALLEGRO_KEY_RIGHT;
+				} else if (pos > 155) {
+					ev->keyboard.keycode = ALLEGRO_KEY_LEFT;
+				} else {
+					ev->keyboard.keycode = ALLEGRO_KEY_UP;
+				}
 			} else {
-				ev->keyboard.keycode = ALLEGRO_KEY_UP;
+				if (pos > 475) {
+					ev->keyboard.keycode = ALLEGRO_KEY_RSHIFT;
+				} else if (pos > 365) {
+					ev->keyboard.keycode = ALLEGRO_KEY_DOWN;
+				} else if (pos > 270) {
+					ev->keyboard.keycode = ALLEGRO_KEY_RIGHT;
+				} else if (pos > 175) {
+					ev->keyboard.keycode = ALLEGRO_KEY_LEFT;
+				} else {
+					ev->keyboard.keycode = ALLEGRO_KEY_UP;
+				}
 			}
 		}
 	}
