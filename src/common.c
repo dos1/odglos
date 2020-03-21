@@ -150,11 +150,17 @@ void Compositor(struct Game* game) {
 				randx = 0;
 				randy = 0;
 			}
+			if (rand() % 2) {
+				randx = -randx;
+			}
+			if (rand() % 2) {
+				randy = -randy;
+			}
 
 			float color = 1.0 + (rand() / (double)RAND_MAX) * 0.01 - 0.005;
 
 			al_draw_tinted_scaled_rotated_bitmap(GetGamestateFramebuffer(game, tmp), al_map_rgba_f(color, color, color, color), 0, 0,
-				game->clip_rect.x + randx, game->clip_rect.y + randy, game->clip_rect.w / (double)al_get_bitmap_width(GetGamestateFramebuffer(game, tmp)) * 1.01, game->clip_rect.h / (double)al_get_bitmap_height(GetGamestateFramebuffer(game, tmp)) * 1.01, 0.0, 0);
+				game->clip_rect.x + randx, game->clip_rect.y + randy, game->clip_rect.w / (double)al_get_bitmap_width(GetGamestateFramebuffer(game, tmp)), game->clip_rect.h / (double)al_get_bitmap_height(GetGamestateFramebuffer(game, tmp)), 0.0, 0);
 			drawn = true;
 		}
 		tmp = GetNextGamestate(game, tmp);
