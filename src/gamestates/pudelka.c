@@ -333,7 +333,6 @@ static CHARACTER_CALLBACK(HandleCenter) {
 		}
 	}
 	if (old && strcmp("pudelko_2_pom_r", old->name) == 0 && !new) {
-		PrintConsole(game, "checkwin");
 		CheckWin(game, data);
 	}
 	if (old && strcmp("pudelka_waz", old->name) == 0) {
@@ -386,6 +385,8 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->stack[2] = BALL_TYPE_NONE;
 
 	data->frames = false;
+
+	data->won = false;
 
 	HideMouse(game);
 }
