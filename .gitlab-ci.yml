@@ -81,6 +81,7 @@ build:linux-flatpak-amd64:
   only:
     variables:
       - $ALL_BUILDS
+      - $ENABLE_FLATPAK
   script:
     - cd utils
     - ./package_linux_flatpak_amd64.sh
@@ -90,6 +91,7 @@ build:linux-flatpak-arm64:
   only:
     variables:
       - $ALL_BUILDS
+      - $ENABLE_FLATPAK
   script:
     - cd utils
     - ./package_linux_flatpak_arm64.sh
@@ -181,6 +183,7 @@ deploy:itch:linux-flatpak-amd64:
   only:
     variables:
       - $ALL_BUILDS
+      - $ENABLE_FLATPAK
   environment:
     name: itch-linux-flatpak-amd64
   dependencies:
@@ -195,6 +198,7 @@ deploy:itch:linux-flatpak-arm64:
   only:
     variables:
       - $ALL_BUILDS
+      - $ENABLE_FLATPAK
   environment:
     name: itch-linux-flatpak-arm64
   dependencies:
