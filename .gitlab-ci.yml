@@ -58,6 +58,15 @@ build:wasm:
     - cd utils
     - ./package_wasm.sh
 
+build:linux-amd64:
+  extends: .build
+  only:
+    variables:
+      - $ALL_BUILDS
+  script:
+    - cd utils
+    - ./package_linux_amd64.sh
+
 build:linux-i686:
   extends: .build
   only:
@@ -138,6 +147,20 @@ build:switch:
     GIT_STRATEGY: none
   script:
     - butler push utils/output/`cat .meta/gamename`$DEPLOY_FILENAME_SUFFIX $BUTLER_TARGET:$DEPLOY_TARGET --userversion `echo $CI_COMMIT_SHA | cut -c1-7`
+
+deploy:itch:linux-amd64:
+  extends: .butler-deploy
+  only:
+    variables:
+      - $ALL_BUILDS
+  environment:
+    name: itch-linux-steamrt-amd64
+  dependencies:
+    - meta
+    - build:linux-amd64
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -linux-amd64.tar.gz
+    DEPLOY_TARGET: ci-linux-steamrt-amd64
 
 deploy:itch:linux-i686:
   extends: .butler-deploy
