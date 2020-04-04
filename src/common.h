@@ -7,7 +7,7 @@
 #define IS_EMSCRIPTEN 0
 #endif
 
-#define DOWNLOAD_PARTS 8
+#define DOWNLOAD_PARTS 10
 
 enum AUDIO_TYPE {
 	NO_AUDIO = 0,

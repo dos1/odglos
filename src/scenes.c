@@ -508,6 +508,8 @@ static char* PACK_POSTLOAD[DOWNLOAD_PARTS][3] = {
 	{},
 	{"pergola"},
 	{"pudelka"},
+	{},
+	{},
 	{"naparstki", "naparstki2"},
 	{"armata"},
 	{},
@@ -667,9 +669,9 @@ static struct SceneDefinition SCENES[] = {
 	{"siatka_na_drzewie_myszka", .audio = {MUSIC, "myszki"}}, //
 	{"drzewko_kolorowe1_maskotki_podwojne_moze_lepsze_TAK"}, //
 	{">pudelka", .checkpoint = true}, //
-	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}, .checkpoint = true, .pack = 5}, //
+	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}, .checkpoint = true, .pack = 7}, //
 	{">naparstki"}, //
-	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar", 1.0}, .checkpoint = true, .pack = 6}, //
+	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar", 1.0}, .checkpoint = true, .pack = 8}, //
 	{"02statki_szyszki_tasmy_animacja2"}, //
 	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}}, //
 	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska"}}}, //
@@ -679,7 +681,7 @@ static struct SceneDefinition SCENES[] = {
 	{">armata"}, //
 
 	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska"}}}, //
-	{"makieta_w_kosmosie_bez_tla", .audio = {MUSIC, "kosmos_metrograph"}, .bg = "kosmos", .freezes = {{28, .footnote = 2}}, .checkpoint = true, .pack = 7}, //
+	{"makieta_w_kosmosie_bez_tla", .audio = {MUSIC, "kosmos_metrograph"}, .bg = "kosmos", .freezes = {{28, .footnote = 2}}, .checkpoint = true, .pack = 9}, //
 	{"makieta_pusta"}, //
 	{"krzeslo_w_lesie_czesc1", .freezes = {{12, "krzeslo_w_lesie08_maska"}}}, //
 	{"krzeslo_w_lesie_czesc2"}, //
