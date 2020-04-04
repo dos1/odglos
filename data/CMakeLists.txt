@@ -303,4 +303,22 @@ if (EMSCRIPTEN)
 		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data9/animations")
 	endforeach()
 
+	MACRO(add_asset_pack_target PACK_NAME)
+		add_custom_target(${LIBSUPERDERPY_GAMENAME}_assets-${PACK_NAME}
+			DEPENDS ${LIBSUPERDERPY_GAMENAME}_install ${LIBSUPERDERPY_GAMENAME}_flac_to_lossy ${LIBSUPERDERPY_GAMENAME}_img_to_webp
+			WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/${PACK_NAME}"
+			COMMAND ${CMAKE_COMMAND} -E tar cfv ${CMAKE_INSTALL_PREFIX}/${LIBSUPERDERPY_GAMENAME}/${PACK_NAME}.zip --format=zip "*")
+		add_dependencies(${LIBSUPERDERPY_GAMENAME}_js ${LIBSUPERDERPY_GAMENAME}_assets-${PACK_NAME})
+	ENDMACRO()
+	add_asset_pack_target(data0)
+	add_asset_pack_target(data1)
+	add_asset_pack_target(data2)
+	add_asset_pack_target(data3)
+	add_asset_pack_target(data4)
+	add_asset_pack_target(data5)
+	add_asset_pack_target(data6)
+	add_asset_pack_target(data7)
+	add_asset_pack_target(data8)
+	add_asset_pack_target(data9)
+
 endif(EMSCRIPTEN)
