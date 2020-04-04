@@ -1,7 +1,9 @@
 #include "common.h"
 #include "defines.h"
 #include <libsuperderpy.h>
+#ifdef __EMSCRIPTEN__
 #include <physfs.h>
+#endif
 
 struct LoadingData {
 	struct Game* game;

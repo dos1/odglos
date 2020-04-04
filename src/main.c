@@ -1,11 +1,13 @@
 #include "common.h"
 #include "defines.h"
-#include <allegro5/allegro_physfs.h>
 #include <getopt.h>
 #include <libsuperderpy.h>
-#include <physfs.h>
 #include <signal.h>
 #include <stdio.h>
+#ifdef __EMSCRIPTEN__
+#include <allegro5/allegro_physfs.h>
+#include <physfs.h>
+#endif
 
 static _Noreturn void derp(int sig) {
 	ssize_t __attribute__((unused)) n = write(STDERR_FILENO, "Segmentation fault\nI just don't know what went wrong!\n", 54);

@@ -20,7 +20,6 @@
 
 #include "../common.h"
 #include <libsuperderpy.h>
-#include <physfs.h>
 
 struct GamestateResources {
 	// This struct is for every resource allocated and used by your gamestate.
