@@ -52,6 +52,14 @@ void HideHTMLLoading(struct Game* game) {
 		window.ODGLOS.hideLoading();
 	});
 }
+
+void SetHTMLLoadingValue(struct Game* game, float value) {
+	EM_ASM({
+		window.ODGLOS.setLoadingValue($0);
+	},
+		value);
+}
+
 #endif
 
 void ShowFootnote(struct Game* game, int id) {
@@ -85,6 +93,7 @@ void ShowMenu(struct Game* game) {
 	game->data->footnote = true;
 	PauseAudio(game);
 #ifdef __EMSCRIPTEN__
+	HideHTMLLoading(game);
 	EM_ASM({
 		window.ODGLOS.showMenu();
 	});

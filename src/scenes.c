@@ -502,8 +502,34 @@ static void DrawCredits(struct Game* game, int frame, void** data) {
 	}
 }
 
+static char* PACK_POSTLOAD[DOWNLOAD_PARTS][3] = {
+	{"byk"},
+	{"lawka"},
+	{},
+	{"pergola"},
+	{"pudelka"},
+	{"naparstki", "naparstki2"},
+	{"armata"},
+	{},
+};
+
+void StartDownloadPacks(struct Game* game) {
+	for (int i = 0; i < DOWNLOAD_PARTS; i++) {
+		if (game->data->download.started[i] || !game->data->download.loaded[i]) {
+			continue;
+		}
+		int j = 0;
+		while (PACK_POSTLOAD[i][j]) {
+			LoadGamestate(game, PACK_POSTLOAD[i][j]);
+			j++;
+		}
+		game->data->download.started[i] = true;
+	}
+}
+
 static struct SceneDefinition SCENES[] = {
-	{"kostki_animacja02_cwierc_obrotu_zapetlic", .repeats = 3, .freezes = {{23, ""}}, .bg = "ekran_startowy_tlo_przyciete", .checkpoint = true}, //
+	{"kostki_animacja01_tworzy_sie_kostka", .bg = "ekran_startowy_tlo_przyciete", .checkpoint = true}, //
+	{"kostki_animacja02_cwierc_obrotu_zapetlic", .repeats = 3, .freezes = {{23, ""}}, .bg = "ekran_startowy_tlo_przyciete"}, //
 	{"kostki_animacja03_waz", .audio = {LOOP, "odlot"}, .bg = "ekran_startowy_tlo_przyciete"}, //
 	{">logo"}, //
 	{"wedrowka_rodzinki_po_trawce", .audio = {MUSIC, "wedrowka_lapis"}, .freezes = {{30, .footnote = 9}}}, //
@@ -520,7 +546,7 @@ static struct SceneDefinition SCENES[] = {
 	{">byk", .checkpoint = true}, //
 	{"swiecznik_hover_ewentualnie", .audio = {MUSIC, "ambient"}, .freezes = {{2, "DSCF2296_maska_oczy_ewentualnie", .links = {{{10.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikLewy, .audio = {SOUND, "switch"}}, {{20.0 / 255.0, 0.0, 0.0}, .callback = SwiecznikPrawy, .audio = {SOUND, "switch"}}}}}, .checkpoint = true}, //
 	{"swiecznik3_TAK", .audio = {LOOP, "MAD CASPER SZ AGNT L 00 02 10 45 - 13 89"}}, //
-	{"samochody_w_lesie", .audio = {MUSIC, "silence"}, .freezes = {{0, "DSCF2433_maska", .audio = {LOOP, "MEGAFLANGE SZ POINTS1 L 00 04 48- 51 "}}}, .sounds = {{24, {SOUND, "S RHAP FX 05 56 09-001", .volume = 0.5}}, {37, {LOOP, "ULTRAFLANGE"}}}, .checkpoint = true}, //
+	{"samochody_w_lesie", .audio = {MUSIC, "silence"}, .freezes = {{0, "DSCF2433_maska", .audio = {LOOP, "MEGAFLANGE SZ POINTS1 L 00 04 48- 51 "}}}, .sounds = {{24, {SOUND, "S RHAP FX 05 56 09-001", .volume = 0.5}}, {37, {LOOP, "ULTRAFLANGE"}}}, .checkpoint = true, .pack = 1}, //
 	{"aksamitki_samochod_sowka", .speed = 1.25, .audio = {LOOP, "PIXEL BUBBLES K ROB L 05 29 10 ", .stop_music = true}, .checkpoint = true}, //
 	{"donice_02_samochod_duzy_jedzie_w_lewo", .audio = {SOUND, "donice1_points"}, .speed = 0.5}, //
 	{"donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej", .audio = {SOUND, "donice2_points"}}, //
@@ -604,7 +630,7 @@ static struct SceneDefinition SCENES[] = {
 	{"schodzenie_ze_schodow_waz"}, //
 
 	{">lawka", .checkpoint = true}, //
-	{"animacja_silacz1", .sounds = {{59, {SOUND, "S LIST FX 07 17 05-001"}}}, .audio = {MUSIC, "silence"}, .freezes = {{0, "silacz_maska", .audio = {SOUND, "LASER SHOWER S LIST L 12 35 45"}}, {22, "silacz_maska", .audio = {SOUND, "S RHAP FX 05 56 09-001"}}, {46, "silacz_maska", .audio = {SOUND, "S HEAD FX 17 06 27-001"}}}, .checkpoint = true}, //
+	{"animacja_silacz1", .sounds = {{59, {SOUND, "S LIST FX 07 17 05-001"}}}, .audio = {MUSIC, "silence"}, .freezes = {{0, "silacz_maska", .audio = {SOUND, "LASER SHOWER S LIST L 12 35 45"}}, {22, "silacz_maska", .audio = {SOUND, "S RHAP FX 05 56 09-001"}}, {46, "silacz_maska", .audio = {SOUND, "S HEAD FX 17 06 27-001"}}}, .checkpoint = true, .pack = 2}, //
 	{"donice_14_samochod_nadjezdza_z_prawej_i_wjezdza_do_donicy_z_lewej", .audio = {SOUND, "DIGI DOGZ K NOR L 04 16 61"}, .callback = Donice, .freezes = {{16, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .callback = DonicaLewa}, {{0.0, 1.0, 0.0}, .callback = DonicaPrawa}}}}}, //
 	{"donice_12_waz_idzie_w_prawo_i_wchodzi_do_prawej_donicy", .audio = {SOUND, "S LIST FX 07 17 05-001"}}, //
 	{"silacz2_maly_samochod_z_sowka_opuszcz_cien_rozny", .freezes = {{0, "silacz_maska", .audio = {SOUND, "K ROB FX 03 26 00-001"}}}}, //
@@ -628,7 +654,7 @@ static struct SceneDefinition SCENES[] = {
 
 	{"aksamitki_waz", .speed = 1.25, .audio = {MUSIC, "waz_poko"}}, //
 	{"waz_zmienia_sie_w_kostke", .freezes = {{14, "IMG_0770_maska", .audio = {SOUND, "ELVES S LIST L 08 57 95"}}}, .audio = {MUSIC, "waz2_poko"}}, //
-	{"sowka_wchodzi_do_miski_ciemniejsze", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF1595_maska", .audio = {MUSIC, "chill"}}}, .checkpoint = true}, //
+	{"sowka_wchodzi_do_miski_ciemniejsze", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF1595_maska", .audio = {MUSIC, "chill"}}}, .checkpoint = true, .pack = 3}, //
 	{"duza_sowka_na_drewnianym_kole", .audio = {SOUND, "K RESZT FX 03 27 28-001"}, .speed = 0.8, .sounds = {{12, {STOP_MUSIC}}}, .freezes = {{13, "IMG_1010_maska", .audio = {SOUND, "dryndryn"}}}}, //
 	{"animacja_poczatkowa", .audio = {SOUND, "pergola_trickstar"}, .repeats = 2, .callback = Pergola, .checkpoint = true}, //
 	{">pergola"}, //
@@ -636,14 +662,14 @@ static struct SceneDefinition SCENES[] = {
 	{"pergola_animacja_koncowa6"}, //
 	{"ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke", .audio = {MUSIC, "dwor"}, .callback = Ul, .freezes = {{0, "IMG_0053_maska", .links = {{{0.0, 1.0, 0.0}, .callback = UlLewo}, {{1.0, 0.0, 0.0}, .callback = UlGora}, {{0.0, 0.0, 1.0}, .callback = UlDol}}}}, .checkpoint = true}, //
 	{"ul_duzy_animacja_koncowa_samochod", .sounds = {{0, {SOUND, "K ROB FX 03 26 00-001"}}}}, //
-	{"pudelko_w_ogrodzie", .audio = {MUSIC, "pienki"}, .freezes = {{22, "pudelko_w_ogrodzie_maska1", .audio = {SOUND, "pac"}}, {56, "pudelko_w_ogrodzie_maska3", .audio = {SOUND, "pac"}}, {93, "pudelko_w_ogrodzie_maska2", .audio = {SOUND, "pac"}}, {119, "pudelko_w_ogrodzie_maska3", .audio = {SOUND, "pac"}}, {157, "pudelko_w_ogrodzie_maska2", .audio = {SOUND, "pac"}}, {183, "pudelko_w_ogrodzie_maska3", .audio = {SOUND, "pac"}}, {195, .footnote = 8}}, .checkpoint = true}, //
+	{"pudelko_w_ogrodzie", .audio = {MUSIC, "pienki"}, .freezes = {{22, "pudelko_w_ogrodzie_maska1", .audio = {SOUND, "pac"}}, {56, "pudelko_w_ogrodzie_maska3", .audio = {SOUND, "pac"}}, {93, "pudelko_w_ogrodzie_maska2", .audio = {SOUND, "pac"}}, {119, "pudelko_w_ogrodzie_maska3", .audio = {SOUND, "pac"}}, {157, "pudelko_w_ogrodzie_maska2", .audio = {SOUND, "pac"}}, {183, "pudelko_w_ogrodzie_maska3", .audio = {SOUND, "pac"}}, {195, .footnote = 8}}, .checkpoint = true, .pack = 4}, //
 	{"portal_ze_stolika_bialego", .freezes = {{9, "DSCF8382_maska", .audio = {SOUND, "pac"}}, {14, "DSCF8387_maska", .audio = {SOUND, "pac"}}}}, //
 	{"siatka_na_drzewie_myszka", .audio = {MUSIC, "myszki"}}, //
 	{"drzewko_kolorowe1_maskotki_podwojne_moze_lepsze_TAK"}, //
 	{">pudelka", .checkpoint = true}, //
-	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}, .checkpoint = true}, //
+	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}, .checkpoint = true, .pack = 5}, //
 	{">naparstki"}, //
-	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar", 1.0}, .checkpoint = true}, //
+	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar", 1.0}, .checkpoint = true, .pack = 6}, //
 	{"02statki_szyszki_tasmy_animacja2"}, //
 	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}}, //
 	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska"}}}, //
@@ -653,7 +679,7 @@ static struct SceneDefinition SCENES[] = {
 	{">armata"}, //
 
 	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska"}}}, //
-	{"makieta_w_kosmosie_bez_tla", .audio = {MUSIC, "kosmos_metrograph"}, .bg = "kosmos", .freezes = {{28, .footnote = 2}}, .checkpoint = true}, //
+	{"makieta_w_kosmosie_bez_tla", .audio = {MUSIC, "kosmos_metrograph"}, .bg = "kosmos", .freezes = {{28, .footnote = 2}}, .checkpoint = true, .pack = 7}, //
 	{"makieta_pusta"}, //
 	{"krzeslo_w_lesie_czesc1", .freezes = {{12, "krzeslo_w_lesie08_maska"}}}, //
 	{"krzeslo_w_lesie_czesc2"}, //
@@ -689,6 +715,20 @@ static struct SceneDefinition SCENES[] = {
 	{"donice_13_tasma", .speed = 0.5, .freezes = {{0, "donice_w_ogrodzie_maski", .audio = {SOUND, "pudelko3"}, .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}}, //
 };
 
+void RequestPack(struct Game* game, int sceneid) {
+	int last_pack = sceneid;
+	if (last_pack < 0) {
+		last_pack = 0;
+	}
+	if ((size_t)last_pack >= sizeof(SCENES) / sizeof(struct SceneDefinition)) {
+		last_pack = sizeof(SCENES) / sizeof(struct SceneDefinition) - 1;
+	}
+	while (SCENES[last_pack].pack == 0 && last_pack > 0) {
+		last_pack--;
+	}
+	game->data->download.requested = SCENES[last_pack].pack;
+}
+
 bool Dispatch(struct Game* game) {
 	if (game->data->queue_pos) {
 		game->data->scene = game->data->queue[game->data->queue_handled];
@@ -700,12 +740,23 @@ bool Dispatch(struct Game* game) {
 		}
 		return true;
 	}
+
+	int sceneid = game->data->sceneid;
 	do {
-		game->data->sceneid++;
-		if ((size_t)game->data->sceneid >= sizeof(SCENES) / sizeof(struct SceneDefinition)) {
+		sceneid++;
+		if ((size_t)sceneid >= sizeof(SCENES) / sizeof(struct SceneDefinition)) {
 			return false;
 		}
-	} while (!SCENES[game->data->sceneid].name);
+	} while (!SCENES[sceneid].name);
+
+	RequestPack(game, sceneid);
+
+	if (!game->data->download.started[game->data->download.requested]) {
+		Enqueue(game, (struct SceneDefinition){">downloader"});
+		return Dispatch(game);
+	}
+
+	game->data->sceneid = sceneid;
 	game->data->scene = SCENES[game->data->sceneid];
 	PrintConsole(game, "Dispatch: %s", game->data->scene.name);
 	if (game->data->sceneid) {
@@ -718,7 +769,7 @@ bool Dispatch(struct Game* game) {
 	return true;
 }
 
-void StartInitialGamestate(struct Game* game) {
+void StartInitialGamestate(struct Game* game, bool show_menu) {
 	if (game->data->sceneid < 0) {
 		game->data->sceneid = -1;
 	}
@@ -728,7 +779,7 @@ void StartInitialGamestate(struct Game* game) {
 	while (!SCENES[game->data->sceneid + 1].checkpoint) {
 		game->data->sceneid--;
 	}
-	if (game->data->sceneid > 0) {
+	if (show_menu && game->data->sceneid > 0) {
 		game->data->menu_requested = true;
 	}
 	if (SCENES[game->data->sceneid + 1].name[0] == '>') {

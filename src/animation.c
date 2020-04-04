@@ -34,9 +34,11 @@ struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename
 
 	anim->game = game;
 
+	/*
 	anim->fd = open(filename, O_RDONLY | O_CLOEXEC);
 
-	if (!anim->fd) {
+	if (anim->fd == -1) {
+		FatalError(game, true, "Could not open animation %s", filename);
 		free(anim);
 		return NULL;
 	}
@@ -65,8 +67,21 @@ struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename
 		anim->mmaped = true;
 	}
 	anim->data.bytes = anim->buf;
+*/
 
-	// TODO: handle invalid file path
+	ALLEGRO_FILE* file = al_fopen(filename, "r");
+	if (!file) {
+		FatalError(game, true, "Could not open animation %s", filename);
+		free(anim);
+		return NULL;
+	}
+
+	anim->data.size = al_fsize(file);
+	anim->buf = malloc(anim->data.size * sizeof(uint8_t));
+	anim->data.bytes = anim->buf;
+	al_fread(file, anim->buf, anim->data.size);
+	anim->mmaped = false;
+	al_fclose(file);
 
 	WebPAnimDecoderOptions dec_options;
 	WebPAnimDecoderOptionsInit(&dec_options);

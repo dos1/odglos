@@ -1,7 +1,9 @@
 #include "common.h"
 #include "defines.h"
+#include <allegro5/allegro_physfs.h>
 #include <getopt.h>
 #include <libsuperderpy.h>
+#include <physfs.h>
 #include <signal.h>
 #include <stdio.h>
 
@@ -35,6 +37,12 @@ int main(int argc, char** argv) {
 		});
 
 	if (!game) { return 1; }
+
+#ifdef __EMSCRIPTEN__
+	PHYSFS_init(argv[0]);
+	PHYSFS_mount(".", NULL, true);
+	al_set_physfs_file_interface();
+#endif
 
 	game->data = CreateGameData(game);
 
@@ -75,18 +83,27 @@ int main(int argc, char** argv) {
 		LoadGamestate(game, "logo");
 		LoadGamestate(game, "anim");
 		LoadGamestate(game, "myszka");
+		LoadGamestate(game, "end");
+		LoadGamestate(game, "blank");
+#ifndef __EMSCRIPTEN__
+		LoadGamestate(game, "byk");
 		LoadGamestate(game, "naparstki");
 		LoadGamestate(game, "naparstki2");
-		LoadGamestate(game, "end");
 		LoadGamestate(game, "lawka");
-		LoadGamestate(game, "byk");
-		LoadGamestate(game, "blank");
 		LoadGamestate(game, "pudelka");
 		LoadGamestate(game, "pergola");
 		LoadGamestate(game, "armata");
+#endif
 	}
 
-	StartInitialGamestate(game);
+	RequestPack(game, game->data->sceneid + 1);
+	StartDownloading(game);
+
+#ifdef __EMSCRIPTEN__
+	StartGamestate(game, "downloader");
+#else
+	StartInitialGamestate(game, false);
+#endif
 
 	al_hide_mouse_cursor(game->display);
 

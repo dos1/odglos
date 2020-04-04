@@ -34,6 +34,7 @@ struct GamestateResources {
 	bool finished;
 	bool stay;
 	bool started;
+	bool dispatched;
 	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
 	void (*draw)(struct Game*, int, void**);
 	struct Character* character;
@@ -46,7 +47,7 @@ struct GamestateResources {
 	void* callback_data;
 };
 
-int Gamestate_ProgressCount = 2;
+int Gamestate_ProgressCount = 1;
 
 static void LoadAnimation(struct Game* game, struct GamestateResources* data, void (*progress)(struct Game*)) {
 	char path[255] = {0};
@@ -358,29 +359,34 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
-	HandleDispatch(game, data, progress);
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 	return data;
 }
 
 void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
-	DestroyAnimation(data->anim);
-	if (data->bg) {
-		al_destroy_bitmap(data->bg);
-	}
-	if (data->fg) {
-		al_destroy_bitmap(data->fg);
-	}
-	if (data->mask) {
-		al_destroy_bitmap(data->mask);
-	}
-	if (data->character) {
-		DestroyCharacter(game, data->character);
+	if (data->dispatched) {
+		DestroyAnimation(data->anim);
+		if (data->bg) {
+			al_destroy_bitmap(data->bg);
+		}
+		if (data->fg) {
+			al_destroy_bitmap(data->fg);
+		}
+		if (data->mask) {
+			al_destroy_bitmap(data->mask);
+		}
+		if (data->character) {
+			DestroyCharacter(game, data->character);
+		}
 	}
 	free(data);
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
+	if (!data->dispatched) {
+		HandleDispatch(game, data, NULL);
+		data->dispatched = true;
+	}
 	data->started = true;
 	if (game->data->force_anim_reload) {
 		data->finished = true;
@@ -392,6 +398,9 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 		HandleAudio(game, game->data->scene.audio);
 	}
 	data->delay = 0;
+#ifdef __EMSCRIPTEN__
+	HideHTMLLoading(game);
+#endif
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {

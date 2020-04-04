@@ -172,7 +172,7 @@
         height: 720px;
         box-shadow: 0px 0px 25px rgba(55, 55, 55, 0.75);
       }
-      .loading, .loading > canvas {
+      .loading, .loading-bar-wrapper, .loading > canvas {
         border: 0;
         padding: 0;
         width: 100%;
@@ -243,7 +243,7 @@
         .footnote {
           font-size: 15pt;
         }
-        .menu-inner {
+        .menu-inner, .loading-bar-wrapper {
           transform: scale(0.8);
         }
       }
@@ -255,7 +255,7 @@
         .footnote {
           font-size: 14pt;
         }
-        .menu-inner {
+        .menu-inner, .loading-bar-wrapper {
           transform: scale(0.625);
         }
       }
@@ -267,7 +267,7 @@
         .footnote {
           font-size: 13pt;
         }
-        .menu-inner {
+        .menu-inner, .loading-bar-wrapper {
           transform: scale(0.5);
         }
       }
@@ -279,7 +279,7 @@
         .footnote {
           font-size: 12pt;
         }
-        .menu-inner {
+        .menu-inner, .loading-bar-wrapper {
           transform: scale(0.375);
         }
       }
@@ -288,7 +288,7 @@
         canvas.emscripten, .loading canvas, .emscripten_border {
           width: 360px; height: 202px;
         }
-        .menu-inner {
+        .menu-inner, .loading-bar-wrapper {
           transform: scale(0.28125);
         }
       }
@@ -297,7 +297,7 @@
         canvas.emscripten, .loading canvas, .emscripten_border {
           width: 240px; height: 135px;
         }
-        .menu-inner {
+        .menu-inner, .loading-bar-wrapper {
           transform: scale(0.1875);
         }
       }
@@ -457,6 +457,20 @@
       a, a:visited, a:hover {
         color: white;
       }
+      .loading-bar-bg, .loading-bar {
+        position: absolute;
+        top: calc(50% - 49px / 2);
+        left: calc(50% - 353px / 2);
+      }
+      .loading-bar-bg {
+        opacity: 0.25;
+        filter: contrast(150%) brightness(150%);
+      }
+      .loading-bar {
+        width: 353px;
+        height: 49px;
+        background-image: url('ekran_startowy_kostki16.png');
+      }
     </style>
     <script src="simplebar.min.js"></script>
   </head>
@@ -464,8 +478,11 @@
     <div class="emscripten_border" id="wrapper">
       <canvas class="emscripten" id="canvas" width="1280" height="720"></canvas>
       <div id="loading" class="loading">
-        <img src="ekran_startowy_tlo_przyciete.jpg" width="1280" height="720" style="width: 100%; height: 100%; position: absolute; filter: brightness(50%)" />
-        <canvas id="loading-canvas" width="1280" height="720"></canvas>
+        <img src="ekran_startowy_tlo_przyciete.jpg" width="1280" height="720" style="width: 100%; height: 100%; position: absolute; filter: brightness(75%) contrast(85%);" />
+        <div class="loading-bar-wrapper">
+          <img src="ekran_startowy_kostki16.png" class="loading-bar-bg" />
+          <div class="loading-bar" id="loading-bar" style="width: 0px"></div>
+        </div>
       </div>
 
       <noscript>
@@ -665,6 +682,9 @@
           document.getElementById('loading').style.display = 'none';
           document.getElementById('wrapper').classList.add('loaded');
         },
+        setLoadingValue: function(value) {
+          Module.drawProgress(0.4 + 0.6 * value);
+        },
         showFootnote: function(x) {
           if (x > 0 && !window.localStorage.getItem('[odglos] footnote'+x)) {
             return;
@@ -720,19 +740,14 @@
 
           return canvas;
         })(),
-        canvasContext: document.getElementById('loading-canvas').getContext('2d'),
         setError: function(text) {
           var err = document.createElement('div');
           err.classList.add('error');
           err.innerHTML = '<p>'+text+'</p><p>Please refresh the page.</p>';
           document.getElementById('wrapper').appendChild(err);
         },
-        drawProgress: function(progress) {
-          Module.canvasContext.clearRect(0, 0, 1280, 720);
-          Module.canvasContext.fillStyle = 'rgba(255,255,255,0.1255)';
-          Module.canvasContext.fillRect(0, 720/2 - 7, 1280, 14);
-          Module.canvasContext.fillStyle = 'rgba(255,255,255,0.5)';
-          Module.canvasContext.fillRect(0, 720/2 - 7, 1280 * progress, 14);
+        drawProgress: function(progress) { console.log(progress);
+          document.getElementById('loading-bar').style.width = ~~(progress * 353) + 'px';
         },
         setStatus: function(text) {
           if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
@@ -745,7 +760,7 @@
           if (m) {
             text = m[1];
             console.log(parseInt(m[2])*100, parseInt(m[4])*100);
-            Module.drawProgress(parseInt(m[2]) / parseInt(m[4]));
+            Module.drawProgress((parseInt(m[2]) / parseInt(m[4])) * 0.4);
           } else {
             console.log('---');
           }

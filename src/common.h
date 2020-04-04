@@ -7,6 +7,8 @@
 #define IS_EMSCRIPTEN 0
 #endif
 
+#define DOWNLOAD_PARTS 8
+
 enum AUDIO_TYPE {
 	NO_AUDIO = 0,
 	SOUND,
@@ -54,6 +56,7 @@ struct SceneDefinition {
 	char* fg;
 	float speed;
 	int repeats;
+	int pack;
 	bool checkpoint;
 	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
 	void (*draw)(struct Game*, int, void**);
@@ -103,6 +106,16 @@ struct CommonResources {
 
 	bool w, a, s, d;
 
+	bool dark_loading;
+
+	struct {
+		float progress[DOWNLOAD_PARTS];
+		bool loaded[DOWNLOAD_PARTS];
+		bool started[DOWNLOAD_PARTS];
+		int requested;
+		bool additional;
+	} download;
+
 	struct {
 		ALLEGRO_AUDIO_STREAM* music;
 		struct {
@@ -118,9 +131,11 @@ struct CommonResources {
 	} audio;
 };
 
+void StartDownloadPacks(struct Game* game);
+void RequestPack(struct Game* game, int sceneid);
 bool Dispatch(struct Game* game);
 void Enqueue(struct Game* game, struct SceneDefinition scene);
-void StartInitialGamestate(struct Game* game);
+void StartInitialGamestate(struct Game* game, bool show_menu);
 void DrawSceneToolbox(struct Game* game);
 
 struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename, bool repeat);
@@ -147,6 +162,7 @@ void ShowMouse(struct Game* game);
 void HideMouse(struct Game* game);
 #ifdef __EMSCRIPTEN__
 void HideHTMLLoading(struct Game* game);
+void SetHTMLLoadingValue(struct Game* game, float value);
 #endif
 void ShowFootnote(struct Game* game, int id);
 void HideFootnote(struct Game* game);
@@ -167,3 +183,5 @@ void StopLoops(struct Game* game);
 void HandleAudio(struct Game* game, struct Audio audio);
 void PauseAudio(struct Game* game);
 void ResumeAudio(struct Game* game);
+
+void StartDownloading(struct Game* game);

@@ -1,29 +1,212 @@
-#include(libsuperderpy-data)
+if (EMSCRIPTEN)
+	set(DATA_EXCLUDE_REGEX "\\./animations/|\\./sprites/|\\./pergola/|\\./byk/|\\./naparstki/|\\./armata/|\\./lawka_w_parku/")
+endif(EMSCRIPTEN)
 
-SET(DATADIR "${CMAKE_INSTALL_PREFIX}/share/${LIBSUPERDERPY_GAMENAME}/data")
+include(libsuperderpy-data)
 
-if(APPLE)
-	SET(DATADIR "${CMAKE_INSTALL_PREFIX}/bin/${LIBSUPERDERPY_GAMENAME}.app/Contents/Resources/data") #OMG NASTY
-endif(APPLE)
+if (EMSCRIPTEN)
+	install(DIRECTORY byk DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data0")
+	install(DIRECTORY sprites/byk DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data0/sprites")
+	install(DIRECTORY sprites/dmuchawa DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data0/sprites")
 
-add_subdirectory(icons)
+	set(ANIMATIONS
+		kostki_animacja01_tworzy_sie_kostka.awebp
+		kostki_animacja02_cwierc_obrotu_zapetlic.awebp
+		kostki_animacja03_waz.awebp
+		wedrowka_rodzinki_po_trawce.awebp
+		rodzinka_jak_wiewiorki.awebp
+		sowka_wchodzi_na_drzewo.awebp
+		sowka_pokazuje_mordke_i_wraca.awebp
+		buty_drewniane.awebp
+		regal_animacja_sam.awebp
+		generator_animacja_wstepna.awebp
+		sucha_trawa_aksamitki_samochod_stary.awebp
+		sowka_konfrontacja_z_rzezba.awebp
+		wrzosy_kuzyn_i_sowka2.awebp
+		samochod_kominek.awebp
+		swiecznik_hover_ewentualnie.awebp
+		DSCF2305.awebp
+		DSCF2449.awebp
+		DSCF2311.awebp
+		DSCF2320.awebp
+		swiecznik3_TAK.awebp
+	)
 
-if(UNIX AND NOT APPLE AND NOT EMSCRIPTEN AND NOT ANDROID)
-	if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${LIBSUPERDERPY_GAMENAME}.desktop)
-		install(FILES ${LIBSUPERDERPY_GAMENAME}.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications/)
-	endif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${LIBSUPERDERPY_GAMENAME}.desktop)
+	foreach (FILE IN ITEMS ${ANIMATIONS})
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data0/animations")
+	endforeach()
 
-	if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${LIBSUPERDERPY_APPID}.appdata.xml)
-		install(FILES ${LIBSUPERDERPY_APPID}.appdata.xml DESTINATION ${CMAKE_INSTALL_PREFIX}/share/metainfo/)
-	endif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${LIBSUPERDERPY_APPID}.appdata.xml)
-endif(UNIX AND NOT APPLE AND NOT EMSCRIPTEN AND NOT ANDROID)
+	# ----------------
 
-install(DIRECTORY . DESTINATION ${DATADIR}
-	PATTERN "stuff" EXCLUDE
-	PATTERN ".git" EXCLUDE
-	PATTERN ".gitignore" EXCLUDE
-	PATTERN ".directory" EXCLUDE
-	PATTERN "CMakeLists.txt" EXCLUDE)
+	install(DIRECTORY lawka_w_parku DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data1")
 
-file(GLOB_RECURSE RES_FILES CONFIGURE_DEPENDS *)
-add_custom_target(data SOURCES ${RES_FILES})
+	set(ANIMATIONS
+		samochody_w_lesie.awebp
+		aksamitki_samochod_sowka.awebp
+		donice_02_samochod_duzy_jedzie_w_lewo.awebp
+		donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej.awebp
+		donice_01_samochod_duzy_jedzie_w_prawo.awebp
+		donice_08_mala_sowka_z_samochodem_wyjezdza_w_przod.awebp
+		skrzypce2_animacja_przerywnikowa.awebp
+		skrzypce2_dzwiek1.awebp
+		skrzypce2_dzwiek2.awebp
+		skrzypce2_dzwiek3.awebp
+		skrzypce2_dzwiek4.awebp
+		skrzypce2_dzwiek5.awebp
+		skrzypce2_dzwiek6.awebp
+		skrzypce2_animacja_koncowa.awebp
+		gawron_i_drewniany_medrzec.awebp
+		ciemna_trawa_samochod_sowka.awebp
+		ciemna_trawa_waz.awebp
+		wchodzenie_po_schodach_samochod_sowka.awebp
+		schodzenie_ze_schodow_waz.awebp
+	)
+
+	foreach (FILE IN ITEMS ${ANIMATIONS})
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data1/animations")
+	endforeach()
+
+	# -------------------
+
+	set(ANIMATIONS
+		animacja_silacz1.awebp
+		donice_14_samochod_nadjezdza_z_prawej_i_wjezdza_do_donicy_z_lewej.awebp
+		donice_18_samochod_duzy_wyjezdza_w_prawo.awebp
+		donice_06_samochod_maly_z_sowka_wyjezdza_w_przod.awebp
+		donice_03_samochod_duzy_wjezdza_do_donicy_z_lewej.awebp
+		donice_19_samochod_maly_z_sowka_wjezdza_z_prawej.awebp
+		donice_17_samochod_duzy_wyjezdza_w_lewo.awebp
+		donice_05_samochod_maly_bez_sowki_wyjezdza_w_przod.awebp
+		donice_20_samochod_maly_bez_sowki_wjezdza_z_prawej.awebp
+		donice_04_samochod_maly_z_sowka_wyjezdza_w_prawo.awebp
+		donice_21_sowka_rudnik_wychodzi_w_prawo.awebp
+		donice_12_waz_idzie_w_prawo_i_wchodzi_do_prawej_donicy.awebp
+		silacz2_maly_samochod_z_sowka_opuszcz_cien_rozny.awebp
+		silacz3_maly_samochod_sam.awebp
+		lira_korbowa.awebp
+		male_dziwne_cos.awebp
+		turkusowe_cos.awebp
+		rzezby_w_lazience_2_wyciszenie_sznureczka.awebp
+		sowka_i_rzezby_01_sowka_przejezdza.awebp
+		sowka_i_rzezby_02a_zakochani.awebp
+		sowka_i_rzezby_02b_muzykanci.awebp
+		031_donice_dom1.awebp
+		donice_16_samochod_kartonowy_duzy_wjezdza_z_prawej.awebp
+		donice_22_sowka_srednia_whodzi_do_duzej_donicy_z_lewej.awebp
+		donice_15_maly_samochodzik_kartonowy_wyjezdza.awebp
+		donice_23_sowka_mala_wychodzi_w_przod.awebp
+		donice_24_sowka_mala_wchodzi_z_prawej.awebp
+		donice_25_sowka_srednia_wychodzi_z_lewej_donicy.awebp
+		donice_26_sowka_srednia_wchodzi_do_prawej_donicy.awebp
+		donice_27_sowka_duza_wychodzi_z_lewej_donicy.awebp
+		donice_11_waz_buszuje_w_prawo_w_lewo_i_wchodzi_z_lewej.awebp
+		donica_w_hortensjach_06_waz.awebp
+		aksamitki_waz.awebp
+		waz_zmienia_sie_w_kostke.awebp
+	)
+
+	foreach (FILE IN ITEMS ${ANIMATIONS})
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data2/animations")
+	endforeach()
+
+	# -------------------
+
+	install(DIRECTORY pergola DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data3")
+
+	set(ANIMATIONS
+		sowka_wchodzi_do_miski_ciemniejsze.awebp
+		duza_sowka_na_drewnianym_kole.awebp
+		animacja_poczatkowa.awebp
+		pergola_animacja_koncowa2.awebp
+		pergola_animacja_koncowa6.awebp
+		ul_duzy_pusty_mozna_dac_tez_sama_pierwsza_klatke.awebp
+		ul_duzy_dol.awebp
+		ul_duzy_lewo.awebp
+		ul_duzy_gora.awebp
+		ul_duzy_animacja_koncowa_samochod.awebp
+	)
+
+	foreach (FILE IN ITEMS ${ANIMATIONS})
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data3/animations")
+	endforeach()
+
+	# -------------------
+
+	install(DIRECTORY sprites/pudelka DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data4/sprites")
+
+	set(ANIMATIONS
+		pudelko_w_ogrodzie.awebp
+		portal_ze_stolika_bialego.awebp
+		siatka_na_drzewie_myszka.awebp
+		drzewko_kolorowe1_maskotki_podwojne_moze_lepsze_TAK.awebp
+	)
+
+	foreach (FILE IN ITEMS ${ANIMATIONS})
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data4/animations")
+	endforeach()
+
+	# -------------------
+
+	install(DIRECTORY sprites/naparstki DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data5/sprites")
+	install(DIRECTORY naparstki DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data5")
+
+	set(ANIMATIONS
+		pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK.awebp
+	)
+
+	foreach (FILE IN ITEMS ${ANIMATIONS})
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data5/animations")
+	endforeach()
+
+	# -------------------
+
+	install(DIRECTORY sprites/makieta DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data6/sprites")
+	install(DIRECTORY armata DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data6")
+
+	set(ANIMATIONS
+		01statki_szyszki_tasmy_animacja1.awebp
+		02statki_szyszki_tasmy_animacja2.awebp
+		03statki_szyszki_tasmy_animacja3.awebp
+		04statki_szyszki_tasmy_gra_dzwiek1.awebp
+		04statki_szyszki_tasmy_gra_dzwiek2.awebp
+		04statki_szyszki_tasmy_gra_dzwiek3.awebp
+		05statki_szyszki_tasmy_animacja4.awebp
+		06statki_szyszki_tasmy_animacja5.awebp
+		magnetofon2_bez_myszek.awebp
+		duch_portalu_animacja2_zlozona_TAK.awebp
+		podniebny_generator_z_kosmosem.awebp
+	)
+
+	foreach (FILE IN ITEMS ${ANIMATIONS})
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data6/animations")
+	endforeach()
+
+	# -------------------
+
+	set(ANIMATIONS
+		makieta_w_kosmosie_bez_tla.awebp
+		makieta_pusta.awebp
+		krzeslo_w_lesie_czesc1.awebp
+		krzeslo_w_lesie_czesc2.awebp
+		sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK.awebp
+		sowka2_zaluzje_pojawia_sie2_TAK.awebp
+		sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK.awebp
+		sowka1_wlacza_konsole_z_daleka2.awebp
+		sowka1_wlacza_konsole_z_bliska_lewa_konsola.awebp
+		sowka1_wlacza_konsole_z_bliska_srodkowa_konsola.awebp
+		sowka2_klika_konsole_prawa.awebp
+		sowka2_klika_konsole_lewa.awebp
+		drzwi_zamykaja_sie_same.awebp
+		okna_sie_otwieraja_z_sowka2.awebp
+		sowka2_zaluzje_nie_znika_TAK.awebp
+		sowka1_zaluzje.awebp
+		animacja_koncowa.awebp
+		animacje_koncowe_rodzinki.awebp
+		donice_13_tasma.awebp
+	)
+
+	foreach (FILE IN ITEMS ${ANIMATIONS})
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data7/animations")
+	endforeach()
+
+endif(EMSCRIPTEN)
