@@ -471,12 +471,25 @@
         height: 49px;
         background-image: url('ekran_startowy_kostki16.png');
       }
+      .blocker {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        background: none;
+      }
+      .blocker.active {
+        display: block;
+      }
     </style>
     <script src="simplebar.min.js"></script>
   </head>
   <body>
     <div class="emscripten_border" id="wrapper">
       <canvas class="emscripten" id="canvas" width="1280" height="720"></canvas>
+      <div class="blocker"></div>
       <div id="loading" class="loading">
         <img src="ekran_startowy_tlo_przyciete.jpg" width="1280" height="720" style="width: 100%; height: 100%; position: absolute; filter: brightness(75%) contrast(85%);" />
         <div class="loading-bar-wrapper">
@@ -734,6 +747,14 @@
           }
         }
       };
+
+      // for correct focus/blur handling in iframes (otherwise canvas eats the events and the engine stays paused)
+      window.addEventListener('focus', function() {
+        document.querySelector('.blocker').classList.remove('active');
+      });
+      window.addEventListener('blur', function() {
+        document.querySelector('.blocker').classList.add('active');
+      });
 
       var Module = {
         preRun: [],
