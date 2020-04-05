@@ -21,7 +21,7 @@ static void CollectStreams(struct Game* game) {
 void PlayMusic(struct Game* game, char* name, float volume) {
 	StopMusic(game);
 	char path[255] = {};
-	snprintf(path, 255, "sounds/%s.flac.opus", name);
+	snprintf(path, 255, "sounds/%s.flac", name);
 	PrintConsole(game, "Starting music: %s", name);
 	game->data->audio.music = al_load_audio_stream(GetDataFilePath(game, path), 4, 2048);
 	al_attach_audio_stream_to_mixer(game->data->audio.music, game->audio.music);
@@ -58,7 +58,7 @@ void PlaySound(struct Game* game, char* name, float volume) {
 	}
 	char path[255] = {};
 	game->data->audio.sounds[i].name = strdup(name);
-	snprintf(path, 255, "sounds/%s.flac.opus", name);
+	snprintf(path, 255, "sounds/%s.flac", name);
 	PrintConsole(game, "Starting sound: %s", name);
 	game->data->audio.sounds[i].stream = al_load_audio_stream(GetDataFilePath(game, path), 4, 2048);
 	al_attach_audio_stream_to_mixer(game->data->audio.sounds[i].stream, game->audio.fx);
@@ -96,7 +96,7 @@ void PlayLoop(struct Game* game, char* name, float volume, bool persist) {
 	}
 	char path[255] = {};
 	game->data->audio.loops[i].name = strdup(name);
-	snprintf(path, 255, "sounds/%s.flac.opus", name);
+	snprintf(path, 255, "sounds/%s.flac", name);
 	PrintConsole(game, "Starting loop: %s", name);
 	game->data->audio.loops[i].stream = al_load_audio_stream(GetDataFilePath(game, path), 4, 2048);
 	game->data->audio.loops[i].persist = persist;

@@ -23,8 +23,3 @@ cmake-build-*
 imgui.ini
 .assetcache
 .meta
-data/sounds/*.flac
-data/sounds/*.wav
-data/sounds/lawka/*.flac
-data/sounds/lawka/*.wav
-
