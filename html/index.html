@@ -136,7 +136,7 @@
         font-display: swap;
       }
 
-      body {
+      html, body {
         background-color: black;
         margin:0;
         padding: 0;
@@ -161,7 +161,6 @@
       .emscripten_border {
         position: relative;
         margin: 0 auto;
-        margin-top: 15px;
         width: 1280px;
       }
       /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
@@ -236,7 +235,7 @@
       .footnote-close:hover, .menu .close:hover {
         opacity: 0.5;
       }
-      @media (max-width: 1300px) {
+      @media (max-width: 1279px) {
         canvas.emscripten, .loading canvas, .emscripten_border {
           width: 1024px; height: 576px;
         }
