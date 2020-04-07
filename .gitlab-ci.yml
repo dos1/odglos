@@ -355,5 +355,6 @@ production-notify:failure:
   stage: production-notify
   extends: .xmpp-notify
   when: on_failure
+  needs: ["notify:success"]
   script:
     - 'xmpp-muc-send -j "$XMPP_JID" -n "$XMPP_NICK" -p "$XMPP_PASSWORD" -r "$XMPP_ROOM" "DEPLOY FAILURE ($CI_PROJECT_NAME): [`echo $CI_COMMIT_SHA | cut -c1-7` | $CI_COMMIT_REF_NAME] $CI_COMMIT_TITLE $CI_PIPELINE_URL"'
