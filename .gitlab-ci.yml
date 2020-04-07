@@ -337,6 +337,9 @@ production-deploy:itch-wasm:
   environment:
     name: itch-production-wasm
     url: $ITCH_PRODUCTION_URL
+  dependencies:
+    - meta
+    - build:wasm
   variables:
     GIT_STRATEGY: none
     DEPLOY_FILENAME_SUFFIX: -wasm.zip
