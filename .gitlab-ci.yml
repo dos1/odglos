@@ -98,6 +98,12 @@ build:linux-flatpak-arm64:
     - cd utils
     - ./package_linux_flatpak_arm64.sh
 
+build:macos:
+  extends: .build
+  script:
+    - cd utils
+    - ./package_macos.sh
+
 build:steamlink:
   extends: .build
   only:
@@ -239,6 +245,18 @@ deploy:itch:wasm:
   variables:
     DEPLOY_FILENAME_SUFFIX: -wasm.zip
     DEPLOY_TARGET: ci-wasm
+
+deploy:itch:macos:
+  stage: deploy
+  extends: .butler-deploy
+  environment:
+    name: itch-macos
+  dependencies:
+    - meta
+    - build:macos
+  variables:
+    DEPLOY_FILENAME_SUFFIX: -macos.zip
+    DEPLOY_TARGET: ci-macos
 
 deploy:itch:steamlink:
   stage: deploy
