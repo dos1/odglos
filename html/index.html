@@ -135,7 +135,9 @@
              url('fonts/Cookie-Regular.otf.woff') format('woff');
         font-display: swap;
       }
-
+      html {
+        overflow: hidden;
+      }
       html, body {
         background-color: black;
         margin:0;
@@ -160,7 +162,6 @@
       }
       .emscripten_border {
         position: relative;
-        margin: 0 auto;
         width: 1280px;
       }
       /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
@@ -235,6 +236,7 @@
       .footnote-close:hover, .menu .close:hover {
         opacity: 0.5;
       }
+/*
       @media (max-width: 1279px) {
         canvas.emscripten, .loading canvas, .emscripten_border {
           width: 1024px; height: 576px;
@@ -300,11 +302,12 @@
           transform: scale(0.1875);
         }
       }
-
+*/
       #wrapper {
         overflow: hidden;
+        transform-origin: top center;
+        margin: 0 auto;
       }
-
       #wrapper.withFootnote > canvas, #wrapper.withFootnote > img {
         filter: grayscale(100%) brightness(130%);
       }
@@ -776,7 +779,7 @@
           err.innerHTML = '<p>'+text+'</p><p>Please refresh the page.</p>';
           document.getElementById('wrapper').appendChild(err);
         },
-        drawProgress: function(progress) { console.log(progress);
+        drawProgress: function(progress) {
           document.getElementById('loading-bar').style.width = ~~(progress * 353) + 'px';
         },
         setStatus: function(text) {
@@ -789,8 +792,8 @@
           Module.setStatus.last.text = text;
           if (m) {
             text = m[1];
-            console.log(parseInt(m[2])*100, parseInt(m[4])*100);
             Module.drawProgress((parseInt(m[2]) / parseInt(m[4])) * 0.4);
+            //console.log(parseInt(m[2])*100, parseInt(m[4])*100);
           } else {
             console.log('---');
           }
@@ -800,10 +803,17 @@
         monitorRunDependencies: function(left) {
           this.totalDependencies = Math.max(this.totalDependencies, left);
           Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+        },
+        adjustSize: function() {
+          var scale = Math.min(window.innerWidth/1280.0, window.innerHeight/720.0);
+          document.getElementById('wrapper').style = 'transform: scale(' + scale + '); transform-origin: top ' + (scale > 1.0 ? 'center' : 'left') + ';';
         }
       };
       Module.setStatus('Downloading...');
       Module.drawProgress(0);
+
+      window.onresize = Module.adjustSize;
+      Module.adjustSize();
 
       window.onerror = function() {
         Module.setStatus('Exception thrown, see JavaScript console');
