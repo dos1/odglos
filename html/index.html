@@ -236,73 +236,6 @@
       .footnote-close:hover, .menu .close:hover {
         opacity: 0.5;
       }
-/*
-      @media (max-width: 1279px) {
-        canvas.emscripten, .loading canvas, .emscripten_border {
-          width: 1024px; height: 576px;
-        }
-        .footnote {
-          font-size: 15pt;
-        }
-        .menu-inner, .loading-bar-wrapper {
-          transform: scale(0.8);
-        }
-      }
-
-      @media (max-width: 1100px) {
-        canvas.emscripten, .loading canvas, .emscripten_border {
-          width: 800px; height: 450px;
-        }
-        .footnote {
-          font-size: 14pt;
-        }
-        .menu-inner, .loading-bar-wrapper {
-          transform: scale(0.625);
-        }
-      }
-
-      @media (max-width: 820px) {
-        canvas.emscripten, .loading canvas, .emscripten_border {
-          width: 640px; height: 360px;
-        }
-        .footnote {
-          font-size: 13pt;
-        }
-        .menu-inner, .loading-bar-wrapper {
-          transform: scale(0.5);
-        }
-      }
-
-      @media (max-width: 639px) {
-        canvas.emscripten, .loading canvas, .emscripten_border {
-          width: 480px; height: 270px;
-        }
-        .footnote {
-          font-size: 12pt;
-        }
-        .menu-inner, .loading-bar-wrapper {
-          transform: scale(0.375);
-        }
-      }
-
-      @media (max-width: 479px) {
-        canvas.emscripten, .loading canvas, .emscripten_border {
-          width: 360px; height: 202px;
-        }
-        .menu-inner, .loading-bar-wrapper {
-          transform: scale(0.28125);
-        }
-      }
-
-      @media (max-width: 359px) {
-        canvas.emscripten, .loading canvas, .emscripten_border {
-          width: 240px; height: 135px;
-        }
-        .menu-inner, .loading-bar-wrapper {
-          transform: scale(0.1875);
-        }
-      }
-*/
       #wrapper {
         overflow: hidden;
         transform-origin: top center;
@@ -702,13 +635,14 @@
 
     <script type='text/javascript'>
       window.ODGLOS = {
+        preloadingValue: 0.4,
         footnote: false,
         hideLoading: function() {
           document.getElementById('loading').style.display = 'none';
           document.getElementById('wrapper').classList.add('loaded');
         },
         setLoadingValue: function(value) {
-          Module.drawProgress(0.4 + 0.6 * value);
+          Module.drawProgress(window.ODGLOS.preloadingValue + (1.0 - window.ODGLOS.preloadingValue) * value);
         },
         showFootnote: function(x) {
           if (x > 0 && !window.localStorage.getItem('[odglos] footnote'+x)) {
@@ -792,8 +726,8 @@
           Module.setStatus.last.text = text;
           if (m) {
             text = m[1];
-            Module.drawProgress((parseInt(m[2]) / parseInt(m[4])) * 0.4);
             //console.log(parseInt(m[2])*100, parseInt(m[4])*100);
+            Module.drawProgress((parseInt(m[2]) / parseInt(m[4])) * window.ODGLOS.preloadingValue);
           } else {
             console.log('---');
           }
@@ -822,7 +756,7 @@
       };
     </script>
 
-    <script type='text/javascript'<>
+    <script type='text/javascript'>
       var ASSERTIONS = 0;
       // Copyright 2017 The Emscripten Authors.  All rights reserved.
       // Emscripten is available under two separate licenses, the MIT license and the
