@@ -977,6 +977,17 @@
 
 
       (function() {
+
+        var canvas = document.createElement("canvas");
+        // Get WebGLRenderingContext from canvas element.
+        var gl = canvas.getContext("webgl")
+          || canvas.getContext("experimental-webgl");
+        // Report the result.
+        if (!(gl && gl instanceof WebGLRenderingContext)) {
+          Module.setError('Error 104: 0x0000014S0WK4 - WebGL not supported');
+          return;
+        }
+
         var emterpretURL = 'odglos.emterpret.js';
         var emterpretXHR = new XMLHttpRequest();
         emterpretXHR.open('GET', emterpretURL, true);
