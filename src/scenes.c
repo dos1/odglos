@@ -509,7 +509,7 @@ static void DrawCredits(struct Game* game, int frame, void** data) {
 		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 5, ALLEGRO_ALIGN_LEFT, "Elżbieta Sikora");
 		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 6, ALLEGRO_ALIGN_LEFT, "Ryszard Szeremeta");
 
-		al_draw_multiline_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 10 - 5, 500, 30, ALLEGRO_ALIGN_LEFT, "The game originates from the GeekJam held during the Game Industry Conference 2018.");
+		al_draw_multiline_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 10 - 5, 500, 30, ALLEGRO_ALIGN_LEFT, "The game originates from the Geek Jam held during the Game Industry Conference 2018.");
 	} else if (frame < 100) {
 		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 0, ALLEGRO_ALIGN_LEFT, "© 2019 Adam Mickiewicz Insitute");
 		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 1, ALLEGRO_ALIGN_LEFT, "       Vitruvio Foundation");
