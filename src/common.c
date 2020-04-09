@@ -101,7 +101,6 @@ void ShowMenu(struct Game* game) {
 }
 
 ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap) {
-	// TODO: apply distortion coming from compositor
 	ALLEGRO_COLOR color = al_get_pixel(bitmap, (int)(game->data->mouseX * al_get_bitmap_width(bitmap)), (int)(game->data->mouseY * al_get_bitmap_height(bitmap)));
 	game->data->hover = (color.r < 0.5) || (color.g < 0.5) || (color.b < 0.5);
 	return color;
@@ -187,9 +186,17 @@ void Compositor(struct Game* game) {
 		al_draw_text(game->data->font, al_map_rgb(255, 255, 255), game->clip_rect.x + game->clip_rect.w / 2.0, game->clip_rect.y + game->clip_rect.h / 2.0, ALLEGRO_ALIGN_CENTER, "PAUSED");
 	}
 
-	if (game->data->cursor && !game->data->footnote) {
-		bool hover = game->data->hover;
+	bool hover = game->data->hover;
 
+	if (game->config.mute) {
+		al_draw_tinted_scaled_rotated_bitmap(game->data->mute, al_map_rgba(0, 0, 0, 255), 48, 48, game->clip_rect.x + game->clip_rect.w * 40.0 / 1280.0, game->clip_rect.y + game->clip_rect.h * 682.0 / 720.0, 0.5 * game->clip_rect.w / (double)game->viewport.width / LIBSUPERDERPY_IMAGE_SCALE, 0.5 * game->clip_rect.h / (double)game->viewport.height / LIBSUPERDERPY_IMAGE_SCALE, 0.0, 0);
+		al_draw_scaled_rotated_bitmap(game->data->mute, 48, 48, game->clip_rect.x + game->clip_rect.w * 38.0 / 1280.0, game->clip_rect.y + game->clip_rect.h * 680.0 / 720.0, 0.5 * game->clip_rect.w / (double)game->viewport.width / LIBSUPERDERPY_IMAGE_SCALE, 0.5 * game->clip_rect.h / (double)game->viewport.height / LIBSUPERDERPY_IMAGE_SCALE, 0.0, 0);
+		if (game->data->mouseX < 0.05 && game->data->mouseY > 0.90 && game->data->mouseX > 0.01 && game->data->mouseY < 0.98) {
+			hover = true;
+		}
+	}
+
+	if (game->data->cursor && !game->data->footnote) {
 #ifdef __EMSCRIPTEN__
 		ALLEGRO_BITMAP* menu = game->data->menu;
 		if (game->data->mouseX > 0.94 && game->data->mouseY > 0.90 && game->data->mouseX < 0.98 && game->data->mouseY < 0.98) {
@@ -197,7 +204,7 @@ void Compositor(struct Game* game) {
 			menu = game->data->menu2;
 		}
 
-		al_draw_scaled_rotated_bitmap(menu, 25, 28, game->clip_rect.w * 1227.0 / 1280.0, game->clip_rect.h * 669.0 / 720.0, game->clip_rect.w / (double)game->viewport.width / LIBSUPERDERPY_IMAGE_SCALE, game->clip_rect.h / (double)game->viewport.height / LIBSUPERDERPY_IMAGE_SCALE, 0.0, 0);
+		al_draw_scaled_rotated_bitmap(menu, 25, 28, game->clip_rect.x + game->clip_rect.w * 1227.0 / 1280.0, game->clip_rect.y + game->clip_rect.h * 669.0 / 720.0, game->clip_rect.w / (double)game->viewport.width / LIBSUPERDERPY_IMAGE_SCALE, game->clip_rect.h / (double)game->viewport.height / LIBSUPERDERPY_IMAGE_SCALE, 0.0, 0);
 #endif
 
 		if (!game->data->touch) {
@@ -400,9 +407,16 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 		return false;
 	}
 
+	if (game->config.mute && game->data->mouseX < 0.05 && game->data->mouseY > 0.90 && game->data->mouseX > 0.01 && game->data->mouseY < 0.98) {
+		if ((game->data->cursor && ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (game->data->cursor && ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
+			ToggleMute(game);
+			return true;
+		}
+	}
+
 #ifdef __EMSCRIPTEN__
 	if (game->data->cursor && game->data->mouseX > 0.94 && game->data->mouseY > 0.90 && game->data->mouseX < 0.98 && game->data->mouseY < 0.98) {
-		if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
+		if ((ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
 			ShowMenu(game);
 			return true;
 		}
@@ -504,6 +518,7 @@ struct CommonResources* CreateGameData(struct Game* game) {
 	data->creditsfont = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 24, 0);
 	data->gradient = al_load_bitmap(GetDataFilePath(game, "gradient.png"));
 	data->banner = al_load_bitmap(GetDataFilePath(game, "banner.png"));
+	data->mute = al_load_bitmap(GetDataFilePath(game, "mute.png"));
 	data->queue_pos = 0;
 	data->queue_handled = 0;
 	return data;
@@ -519,6 +534,7 @@ void DestroyGameData(struct Game* game) {
 	al_destroy_font(game->data->font);
 	al_destroy_font(game->data->creditsfont);
 	al_destroy_bitmap(game->data->banner);
+	al_destroy_bitmap(game->data->mute);
 
 	if (game->data->audio.music) {
 		al_destroy_audio_stream(game->data->audio.music);

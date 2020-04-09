@@ -95,7 +95,7 @@ struct CommonResources {
 	int queue_handled;
 
 	ALLEGRO_FONT *font, *creditsfont;
-	ALLEGRO_BITMAP *banner, *menu, *menu2;
+	ALLEGRO_BITMAP *banner, *menu, *menu2, *mute;
 
 	bool footnote;
 	bool menu_requested;
