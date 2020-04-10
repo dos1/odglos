@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2018 Sebastian Krzyszkowiak <dos@dosowisko.net> -->
+<!-- Copyright 2020 Sebastian Krzyszkowiak <dos@dosowisko.net> -->
 <component type="desktop-application">
   <id>com.holypangolin.ODGLOS</id>
   <metadata_license>FSFAP</metadata_license>
-  <name>ODGLOS</name>
-  <summary>A weird game about taking off and making sounds.</summary>
+  <project_license>LicenseRef-Proprietary</project_license>
+  <name>ODGŁOS</name>
+  <summary>Interdimentional journey of a small owl and her friends, in search of Polish Radio Experimental Studio</summary>
+  <url type="homepage">https://holypangolin.com/odglos</url>
+  <categories>
+    <category>Game</category>
+    <category>AdventureGame</category>
+  </categories>
 
   <description>
-    <p>
-    </p>
+    <p>Come along on a journey with a small owl looking for her lost friends in other dimensions. Followed by a shapeshifting snake, she has to get to the Polish Radio Experimental Studio that holds control over the universe.</p>
+    <p>The game design process emerges from experimental ways of creating music developed by PRES, where all the sounds used in the game were sourced from via compositions by Krzysztof Knittel, Elżbieta Sikora and Ryszard Szeremeta.</p>
   </description>
 
   <launchable type="desktop-id">odglos.desktop</launchable>
@@ -21,4 +27,5 @@
     <binary>odglos</binary>
   </provides>
 
+  <content_rating type="oars-1.0" />
 </component>
