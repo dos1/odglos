@@ -91,10 +91,10 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	al_draw_bitmap(data->bg, 0, 0, 0);
 	DrawCharacter(game, data->byk);
 
-	al_draw_tinted_bitmap(data->gradient, data->munching ? al_map_rgba(128, 128, 128, 128) : al_map_rgba(64, 64, 64, 64), 0, 0, 0);
-
 	if (!data->munching) {
 		al_draw_bitmap(data->leaf, game->data->mouseX * game->viewport.width - (game->data->touch ? 55 : 5), game->data->mouseY * game->viewport.height + (game->data->touch ? 0 : 30), 0);
+	} else {
+		al_draw_tinted_bitmap(data->gradient, al_map_rgba(128, 128, 128, 128), 0, 0, 0);
 	}
 }
 
