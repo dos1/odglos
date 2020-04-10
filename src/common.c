@@ -236,7 +236,7 @@ void DrawBuildInfo(struct Game* game) {
 	}
 }
 
-void HandlePointerEmulation(struct Game* game, ALLEGRO_EVENT* ev) {
+static void HandlePointerEmulation(struct Game* game, ALLEGRO_EVENT* ev) {
 	struct CommonResources* data = game->data;
 
 	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_W)) {
