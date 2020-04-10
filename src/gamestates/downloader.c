@@ -89,7 +89,6 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
 	// Called when gamestate gets stopped. Stop timers, music etc. here.
-	game->data->dark_loading = true;
 	game->data->download.additional = true;
 }
 

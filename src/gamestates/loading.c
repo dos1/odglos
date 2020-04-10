@@ -65,4 +65,10 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 #endif
 }
 
-void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
+void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
+	if (game->loading.progress < 1.0) {
+		// TODO: fixme in engine
+		return;
+	}
+	game->data->dark_loading = true;
+}
