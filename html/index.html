@@ -240,8 +240,6 @@
       }
       #wrapper {
         overflow: hidden;
-        transform-origin: top center;
-        margin: 0 auto;
       }
       #wrapper.withFootnote > canvas, #wrapper.withFootnote > img {
         filter: grayscale(100%) brightness(130%);
@@ -836,7 +834,9 @@
         },
         adjustSize: function() {
           var scale = Math.min(window.innerWidth/1280.0, window.innerHeight/720.0);
-          document.getElementById('wrapper').style = 'transform: scale(' + scale + '); transform-origin: top ' + (scale > 1.0 ? 'center' : 'left') + ';';
+          var x = (window.innerWidth - 1280 * scale) / 2;
+          var y = (window.innerHeight - 720 * scale) / 2;
+          document.getElementById('wrapper').style = 'transform: translateX(' + x + 'px) translateY(' + y + 'px) scale(' + scale + '); transform-origin: top left;';
         }
       };
       Module.setStatus('Downloading...');
