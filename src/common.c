@@ -174,7 +174,7 @@ void Compositor(struct Game* game) {
 		tmp = GetNextGamestate(game, tmp);
 	}
 	if (!drawn) {
-		al_draw_filled_rectangle(game->clip_rect.x, game->clip_rect.y, game->clip_rect.w, game->clip_rect.h, al_map_rgb(0, 0, 0));
+		al_draw_tinted_bitmap(GetGamestateFramebuffer(game, GetGamestate(game, NULL)), al_map_rgba(0, 0, 0, 0), game->clip_rect.x, game->clip_rect.y, 0);
 	}
 	al_use_shader(NULL);
 
