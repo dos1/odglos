@@ -520,6 +520,109 @@ static void DrawCredits(struct Game* game, int frame, void** data) {
 	}
 }
 
+struct KosmosData {
+	bool krzatanie;
+	int buzia;
+	int cyrk;
+	int kolo;
+	int samochod;
+	int brama;
+};
+
+static bool Kosmos(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
+	if (!*data) {
+		*data = calloc(1, sizeof(struct KosmosData));
+	}
+	return false;
+}
+
+static bool KosmosFinish(struct Game* game, struct KosmosData* data) {
+	return data->krzatanie && data->buzia && data->cyrk && data->kolo && data->samochod && data->brama;
+}
+
+static bool KosmosBack(struct Game* game, struct Character* character, void** d);
+
+static bool KosmosSowka(struct Game* game, struct Character* character, void** d);
+
+static bool KosmosSowkaLeft(struct Game* game, struct Character* character, void** d) {
+	struct KosmosData* data = *d;
+	Enqueue(game, (struct SceneDefinition){"sowka1_wlacza_konsole_z_bliska_lewa_konsola"});
+
+	char* anims[] = {"buzia_01_bez_niczego", "buzia_02_sowa", "buzia_03_kuzyn", "buzia_04_myszka"};
+	Enqueue(game, (struct SceneDefinition){anims[data->buzia % 4], .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	data->buzia++;
+	return KosmosSowka(game, character, d);
+}
+
+static bool KosmosSowkaMiddle(struct Game* game, struct Character* character, void** d) {
+	struct KosmosData* data = *d;
+	Enqueue(game, (struct SceneDefinition){"sowka1_wlacza_konsole_z_bliska_srodkowa_konsola"});
+
+	char* anims[] = {"wiklinowy_cyrk_po_dwa_bez_myszki", "wiklinowy_cyrk_sama_myszka"};
+	Enqueue(game, (struct SceneDefinition){anims[data->cyrk % 2], .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	data->cyrk++;
+	return KosmosSowka(game, character, d);
+}
+
+static bool KosmosSowkaRight(struct Game* game, struct Character* character, void** d) {
+	struct KosmosData* data = *d;
+	Enqueue(game, (struct SceneDefinition){"sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK", .speed = 0.75});
+
+	char* anims[] = {"wiklinowe_kolo1_samochod", "wiklinowe_kolo2_pilka", "wiklinowe_kolo3_myszka"};
+	Enqueue(game, (struct SceneDefinition){anims[data->kolo % 3], .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+
+	data->kolo++;
+	return KosmosSowka(game, character, d);
+}
+
+static bool KosmosSowka(struct Game* game, struct Character* character, void** d) {
+	struct KosmosData* data = *d;
+	if (KosmosFinish(game, *d)) {
+		free(*d);
+		return true;
+	}
+	if (!data->krzatanie) {
+		data->krzatanie = true;
+		Enqueue(game, (struct SceneDefinition){"sowka1_wlacza_konsole_z_daleka2", .bg = "kosmos"});
+	}
+	Enqueue(game, (struct SceneDefinition){"sowka1_wlacza_konsole_z_bliska_lewa_konsola", .callback_data = data, .freezes = {{0, "DSCF0067_maska_ze_stolem", .skip = true, .links = {{{0.0, 0.0, 1.0}, .callback = KosmosBack}, {{1.0, 0.0, 0.0}, .callback = KosmosSowkaLeft}, {{0.0, 1.0, 0.0}, .callback = KosmosSowkaMiddle}, {{0.0, 0.0, 0.0}, .callback = KosmosSowkaRight}}}}});
+	return true;
+}
+
+static bool KosmosRudnik(struct Game* game, struct Character* character, void** d);
+
+static bool KosmosRudnikLeft(struct Game* game, struct Character* character, void** d) {
+	struct KosmosData* data = *d;
+	data->samochod++;
+	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_lewa", .speed = 0.75});
+	Enqueue(game, (struct SceneDefinition){"altanka_samochod", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	return KosmosRudnik(game, character, d);
+}
+
+static bool KosmosRudnikRight(struct Game* game, struct Character* character, void** d) {
+	struct KosmosData* data = *d;
+	data->brama++;
+	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_prawa", .speed = 0.75});
+	Enqueue(game, (struct SceneDefinition){"zamiana_myszki_w_bramie", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	return KosmosRudnik(game, character, d);
+}
+
+static bool KosmosRudnik(struct Game* game, struct Character* character, void** d) {
+	struct KosmosData* data = *d;
+	if (KosmosFinish(game, *d)) {
+		free(*d);
+		return true;
+	}
+	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_prawa", .callback_data = data, .freezes = {{0, "DSCF0286_maska", .skip = true, .links = {{{0.0, 0.0, 1.0}, .callback = KosmosBack}, {{1.0, 0.0, 0.0}, .callback = KosmosRudnikLeft}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnikRight}}}}});
+	return true;
+}
+
+static bool KosmosBack(struct Game* game, struct Character* character, void** d) {
+	struct KosmosData* data = *d;
+	Enqueue(game, (struct SceneDefinition){"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .callback_data = data, .freezes = {{0, "DSCF0566_maska_obszary", .links = {{{1.0, 0.0, 0.0}, .callback = KosmosSowka}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnik}}}}});
+	return true;
+}
+
 static char* PACK_POSTLOAD[DOWNLOAD_PARTS][3] = {
 	{"byk"},
 	{"lawka"},
@@ -697,37 +800,24 @@ static struct SceneDefinition SCENES[] = {
 	{"magnetofon2_bez_myszek", .freezes = {{0, "DSCF9467_maska_magnetofon"}}}, //
 	{"duch_portalu_animacja2_zlozona_TAK", .callback = DuchPortalu}, //
 	{">armata"}, //
-
 	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska"}}}, //
+
 	{"makieta_w_kosmosie_bez_tla", .audio = {MUSIC, "kosmos_metrograph"}, .bg = "kosmos", .freezes = {{28, .footnote = 2}}, .checkpoint = true, .pack = 9}, //
 	{"makieta_pusta"}, //
 	{"krzeslo_w_lesie_czesc1", .freezes = {{12, "krzeslo_w_lesie08_maska"}}}, //
 	{"krzeslo_w_lesie_czesc2"}, //
-	{"sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK"}, // fade?
-	{"sowka2_zaluzje_pojawia_sie2_TAK", .speed = 0.15}, // fade?
-	{"sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK", .freezes = {{85, "DSCF0566_maska_obszary"}}}, //
-	{"sowka1_wlacza_konsole_z_daleka2", .bg = "kosmos"}, //
-	{"sowka1_wlacza_konsole_z_bliska_lewa_konsola", .freezes = {{0, "DSCF0067_maska_ze_stolem"}}}, //
-	{"sowka1_wlacza_konsole_z_bliska_srodkowa_konsola", .freezes = {{0, "DSCF0067_maska_ze_stolem"}}}, //
-	//{"altanka_samochod"},
-	//{"zamiana_myszki_w_bramie"},
-	//{"sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK"},
-	{"sowka2_klika_konsole_prawa", .freezes = {{0, "DSCF0286_maska"}}}, //
-	{"sowka2_klika_konsole_lewa", .freezes = {{0, "DSCF0286_maska"}}}, //
-	//{"buzia_01_bez_niczego"},
-	//{"buzia_02_sowa"},
-	//{"buzia_03_kuzyn"},
-	//{"buzia_04_myszka"},
-	//{"wiklinowy_cyrk_po_dwa_bez_myszki"},
-	//{"wiklinowy_cyrk_sama_myszka"},
-	//{"wiklinowe_kolo1_samochod"},
-	//{"wiklinowe_kolo2_pilka"},
-	//{"wiklinowe_kolo3_myszka"},
+	{"sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK", .sounds = {{1, {SOUND, "pac", .volume = 0.2}}}}, // fade?
+	{"sowka2_zaluzje_pojawia_sie2_TAK", .speed = 0.15, .sounds = {{1, {SOUND, "pac", .volume = 0.2}}}}, // fade?
+	{"sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK"}, //
+	{"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .callback = Kosmos, .freezes = {{0, "DSCF0566_maska_obszary", .links = {{{1.0, 0.0, 0.0}, .callback = KosmosSowka}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnik}}}}}, //
 	{"drzwi_zamykaja_sie_same", .audio = {MUSIC, "koniec_lapis"}, .bg = "kosmos"}, //
 	{"okna_sie_otwieraja_z_sowka2", .bg = "kosmos"}, //
+	{"okna_sie_otwieraja_z_sowka2", .bg = "kosmos"}, //
+	{"sowka2_zaluzje_nie_znika_TAK"}, //
 	{"sowka2_zaluzje_nie_znika_TAK"}, //
 	{"sowka1_zaluzje"}, //
-	{"animacja_koncowa", .bg = "kosmos", .freezes = {{29, .footnote = 1}}}, //
+	{"drzwi_z_zewnatrz"}, //
+	{"animacja_koncowa", .bg = "kosmos", .sounds = {{18, {SOUND, "pac", .volume = 0.2}}}, .freezes = {{29, .footnote = 1}}}, //
 	{">myszka"}, //
 	{">blank", .audio = {STOP_SOUND, "napisy_metrograph"}}, //
 	{"animacje_koncowe_rodzinki", .audio = {SOUND, "napisy_metrograph"}, .callback = Credits, .draw = DrawCredits, .speed = 0.5}, //

@@ -285,15 +285,29 @@ if (EMSCRIPTEN)
 		sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK.awebp
 		sowka2_zaluzje_pojawia_sie2_TAK.awebp
 		sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK.awebp
+		sowki_zamieniaja_sie_krzeslami_po_dwa_freeze.awebp
 		sowka1_wlacza_konsole_z_daleka2.awebp
 		sowka1_wlacza_konsole_z_bliska_lewa_konsola.awebp
 		sowka1_wlacza_konsole_z_bliska_srodkowa_konsola.awebp
 		sowka2_klika_konsole_prawa.awebp
 		sowka2_klika_konsole_lewa.awebp
+		altanka_samochod.awebp
+		zamiana_myszki_w_bramie.awebp
+		sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK.awebp
+		buzia_01_bez_niczego.awebp
+		buzia_02_sowa.awebp
+		buzia_03_kuzyn.awebp
+		buzia_04_myszka.awebp
+		wiklinowy_cyrk_po_dwa_bez_myszki.awebp
+		wiklinowy_cyrk_sama_myszka.awebp
+		wiklinowe_kolo1_samochod.awebp
+		wiklinowe_kolo2_pilka.awebp
+		wiklinowe_kolo3_myszka.awebp
 		drzwi_zamykaja_sie_same.awebp
 		okna_sie_otwieraja_z_sowka2.awebp
 		sowka2_zaluzje_nie_znika_TAK.awebp
 		sowka1_zaluzje.awebp
+		drzwi_z_zewnatrz.awebp
 		animacja_koncowa.awebp
 		animacje_koncowe_rodzinki.awebp
 		donice_13_tasma.awebp
