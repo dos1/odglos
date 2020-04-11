@@ -579,6 +579,9 @@ static bool KosmosSowka(struct Game* game, struct Character* character, void** d
 	struct KosmosData* data = *d;
 	if (KosmosFinish(game, *d)) {
 		free(*d);
+#ifdef __EMSCRIPTEN__
+		Enqueue(game, (struct SceneDefinition){"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .freezes = {{0, .footnote = 1}}});
+#endif
 		return true;
 	}
 	if (!data->krzatanie) {
@@ -611,6 +614,9 @@ static bool KosmosRudnik(struct Game* game, struct Character* character, void** 
 	struct KosmosData* data = *d;
 	if (KosmosFinish(game, *d)) {
 		free(*d);
+#ifdef __EMSCRIPTEN__
+		Enqueue(game, (struct SceneDefinition){"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .freezes = {{0, .footnote = 1}}});
+#endif
 		return true;
 	}
 	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_prawa", .callback_data = data, .freezes = {{0, "DSCF0286_maska", .skip = true, .links = {{{0.0, 0.0, 1.0}, .callback = KosmosBack}, {{1.0, 0.0, 0.0}, .callback = KosmosRudnikLeft}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnikRight}}}}});
@@ -818,7 +824,7 @@ static struct SceneDefinition SCENES[] = {
 	{"sowka2_zaluzje_nie_znika_TAK"}, //
 	{"sowka1_zaluzje"}, //
 	{"drzwi_z_zewnatrz"}, //
-	{"animacja_koncowa", .bg = "kosmos", .sounds = {{18, {SOUND, "pac", .volume = 0.2}}}, .freezes = {{29, .footnote = 1}}}, //
+	{"animacja_koncowa", .bg = "kosmos", .sounds = {{18, {SOUND, "pac", .volume = 0.2}}}}, //
 	{">myszka"}, //
 	{">blank", .audio = {STOP_SOUND, "napisy_metrograph"}}, //
 	{"animacje_koncowe_rodzinki", .audio = {SOUND, "napisy_metrograph"}, .callback = Credits, .draw = DrawCredits, .speed = 0.5}, //
