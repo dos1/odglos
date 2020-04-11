@@ -48,7 +48,7 @@ static void DownloadNextPack(struct Game* game) {
 #ifdef __EMSCRIPTEN__
 	struct LoadingData* d = malloc(sizeof(struct LoadingData));
 	d->game = game;
-	d->name = strdup(PunchNumber(game, "dataX.zip", 'X', current));
+	d->name = strdup(PunchNumber(game, "dataXX.zip", 'X', current));
 	d->number = current;
 	int handle = emscripten_async_wget2_data(d->name, "GET", "", d, false, DownloadOnLoad, DownloadOnError, DownloadOnProgress);
 	PrintConsole(game, "Started downloading %s: %d", d->name, handle);

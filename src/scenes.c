@@ -634,6 +634,7 @@ static char* PACK_POSTLOAD[DOWNLOAD_PARTS][3] = {
 	{"naparstki", "naparstki2"},
 	{"armata"},
 	{},
+	{},
 };
 
 void StartDownloadPacks(struct Game* game) {
@@ -802,7 +803,7 @@ static struct SceneDefinition SCENES[] = {
 	{">armata"}, //
 	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska"}}}, //
 
-	{"makieta_w_kosmosie_bez_tla", .audio = {MUSIC, "kosmos_metrograph"}, .bg = "kosmos", .freezes = {{28, .footnote = 2}}, .checkpoint = true, .pack = 9}, //
+	{"makieta_w_kosmosie_bez_tla", .audio = {MUSIC, "kosmos_metrograph"}, .bg = "kosmos", .freezes = {{28, .footnote = 2}}, .checkpoint = true, .pack = 10}, //
 	{"makieta_pusta"}, //
 	{"krzeslo_w_lesie_czesc1", .freezes = {{12, "krzeslo_w_lesie08_maska"}}}, //
 	{"krzeslo_w_lesie_czesc2"}, //

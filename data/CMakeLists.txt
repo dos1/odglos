@@ -5,9 +5,9 @@ endif(EMSCRIPTEN)
 include(libsuperderpy-data)
 
 if (EMSCRIPTEN)
-	install(DIRECTORY byk DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data0")
-	install(DIRECTORY sprites/byk DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data0/sprites")
-	install(DIRECTORY sprites/dmuchawa DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data0/sprites")
+	install(DIRECTORY byk DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data00")
+	install(DIRECTORY sprites/byk DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data00/sprites")
+	install(DIRECTORY sprites/dmuchawa DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data00/sprites")
 
 	set(ANIMATIONS
 		kostki_animacja01_tworzy_sie_kostka.awebp
@@ -33,12 +33,12 @@ if (EMSCRIPTEN)
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data0/animations")
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data00/animations")
 	endforeach()
 
 	# ----------------
 
-	install(DIRECTORY lawka_w_parku DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data1")
+	install(DIRECTORY lawka_w_parku DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data01")
 
 	set(ANIMATIONS
 		samochody_w_lesie.awebp
@@ -63,7 +63,7 @@ if (EMSCRIPTEN)
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data1/animations")
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data01/animations")
 	endforeach()
 
 	# -------------------
@@ -106,12 +106,12 @@ if (EMSCRIPTEN)
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data2/animations")
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data02/animations")
 	endforeach()
 
 	# -------------------
 
-	install(DIRECTORY pergola DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data3")
+	install(DIRECTORY pergola DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data03")
 
 	set(ANIMATIONS
 		sowka_wchodzi_do_miski_ciemniejsze.awebp
@@ -127,12 +127,12 @@ if (EMSCRIPTEN)
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data3/animations")
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data03/animations")
 	endforeach()
 
 	# -------------------
 
-	install(DIRECTORY sprites/pudelka DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data4/sprites")
+	install(DIRECTORY sprites/pudelka DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data04/sprites")
 
 	set(ANIMATIONS
 		pudelko_w_ogrodzie.awebp
@@ -142,12 +142,12 @@ if (EMSCRIPTEN)
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data4/animations")
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data04/animations")
 	endforeach()
 
 	# -------------------
 
-	install(DIRECTORY naparstki DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data5")
+	install(DIRECTORY naparstki DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data05")
 
 	set(ANIMATIONS
 		naparstki_00_poczatek.awebp
@@ -171,7 +171,7 @@ if (EMSCRIPTEN)
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES sprites/naparstki/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data5/sprites/naparstki")
+		install(FILES sprites/naparstki/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data05/sprites/naparstki")
 	endforeach()
 
 	# -------------------
@@ -200,12 +200,12 @@ if (EMSCRIPTEN)
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES sprites/naparstki/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data6/sprites/naparstki")
+		install(FILES sprites/naparstki/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data06/sprites/naparstki")
 	endforeach()
 
 	# -------------------
 
-	install(DIRECTORY naparstki DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data7")
+	install(DIRECTORY naparstki DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data07")
 
 	set(ANIMATIONS
 		naparstki_PUSTE_03_paski.awebp
@@ -241,7 +241,7 @@ if (EMSCRIPTEN)
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES sprites/naparstki/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data7/sprites/naparstki")
+		install(FILES sprites/naparstki/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data07/sprites/naparstki")
 	endforeach()
 
 	set(ANIMATIONS
@@ -249,13 +249,13 @@ if (EMSCRIPTEN)
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data7/animations")
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data07/animations")
 	endforeach()
 
 	# -------------------
 
-	install(DIRECTORY sprites/makieta DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data8/sprites")
-	install(DIRECTORY armata DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data8")
+	install(DIRECTORY sprites/makieta DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data08/sprites")
+	install(DIRECTORY armata DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data08")
 
 	set(ANIMATIONS
 		01statki_szyszki_tasmy_animacja1.awebp
@@ -272,7 +272,7 @@ if (EMSCRIPTEN)
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data8/animations")
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data08/animations")
 	endforeach()
 
 	# -------------------
@@ -298,11 +298,21 @@ if (EMSCRIPTEN)
 		buzia_02_sowa.awebp
 		buzia_03_kuzyn.awebp
 		buzia_04_myszka.awebp
-		wiklinowy_cyrk_po_dwa_bez_myszki.awebp
-		wiklinowy_cyrk_sama_myszka.awebp
 		wiklinowe_kolo1_samochod.awebp
+	)
+
+	foreach (FILE IN ITEMS ${ANIMATIONS})
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data09/animations")
+	endforeach()
+
+
+	# -------------------
+
+	set(ANIMATIONS
 		wiklinowe_kolo2_pilka.awebp
 		wiklinowe_kolo3_myszka.awebp
+		wiklinowy_cyrk_po_dwa_bez_myszki.awebp
+		wiklinowy_cyrk_sama_myszka.awebp
 		drzwi_zamykaja_sie_same.awebp
 		okna_sie_otwieraja_z_sowka2.awebp
 		sowka2_zaluzje_nie_znika_TAK.awebp
@@ -314,8 +324,10 @@ if (EMSCRIPTEN)
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data9/animations")
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data10/animations")
 	endforeach()
+
+	# -----
 
 	MACRO(add_asset_pack_target PACK_NAME)
 		add_custom_target(${LIBSUPERDERPY_GAMENAME}_assets-${PACK_NAME}
@@ -324,15 +336,16 @@ if (EMSCRIPTEN)
 			COMMAND ${CMAKE_COMMAND} -E tar cfv ${CMAKE_INSTALL_PREFIX}/${LIBSUPERDERPY_GAMENAME}/${PACK_NAME}.zip --format=zip "*")
 		add_dependencies(${LIBSUPERDERPY_GAMENAME}_js ${LIBSUPERDERPY_GAMENAME}_assets-${PACK_NAME})
 	ENDMACRO()
-	add_asset_pack_target(data0)
-	add_asset_pack_target(data1)
-	add_asset_pack_target(data2)
-	add_asset_pack_target(data3)
-	add_asset_pack_target(data4)
-	add_asset_pack_target(data5)
-	add_asset_pack_target(data6)
-	add_asset_pack_target(data7)
-	add_asset_pack_target(data8)
-	add_asset_pack_target(data9)
+	add_asset_pack_target(data00)
+	add_asset_pack_target(data01)
+	add_asset_pack_target(data02)
+	add_asset_pack_target(data03)
+	add_asset_pack_target(data04)
+	add_asset_pack_target(data05)
+	add_asset_pack_target(data06)
+	add_asset_pack_target(data07)
+	add_asset_pack_target(data08)
+	add_asset_pack_target(data09)
+	add_asset_pack_target(data10)
 
 endif(EMSCRIPTEN)
