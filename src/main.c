@@ -79,14 +79,15 @@ int main(int argc, char** argv) {
 		}
 	} while (c != -1);
 
+	LoadGamestate(game, "end");
+	LoadGamestate(game, "blank");
+
 	if (game->data->lowmem) {
 		PrintConsole(game, "Low memory mode enabled");
 	} else {
 		LoadGamestate(game, "logo");
 		LoadGamestate(game, "anim");
 		LoadGamestate(game, "myszka");
-		LoadGamestate(game, "end");
-		LoadGamestate(game, "blank");
 #ifndef __EMSCRIPTEN__
 		LoadGamestate(game, "byk");
 		LoadGamestate(game, "naparstki");
