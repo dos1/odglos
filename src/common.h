@@ -33,6 +33,7 @@ struct FreezeLink {
 	char* name;
 	bool (*callback)(struct Game*, struct Character*, void**);
 	bool ignore;
+	bool skip;
 	struct Audio audio;
 };
 
@@ -40,6 +41,7 @@ struct FreezeFrame {
 	int frame;
 	char* mask;
 	int footnote;
+	bool skip;
 	struct FreezeLink links[8];
 	bool (*callback)(struct Game*, struct Character*, void**);
 	struct Audio audio, pre_audio;

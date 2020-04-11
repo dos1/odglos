@@ -250,6 +250,14 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	}
 }
 
+static void SkipAnim(struct Game* game, struct GamestateResources* data) {
+	data->delay = 0.01;
+	data->finished = true;
+	data->frozen = false;
+	data->freezeno++;
+	data->repeats = 0;
+}
+
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	if (!data->loaded) {
 		return;
@@ -306,11 +314,19 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 							}
 						}
 						HandleAudio(game, data->freezes[data->freezeno].links[i].audio);
+						if (data->freezes[data->freezeno].links[i].skip) {
+							SkipAnim(game, data);
+							return;
+						}
 					}
 				}
 			}
 			if (data->freezes[data->freezeno].callback) {
 				data->freezes[data->freezeno].callback(game, data->character, &data->callback_data);
+			}
+			if (data->freezes[data->freezeno].skip) {
+				SkipAnim(game, data);
+				return;
 			}
 			data->freezeno++;
 			al_destroy_bitmap(data->mask);
@@ -322,22 +338,14 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	}
 
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
-		data->delay = 0.01;
-		data->finished = true;
-		data->frozen = false;
-		data->freezeno++;
-		data->repeats = 0;
+		SkipAnim(game, data);
 	}
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
-		data->delay = 0.01;
-		data->finished = true;
+		SkipAnim(game, data);
 		game->data->sceneid--;
 		if (game->data->sceneid < -1) {
 			game->data->sceneid = -1;
 		}
-		data->frozen = false;
-		data->freezeno++;
-		data->repeats = 0;
 	}
 }
 
