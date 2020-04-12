@@ -577,13 +577,6 @@ static bool KosmosSowkaRight(struct Game* game, struct Character* character, voi
 
 static bool KosmosSowka(struct Game* game, struct Character* character, void** d) {
 	struct KosmosData* data = *d;
-	if (KosmosFinish(game, *d)) {
-		free(*d);
-#ifdef __EMSCRIPTEN__
-		Enqueue(game, (struct SceneDefinition){"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .freezes = {{0, .footnote = 1}}});
-#endif
-		return true;
-	}
 	if (!data->krzatanie) {
 		data->krzatanie = true;
 		Enqueue(game, (struct SceneDefinition){"sowka1_wlacza_konsole_z_daleka2", .bg = "kosmos"});
@@ -612,19 +605,16 @@ static bool KosmosRudnikRight(struct Game* game, struct Character* character, vo
 
 static bool KosmosRudnik(struct Game* game, struct Character* character, void** d) {
 	struct KosmosData* data = *d;
-	if (KosmosFinish(game, *d)) {
-		free(*d);
-#ifdef __EMSCRIPTEN__
-		Enqueue(game, (struct SceneDefinition){"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .freezes = {{0, .footnote = 1}}});
-#endif
-		return true;
-	}
 	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_prawa", .callback_data = data, .freezes = {{0, "DSCF0286_maska", .skip = true, .links = {{{0.0, 0.0, 1.0}, .callback = KosmosBack}, {{1.0, 0.0, 0.0}, .callback = KosmosRudnikLeft}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnikRight}}}}});
 	return true;
 }
 
 static bool KosmosBack(struct Game* game, struct Character* character, void** d) {
 	struct KosmosData* data = *d;
+	if (KosmosFinish(game, *d)) {
+		free(*d);
+		return true;
+	}
 	Enqueue(game, (struct SceneDefinition){"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .callback_data = data, .freezes = {{0, "DSCF0566_maska_obszary", .links = {{{1.0, 0.0, 0.0}, .callback = KosmosSowka}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnik}}}}});
 	return true;
 }
@@ -815,7 +805,7 @@ static struct SceneDefinition SCENES[] = {
 	{"krzeslo_w_lesie_czesc2"}, //
 	{"sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK", .audio = {STOP_LOOP, "dwor"}, .sounds = {{1, {SOUND, "pac", .volume = 0.2}}}}, // fade?
 	{"sowka2_zaluzje_pojawia_sie2_TAK", .speed = 0.15, .sounds = {{1, {SOUND, "pac", .volume = 0.2}}}}, // fade?
-	{"sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK"}, //
+	{"sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK", .freezes = {{85, .footnote = 1}}}, //
 	{"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .callback = Kosmos, .freezes = {{0, "DSCF0566_maska_obszary", .links = {{{1.0, 0.0, 0.0}, .callback = KosmosSowka}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnik}}}}}, //
 	{"drzwi_zamykaja_sie_same", .audio = {MUSIC, "koniec_lapis"}, .bg = "kosmos"}, //
 	{"okna_sie_otwieraja_z_sowka2", .bg = "kosmos"}, //
