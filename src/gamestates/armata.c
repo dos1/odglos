@@ -73,6 +73,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	if (game->data->hover && (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
 		data->clicked = true;
 		HideMouse(game);
+		PlayMusic(game, "odwilz_trickstar5", 1.0);
 	}
 
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
@@ -129,6 +130,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->finished = false;
 	SelectSpritesheet(game, data->makieta, "makieta");
 	ResetAnimation(data->anim, true);
+	PlayMusic(game, "odwilz_trickstar3", 1.0);
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}

@@ -812,13 +812,13 @@ static struct SceneDefinition SCENES[] = {
 	{">pudelka", .checkpoint = true}, //
 	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}, .checkpoint = true, .pack = 7}, //
 	{">naparstki"}, //
-	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar", 1.0}, .checkpoint = true, .pack = 8}, //
-	{"02statki_szyszki_tasmy_animacja2"}, //
+	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar1", 1.0}, .sounds = {{5, {MUSIC, "odwilz_trickstar2"}}}, .checkpoint = true, .pack = 8}, //
+	{"02statki_szyszki_tasmy_animacja2", .speed = 0.96}, //
 	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}}, //
 	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska"}}}, //
 	{"06statki_szyszki_tasmy_animacja5"}, //
-	{"magnetofon2_bez_myszek", .freezes = {{0, "DSCF9467_maska_magnetofon"}}}, //
-	{"duch_portalu_animacja2_zlozona_TAK", .callback = DuchPortalu}, //
+	{"magnetofon2_bez_myszek", .freezes = {{0, "DSCF9467_maska_magnetofon", .audio = {MUSIC, "odwilz_trickstar3"}}}, .sounds = {{50, {MUSIC, "odwilz_trickstar4"}}}}, //
+	{"duch_portalu_animacja2_zlozona_TAK", .callback = DuchPortalu, .speed = 0.92}, //
 	{">armata"}, //
 	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska"}}}, //
 
