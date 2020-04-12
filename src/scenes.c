@@ -822,14 +822,14 @@ static struct SceneDefinition SCENES[] = {
 	{">armata"}, //
 	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska"}}}, //
 
-	{"makieta_w_kosmosie_bez_tla", .audio = {MUSIC, "kosmos_metrograph"}, .bg = "kosmos", .freezes = {{28, .footnote = 2}}, .checkpoint = true, .pack = 10}, //
+	{"makieta_w_kosmosie_bez_tla", .audio = {MUSIC, "kosmos_metrograph1"}, .bg = "kosmos", .freezes = {{28, .footnote = 2}}, .checkpoint = true, .pack = 10}, //
 	{"makieta_pusta", .audio = {STOP_LOOP, "dwor"}}, //
-	{"krzeslo_w_lesie_czesc1", .audio = {LOOP, "dwor", .volume = 0.15, .persist = true}, .freezes = {{12, "krzeslo_w_lesie08_maska"}}}, //
+	{"krzeslo_w_lesie_czesc1", .audio = {LOOP, "dwor", .volume = 0.15, .persist = true}, .freezes = {{12, "krzeslo_w_lesie08_maska", .audio = {MUSIC, "kosmos_metrograph2"}}}}, //
 	{"krzeslo_w_lesie_czesc2"}, //
 	{"sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK", .audio = {STOP_LOOP, "dwor"}, .sounds = {{1, {SOUND, "pac", .volume = 0.2}}}}, // fade?
 	{"sowka2_zaluzje_pojawia_sie2_TAK", .speed = 0.15, .sounds = {{1, {SOUND, "pac", .volume = 0.2}}}}, // fade?
 	{"sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK", .freezes = {{85, .footnote = 1}}}, //
-	{"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .callback = Kosmos, .freezes = {{0, "DSCF0566_maska_obszary", .links = {{{1.0, 0.0, 0.0}, .callback = KosmosSowka}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnik}}}}}, //
+	{"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .callback = Kosmos, .freezes = {{0, "DSCF0566_maska_obszary", .links = {{{1.0, 0.0, 0.0}, .callback = KosmosSowka, .audio = {MUSIC, "kosmos_metrograph3", .volume = 2.0}}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnik, .audio = {MUSIC, "kosmos_metrograph3", .volume = 2.0}}}}}}, //
 	{"drzwi_zamykaja_sie_same", .audio = {MUSIC, "koniec_lapis"}, .bg = "kosmos"}, //
 	{"okna_sie_otwieraja_z_sowka2", .bg = "kosmos", .repeats = 1}, //
 	{"sowka2_zaluzje_nie_znika_TAK", .repeats = 1}, //
