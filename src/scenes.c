@@ -767,7 +767,7 @@ static struct SceneDefinition SCENES[] = {
 		},
 		.checkpoint = true}, //
 
-	{"ciemna_trawa_samochod_sowka", .sounds = {{1, {SOUND, "S LIST FX 01 37 00-001 S LIST FX 01 53 86-001"}}}, .speed = 1.25}, //
+	{"ciemna_trawa_samochod_sowka", .audio = {MUSIC, "silence"}, .sounds = {{6, {SOUND, "S LIST FX 01 37 00-001"}}, {23, {SOUND, "S LIST FX 01 53 86-001"}}}, .speed = 1.25}, //
 	{"ciemna_trawa_waz", .sounds = {{2, {SOUND, "S LIST FX 07 17 05-001"}}}, .speed = 1.25}, //
 	{"wchodzenie_po_schodach_samochod_sowka", .audio = {MUSIC, "dwor"}, .freezes = {{19, "maska_schodek1", .audio = {SOUND, "pac"}}, {23, "maska_schodek2", .audio = {SOUND, "pac"}}, {26, "maska_schodek3", .audio = {SOUND, "pac"}}, {29, "maska_schodek4", .audio = {SOUND, "pac"}}}, .checkpoint = true}, //
 	{"schodzenie_ze_schodow_waz"}, //
@@ -796,7 +796,7 @@ static struct SceneDefinition SCENES[] = {
 	{"donica_w_hortensjach_06_waz", .freezes = {{0, "donica_w_hortensjach_maska", .audio = {SOUND, "S LIST FX 07 17 05-001"}}, {10, "donica_w_hortensjach_maska", .audio = {SOUND, "pac"}}}, .checkpoint = true}, //
 
 	{"aksamitki_waz", .speed = 1.25, .audio = {MUSIC, "waz_poko"}}, //
-	{"waz_zmienia_sie_w_kostke", .freezes = {{14, "IMG_0770_maska", .audio = {SOUND, "ELVES S LIST L 08 57 95"}}}, .audio = {MUSIC, "waz2_poko"}}, //
+	{"waz_zmienia_sie_w_kostke", .freezes = {{14, "IMG_0770_maska", .audio = {LOOP, "ELVES S LIST L 08 57 95"}}}, .audio = {MUSIC, "waz2_poko"}, .speed = 1.2}, //
 	{"sowka_wchodzi_do_miski_ciemniejsze", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF1595_maska", .audio = {MUSIC, "chill"}}}, .checkpoint = true, .pack = 3}, //
 	{"duza_sowka_na_drewnianym_kole", .audio = {SOUND, "K RESZT FX 03 27 28-001"}, .speed = 0.8, .sounds = {{12, {STOP_MUSIC}}}, .freezes = {{13, "IMG_1010_maska", .audio = {SOUND, "dryndryn"}}}}, //
 	{"animacja_poczatkowa", .audio = {SOUND, "pergola_trickstar"}, .repeats = 2, .callback = Pergola, .checkpoint = true}, //
@@ -812,15 +812,15 @@ static struct SceneDefinition SCENES[] = {
 	{">pudelka", .checkpoint = true}, //
 	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}, .checkpoint = true, .pack = 7}, //
 	{">naparstki"}, //
-	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar1", 1.0}, .sounds = {{5, {MUSIC, "odwilz_trickstar2"}}}, .checkpoint = true, .pack = 8}, //
+	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar1", 1.0}, .sounds = {{5, {MUSIC, "odwilz_trickstar2"}}, {70, {SOUND, "NOISE LONG SZ ENTER 00 30 96", .volume = 0.5}}}, .checkpoint = true, .pack = 8}, //
 	{"02statki_szyszki_tasmy_animacja2", .speed = 0.96}, //
 	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}}, //
-	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska"}}}, //
+	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska", .audio = {SOUND, "tasma_metrograph"}}}, .sounds = {{10, {SOUND, "PIANO SPIILL SZ TRIC L 04 17 48 - 22 44", .volume = 2.0}}, {64, {SOUND, "SWOOSH 4S LIST FX 00 07 10-001 ", .volume = 0.8}}}}, //
 	{"06statki_szyszki_tasmy_animacja5"}, //
-	{"magnetofon2_bez_myszek", .freezes = {{0, "DSCF9467_maska_magnetofon", .audio = {MUSIC, "odwilz_trickstar3"}}}, .sounds = {{50, {MUSIC, "odwilz_trickstar4"}}}}, //
+	{"magnetofon2_bez_myszek", .freezes = {{0, "DSCF9467_maska_magnetofon", .audio = {MUSIC, "odwilz_trickstar3"}}}, .sounds = {{3, {SOUND, "BARREL HIT 2 K STUD 3 FX 05 23 65"}}, {50, {MUSIC, "odwilz_trickstar4"}}}}, //
 	{"duch_portalu_animacja2_zlozona_TAK", .callback = DuchPortalu, .speed = 0.92}, //
 	{">armata"}, //
-	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska"}}}, //
+	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska", .audio = {SOUND, "BARREL HIT 1K STUD 3 FX 02 00 37 ", .volume = 1.25}}}, .sounds = {{14, {SOUND, "trickstar_koniec", .stop_music = true, .volume = 0.7}}}}, //
 
 	{"makieta_w_kosmosie_bez_tla", .audio = {MUSIC, "kosmos_metrograph1"}, .bg = "kosmos", .freezes = {{28, .footnote = 2}}, .checkpoint = true, .pack = 10}, //
 	{"makieta_pusta", .audio = {STOP_LOOP, "dwor"}}, //
