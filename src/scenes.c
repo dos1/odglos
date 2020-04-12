@@ -490,7 +490,7 @@ static void DrawCredits(struct Game* game, int frame, void** data) {
 		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 11, ALLEGRO_ALIGN_LEFT, "PRES model:");
 		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 12, ALLEGRO_ALIGN_LEFT, "Museum of Modern Art in Warsaw");
 
-	} else if (frame < 70) {
+	} else if (frame < 69) {
 		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 0, ALLEGRO_ALIGN_LEFT, "SPECIAL THANKS");
 
 		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 2, ALLEGRO_ALIGN_LEFT, "Instruments:");
@@ -838,7 +838,7 @@ static struct SceneDefinition SCENES[] = {
 	{"animacja_koncowa", .bg = "kosmos", .sounds = {{18, {SOUND, "pac", .volume = 0.2}}}}, //
 	{">myszka"}, //
 	{">blank", .audio = {STOP_SOUND, "napisy_metrograph"}}, //
-	{"animacje_koncowe_rodzinki", .audio = {SOUND, "napisy_metrograph"}, .callback = Credits, .draw = DrawCredits, .speed = 0.5}, //
+	{"animacje_koncowe_rodzinki", .audio = {SOUND, "napisy_metrograph"}, .callback = Credits, .draw = DrawCredits, .speed = 0.335}, //
 	{">blank", .audio = {STOP_SOUND, "napisy_metrograph"}}, //
 	{"donice_13_tasma", .speed = 0.5, .freezes = {{0, "donice_w_ogrodzie_maski", .audio = {SOUND, "pudelko3"}, .links = {{{0.0, 1.0, 0.0}, .ignore = true}}}}}, //
 };
