@@ -101,7 +101,7 @@ void ShowMenu(struct Game* game) {
 }
 
 ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap) {
-	ALLEGRO_COLOR color = al_get_pixel(bitmap, (int)(game->data->mouseX * al_get_bitmap_width(bitmap)), (int)(game->data->mouseY * al_get_bitmap_height(bitmap)));
+	ALLEGRO_COLOR color = al_get_pixel(bitmap, (int)(Clamp(0.0, 1.0, game->data->mouseX) * (al_get_bitmap_width(bitmap) - 1)), (int)(Clamp(0.0, 1.0, game->data->mouseY) * (al_get_bitmap_height(bitmap) - 1)));
 	game->data->hover = (color.r < 0.5) || (color.g < 0.5) || (color.b < 0.5);
 	return color;
 }

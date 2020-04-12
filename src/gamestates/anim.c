@@ -155,8 +155,8 @@ static void CheckHover(struct Game* game, struct GamestateResources* data) {
 		}
 	} else {
 		ALLEGRO_BITMAP* bitmap = GetAnimationFrame(data->anim);
-		int x = game->data->mouseX * game->viewport.width;
-		int y = game->data->mouseY * game->viewport.height;
+		int x = Clamp(0.0, 1.0, game->data->mouseX) * (game->viewport.width - 1);
+		int y = Clamp(0.0, 1.0, game->data->mouseY) * (game->viewport.height - 1);
 		x -= data->x;
 		y -= data->y;
 
