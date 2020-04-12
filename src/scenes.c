@@ -720,11 +720,11 @@ static struct SceneDefinition SCENES[] = {
 
 	{"gawron_i_drewniany_medrzec", .audio = {MUSIC, "gawron_poko"}, //
 		.sounds = {
-			{4, {LOOP, "CRICKET GOSSIP S VIEW L 03 49 48", .volume = 0.9}},
+			{4, {LOOP, "CRICKET GOSSIP S VIEW L 03 49 48", .volume = 0.8}},
 			{18, {STOP_LOOP, "CRICKET GOSSIP S VIEW L 03 49 48"}},
-			{20, {LOOP, "CRICKET GOSSIP 2S VIEW L 03 54 93", .volume = 0.8}},
+			{20, {LOOP, "CRICKET GOSSIP 2S VIEW L 03 54 93", .volume = 0.7}},
 			{31, {STOP_LOOP, "CRICKET GOSSIP 2S VIEW L 03 54 93"}},
-			{97, {LOOP, "CRICKET GOSSIP S VIEW L 03 49 48", .volume = 0.9}},
+			{97, {LOOP, "CRICKET GOSSIP S VIEW L 03 49 48", .volume = 0.8}},
 			{107, {STOP_LOOP, "CRICKET GOSSIP S VIEW L 03 49 48"}},
 			{108, {SOUND, "drop_poko", .volume = 1.5}},
 			{115, {SOUND, "lawka/13", .volume = 1.5}},
