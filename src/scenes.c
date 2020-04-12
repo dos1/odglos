@@ -526,7 +526,7 @@ struct KosmosData {
 	int cyrk;
 	int kolo;
 	int samochod;
-	int brama;
+	int myszkowanie;
 };
 
 static bool Kosmos(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
@@ -537,7 +537,7 @@ static bool Kosmos(struct Game* game, int frame, int* x, int* y, double* scale, 
 }
 
 static bool KosmosFinish(struct Game* game, struct KosmosData* data) {
-	return data->krzatanie && data->buzia && data->cyrk && data->kolo && data->samochod && data->brama;
+	return data->krzatanie && data->buzia && data->cyrk && data->kolo && data->samochod && data->myszkowanie;
 }
 
 static bool KosmosBack(struct Game* game, struct Character* character, void** d);
@@ -548,8 +548,12 @@ static bool KosmosSowkaLeft(struct Game* game, struct Character* character, void
 	struct KosmosData* data = *d;
 	Enqueue(game, (struct SceneDefinition){"sowka1_wlacza_konsole_z_bliska_lewa_konsola"});
 
-	char* anims[] = {"buzia_01_bez_niczego", "buzia_02_sowa", "buzia_03_kuzyn", "buzia_04_myszka"};
-	Enqueue(game, (struct SceneDefinition){anims[data->buzia % 4], .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	if (data->buzia % 2 == 0) {
+		Enqueue(game, (struct SceneDefinition){"buzia_01_bez_niczego", .speed = 0.75, .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	} else {
+		Enqueue(game, (struct SceneDefinition){"zamiana_myszki_w_bramie", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	}
+
 	data->buzia++;
 	return KosmosSowka(game, character, d);
 }
@@ -558,8 +562,12 @@ static bool KosmosSowkaMiddle(struct Game* game, struct Character* character, vo
 	struct KosmosData* data = *d;
 	Enqueue(game, (struct SceneDefinition){"sowka1_wlacza_konsole_z_bliska_srodkowa_konsola"});
 
-	char* anims[] = {"wiklinowy_cyrk_po_dwa_bez_myszki", "wiklinowy_cyrk_sama_myszka"};
-	Enqueue(game, (struct SceneDefinition){anims[data->cyrk % 2], .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	if (data->cyrk % 2 == 0) {
+		Enqueue(game, (struct SceneDefinition){"wiklinowy_cyrk_po_dwa_bez_myszki", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	} else {
+		Enqueue(game, (struct SceneDefinition){"wiklinowy_cyrk_sama_myszka", .speed = 0.666, .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	}
+
 	data->cyrk++;
 	return KosmosSowka(game, character, d);
 }
@@ -568,8 +576,11 @@ static bool KosmosSowkaRight(struct Game* game, struct Character* character, voi
 	struct KosmosData* data = *d;
 	Enqueue(game, (struct SceneDefinition){"sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK", .speed = 0.75});
 
-	char* anims[] = {"wiklinowe_kolo1_samochod", "wiklinowe_kolo2_pilka", "wiklinowe_kolo3_myszka"};
-	Enqueue(game, (struct SceneDefinition){anims[data->kolo % 3], .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	if (data->kolo % 2 == 0) {
+		Enqueue(game, (struct SceneDefinition){"wiklinowe_kolo1_samochod", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	} else {
+		Enqueue(game, (struct SceneDefinition){"wiklinowe_kolo3_myszka", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	}
 
 	data->kolo++;
 	return KosmosSowka(game, character, d);
@@ -589,17 +600,29 @@ static bool KosmosRudnik(struct Game* game, struct Character* character, void** 
 
 static bool KosmosRudnikLeft(struct Game* game, struct Character* character, void** d) {
 	struct KosmosData* data = *d;
-	data->samochod++;
 	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_lewa", .speed = 0.75});
-	Enqueue(game, (struct SceneDefinition){"altanka_samochod", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+
+	if (data->samochod % 2 == 0) {
+		Enqueue(game, (struct SceneDefinition){"altanka_samochod", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	} else {
+		Enqueue(game, (struct SceneDefinition){"altanka", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	}
+
+	data->samochod++;
 	return KosmosRudnik(game, character, d);
 }
 
 static bool KosmosRudnikRight(struct Game* game, struct Character* character, void** d) {
 	struct KosmosData* data = *d;
-	data->brama++;
 	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_prawa", .speed = 0.75});
-	Enqueue(game, (struct SceneDefinition){"zamiana_myszki_w_bramie", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+
+	if (data->myszkowanie % 2 == 0) {
+		Enqueue(game, (struct SceneDefinition){"myszkowanie_w_wiklinie_puste", .repeats = 1, .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	} else {
+		Enqueue(game, (struct SceneDefinition){"myszkowanie_w_wiklinie2", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+	}
+
+	data->myszkowanie++;
 	return KosmosRudnik(game, character, d);
 }
 
@@ -808,10 +831,8 @@ static struct SceneDefinition SCENES[] = {
 	{"sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK", .freezes = {{85, .footnote = 1}}}, //
 	{"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .callback = Kosmos, .freezes = {{0, "DSCF0566_maska_obszary", .links = {{{1.0, 0.0, 0.0}, .callback = KosmosSowka}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnik}}}}}, //
 	{"drzwi_zamykaja_sie_same", .audio = {MUSIC, "koniec_lapis"}, .bg = "kosmos"}, //
-	{"okna_sie_otwieraja_z_sowka2", .bg = "kosmos"}, //
-	{"okna_sie_otwieraja_z_sowka2", .bg = "kosmos"}, //
-	{"sowka2_zaluzje_nie_znika_TAK"}, //
-	{"sowka2_zaluzje_nie_znika_TAK"}, //
+	{"okna_sie_otwieraja_z_sowka2", .bg = "kosmos", .repeats = 1}, //
+	{"sowka2_zaluzje_nie_znika_TAK", .repeats = 1}, //
 	{"sowka1_zaluzje"}, //
 	{"drzwi_z_zewnatrz"}, //
 	{"animacja_koncowa", .bg = "kosmos", .sounds = {{18, {SOUND, "pac", .volume = 0.2}}}}, //

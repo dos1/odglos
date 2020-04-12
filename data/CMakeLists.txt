@@ -291,14 +291,13 @@ if (EMSCRIPTEN)
 		sowka1_wlacza_konsole_z_bliska_srodkowa_konsola.awebp
 		sowka2_klika_konsole_prawa.awebp
 		sowka2_klika_konsole_lewa.awebp
+		sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK.awebp
+		altanka.awebp
 		altanka_samochod.awebp
 		zamiana_myszki_w_bramie.awebp
-		sowka1_wchodzi_na_stol_z_bliska_nie_znika_TAK.awebp
 		buzia_01_bez_niczego.awebp
-		buzia_02_sowa.awebp
-		buzia_03_kuzyn.awebp
-		buzia_04_myszka.awebp
-		wiklinowe_kolo1_samochod.awebp
+		myszkowanie_w_wiklinie_puste.awebp
+		myszkowanie_w_wiklinie2.awebp
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
@@ -309,7 +308,7 @@ if (EMSCRIPTEN)
 	# -------------------
 
 	set(ANIMATIONS
-		wiklinowe_kolo2_pilka.awebp
+		wiklinowe_kolo1_samochod.awebp
 		wiklinowe_kolo3_myszka.awebp
 		wiklinowy_cyrk_po_dwa_bez_myszki.awebp
 		wiklinowy_cyrk_sama_myszka.awebp
