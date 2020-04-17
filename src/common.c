@@ -537,15 +537,18 @@ void DestroyGameData(struct Game* game) {
 	al_destroy_bitmap(game->data->mute);
 
 	if (game->data->audio.music) {
-		al_destroy_audio_stream(game->data->audio.music);
+		al_destroy_sample_instance(game->data->audio.music);
+		al_destroy_sample(game->data->audio.music_sample);
 	}
 	for (int i = 0; i < 32; i++) {
-		if (game->data->audio.sounds[i].stream) {
-			al_destroy_audio_stream(game->data->audio.sounds[i].stream);
+		if (game->data->audio.sounds[i].sample_instance) {
+			al_destroy_sample_instance(game->data->audio.sounds[i].sample_instance);
+			al_destroy_sample(game->data->audio.sounds[i].sample);
 			free(game->data->audio.sounds[i].name);
 		}
-		if (game->data->audio.loops[i].stream) {
-			al_destroy_audio_stream(game->data->audio.loops[i].stream);
+		if (game->data->audio.loops[i].sample_instance) {
+			al_destroy_sample_instance(game->data->audio.loops[i].sample_instance);
+			al_destroy_sample(game->data->audio.loops[i].sample);
 			free(game->data->audio.loops[i].name);
 		}
 	}

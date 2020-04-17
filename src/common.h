@@ -119,14 +119,20 @@ struct CommonResources {
 	} download;
 
 	struct {
-		ALLEGRO_AUDIO_STREAM* music;
+		ALLEGRO_SAMPLE_INSTANCE* music;
+		ALLEGRO_SAMPLE* music_sample;
+		double music_pos;
 		struct {
-			ALLEGRO_AUDIO_STREAM* stream;
+			ALLEGRO_SAMPLE_INSTANCE* sample_instance;
+			ALLEGRO_SAMPLE* sample;
+			double pos;
 			char* name;
 			bool persist;
 		} loops[32];
 		struct {
-			ALLEGRO_AUDIO_STREAM* stream;
+			ALLEGRO_SAMPLE_INSTANCE* sample_instance;
+			ALLEGRO_SAMPLE* sample;
+			double pos;
 			char* name;
 		} sounds[32];
 		bool paused;
