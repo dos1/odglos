@@ -251,6 +251,13 @@ static bool SkrzypceCheck(struct Game* game, void** data) {
 	free(*data);
 	*data = NULL;
 	Enqueue(game, (struct SceneDefinition){"skrzypce2_animacja_przerywnikowa", .freezes = {{3, .footnote = 3}}});
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_dzwiek1", .audio = {SOUND, "skrzypce1_orange"}});
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_dzwiek2", .audio = {SOUND, "skrzypce2_orange"}});
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_dzwiek3", .audio = {SOUND, "skrzypce3_orange"}});
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_dzwiek4", .audio = {SOUND, "skrzypce5_orange"}});
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_dzwiek5", .audio = {SOUND, "skrzypce6_orange"}});
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_dzwiek6", .audio = {SOUND, "skrzypce4_orange"}});
+	Enqueue(game, (struct SceneDefinition){"skrzypce2_animacja_koncowa", .repeats = 1, .sounds = {{1, {SOUND, "skrzypce_orange"}}}});
 	return true;
 }
 
@@ -710,13 +717,6 @@ static struct SceneDefinition SCENES[] = {
 				{{50.0 / 255.0, 0.0, 0.0}, .callback = Skrzypce6},
 			}}},
 		.checkpoint = true}, //
-	{"skrzypce2_dzwiek1", .audio = {SOUND, "skrzypce1_orange"}}, //
-	{"skrzypce2_dzwiek2", .audio = {SOUND, "skrzypce2_orange"}}, //
-	{"skrzypce2_dzwiek3", .audio = {SOUND, "skrzypce3_orange"}}, //
-	{"skrzypce2_dzwiek4", .audio = {SOUND, "skrzypce5_orange"}}, //
-	{"skrzypce2_dzwiek5", .audio = {SOUND, "skrzypce6_orange"}}, //
-	{"skrzypce2_dzwiek6", .audio = {SOUND, "skrzypce4_orange"}}, //
-	{"skrzypce2_animacja_koncowa", .repeats = 1, .sounds = {{1, {SOUND, "skrzypce_orange"}}}}, //
 
 	{"gawron_i_drewniany_medrzec", .audio = {MUSIC, "gawron_poko"}, //
 		.sounds = {
