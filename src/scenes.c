@@ -572,7 +572,7 @@ static bool KosmosSowkaMiddle(struct Game* game, struct Character* character, vo
 	if (data->cyrk % 2 == 0) {
 		Enqueue(game, (struct SceneDefinition){"wiklinowy_cyrk_po_dwa_bez_myszki", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
 	} else {
-		Enqueue(game, (struct SceneDefinition){"wiklinowy_cyrk_sama_myszka", .speed = 0.666, .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
+		Enqueue(game, (struct SceneDefinition){"wiklinowy_cyrk_sama_myszka", .speed = 0.666, .repeats = 1, .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
 	}
 
 	data->cyrk++;
@@ -607,7 +607,7 @@ static bool KosmosRudnik(struct Game* game, struct Character* character, void** 
 
 static bool KosmosRudnikLeft(struct Game* game, struct Character* character, void** d) {
 	struct KosmosData* data = *d;
-	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_lewa", .speed = 0.75, .sounds = {{9, {SOUND, "STARZ 2 K ROB FX 02 32 11-001", .volume = 0.5}}}});
+	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_lewa", .speed = 0.75, .sounds = {{10, {SOUND, "kompurer_bad_points", .volume = 0.75}}}});
 
 	if (data->samochod % 2 == 0) {
 		Enqueue(game, (struct SceneDefinition){"altanka_samochod", .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
@@ -621,7 +621,7 @@ static bool KosmosRudnikLeft(struct Game* game, struct Character* character, voi
 
 static bool KosmosRudnikRight(struct Game* game, struct Character* character, void** d) {
 	struct KosmosData* data = *d;
-	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_prawa", .speed = 0.75, .sounds = {{7, {SOUND, "K ROB FX 02 40 06-001", .volume = 0.5}}}});
+	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_prawa", .speed = 0.75, .sounds = {{7, {SOUND, "SAD ENGINE K ROB L 05 48 10 short", .volume = 2.25}}}});
 
 	if (data->myszkowanie % 2 == 0) {
 		Enqueue(game, (struct SceneDefinition){"myszkowanie_w_wiklinie_puste", .repeats = 1, .fg = "gradient", .audio = {LOOP, "ambient", .volume = 0.1}, .sounds = {{0, {LOOP, "dwor", .volume = 0.1}}}});
