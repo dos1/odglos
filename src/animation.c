@@ -11,7 +11,8 @@
 
 struct AnimationDecoder {
 	WebPData data;
-	int timestamp, position, duration, swap_duration, old_timestamp;
+	int timestamp, duration, swap_duration, old_timestamp;
+	double position;
 	WebPAnimDecoder* decoder;
 	ALLEGRO_BITMAP *bitmap, *swap;
 	int fd;
@@ -114,7 +115,7 @@ struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename
 }
 
 void ResetAnimation(struct AnimationDecoder* anim, bool reset_bitmap) {
-	if (anim->position == 0) {
+	if (anim->position == 0.0) {
 		return;
 	}
 	if (!anim->initialized) {
@@ -155,7 +156,6 @@ bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 
 	anim->position += timestamp * 1000;
 	ALLEGRO_LOCKED_REGION* lock = NULL;
-
 	if (anim->shouldload) {
 		anim->shouldload = false;
 		if (!WebPAnimDecoderHasMoreFrames(anim->decoder)) {
