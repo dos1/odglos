@@ -820,6 +820,11 @@
           Module.setStatus.last.text = text;
           if (m) {
             text = m[1];
+            if (text == "Downloading data... ") {
+               m[2] *= 0.9;
+            } else if (text == "Preparing... ") {
+               m[2] = m[2] * 0.1 + 0.9 * m[4];
+            }
             //console.log(parseInt(m[2])*100, parseInt(m[4])*100);
             Module.drawProgress((parseInt(m[2]) / parseInt(m[4])) * window.ODGLOS.preloadingValue);
           } else {
