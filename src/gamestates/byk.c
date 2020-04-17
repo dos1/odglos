@@ -44,14 +44,15 @@ static void UpdateState(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
-	if (game->data->footnote) { return; }
-	// Here you should do all your game logic as if <delta> seconds have passed.
+	if (game->data->footnote) {
+		al_set_sample_instance_gain(data->sound, 0.0);
+		return;
+	}
 	if (data->munching) {
 		AnimateCharacter(game, data->byk, delta, 1.0);
 		data->delay += delta;
 		if (data->delay > 6.0) {
 			if (!data->footnoted) {
-				al_set_sample_instance_gain(data->sound, 0.0);
 				ShowFootnote(game, 4);
 				data->footnoted = true;
 			} else {
