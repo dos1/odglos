@@ -8,6 +8,7 @@ if (EMSCRIPTEN)
 	install(DIRECTORY byk DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data00")
 	install(DIRECTORY sprites/byk DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data00/sprites")
 	install(DIRECTORY sprites/dmuchawa DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data00/sprites")
+	install(DIRECTORY sprites/generator DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data00/sprites")
 
 	set(ANIMATIONS
 		kostki_animacja01_tworzy_sie_kostka.awebp
