@@ -23,7 +23,8 @@ static bool Pergola2(struct Game* game, int frame, int* x, int* y, double* scale
 
 static bool Generator(struct Game* game, int frame, int* x, int* y, double* scale, struct Character* character, void** data) {
 	*x = 142;
-	*y = 136;
+	*y = 136 - sin(frame / ALLEGRO_PI / 2.0) * 10;
+	SetCharacterPosition(game, character, *x, *y, 0);
 	return false;
 }
 
@@ -688,7 +689,7 @@ static struct SceneDefinition SCENES[] = {
 	{"sowka_pokazuje_mordke_i_wraca"}, //
 	{"buty_drewniane", .audio = {STOP_MUSIC}, .sounds = {{0, {SOUND, "buciki_trickstar"}}}, .checkpoint = true}, //
 	{"regal_animacja_sam", .freezes = {{0, "", .audio = {MUSIC, "dmuchawa_metrographfuture"}}}, .repeats = 1, .bg = "regal_dmuchawa_100_9254_tlo_przyciete", .callback = RegalDmuchawa, .character = {"dmuchawa", {"dmuchawa_ptaszor_sam"}, .repeat = true}}, //
-	{"generator_animacja_wstepna", .audio = {STOP_MUSIC}, .freezes = {{0, "", .audio = {LOOP, "generator_metrographfuture"}}}, .callback = Generator, .bg = "generator_tlo_liscie_przyciete"}, //
+	{"generator_animacja_wstepna", .audio = {STOP_MUSIC}, .freezes = {{0, "", .audio = {LOOP, "generator_metrographfuture"}}}, .callback = Generator, .bg = "generator_tlo_liscie_przyciete", .character = {"generator", {"generator_wloski"}, .repeat = true}}, //
 	{"sucha_trawa_aksamitki_samochod_stary", .audio = {SOUND, "K ROB FX 03 26 00-001"}}, //
 	{"sowka_konfrontacja_z_rzezba", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF8160_maska", .audio = {MUSIC, "BIRDY K K LAP L 05 29 08"}}}, .checkpoint = true}, //
 	{"wrzosy_kuzyn_i_sowka2", .audio = {MUSIC, "DIGI DOGZ K NOR L 04 16 61"}}, //
