@@ -507,7 +507,6 @@ struct CommonResources* CreateGameData(struct Game* game) {
 	data->menu = al_load_bitmap(GetDataFilePath(game, "menu_przycisk1_standby.png"));
 	data->menu2 = al_load_bitmap(GetDataFilePath(game, "menu_przycisk2_hover.png"));
 	data->start_time = al_get_time();
-	data->lowmem = false;
 #ifdef __EMSCRIPTEN__
 	data->sceneid = strtol(GetConfigOptionDefault(game, LIBSUPERDERPY_GAMENAME, "scene", "0"), NULL, 10) - 1;
 #else
