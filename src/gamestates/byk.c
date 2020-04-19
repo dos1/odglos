@@ -153,8 +153,9 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	progress(game);
 
 	data->byk = CreateCharacter(game, "byk");
-	RegisterSpritesheet(game, data->byk, "open");
-	RegisterSpritesheet(game, data->byk, "chew");
+	RegisterStreamedSpritesheet(game, data->byk, "open", AnimationStream, DestroyStream, CreateAnimation(game, GetDataFilePath(game, "sprites/byk/open.awebp"), false));
+	PreloadStreamedSpritesheet(game, data->byk, "open");
+	RegisterStreamedSpritesheet(game, data->byk, "chew", AnimationStream, DestroyStream, CreateAnimation(game, GetDataFilePath(game, "sprites/byk/chew.awebp"), true));
 	LoadSpritesheets(game, data->byk, progress);
 
 	return data;
