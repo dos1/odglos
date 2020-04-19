@@ -54,6 +54,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 
 void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	al_destroy_bitmap(data->bg);
+	al_destroy_bitmap(data->fg);
 	free(data);
 }
 
