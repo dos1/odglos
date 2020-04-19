@@ -30,6 +30,7 @@ void PlayMusic(struct Game* game, char* name, float volume) {
 	al_attach_sample_instance_to_mixer(game->data->audio.music, game->audio.music);
 	al_set_sample_instance_playmode(game->data->audio.music, ALLEGRO_PLAYMODE_LOOP);
 	al_set_sample_instance_gain(game->data->audio.music, volume);
+	al_set_sample_instance_speed(game->data->audio.music, GetGameSpeed(game));
 	al_play_sample_instance(game->data->audio.music);
 }
 
@@ -70,6 +71,7 @@ void PlaySound(struct Game* game, char* name, float volume) {
 	al_attach_sample_instance_to_mixer(game->data->audio.sounds[i].sample_instance, game->audio.fx);
 	al_set_sample_instance_playmode(game->data->audio.sounds[i].sample_instance, ALLEGRO_PLAYMODE_ONCE);
 	al_set_sample_instance_gain(game->data->audio.sounds[i].sample_instance, volume);
+	al_set_sample_instance_speed(game->data->audio.sounds[i].sample_instance, GetGameSpeed(game));
 	al_play_sample_instance(game->data->audio.sounds[i].sample_instance);
 }
 
@@ -112,6 +114,7 @@ void PlayLoop(struct Game* game, char* name, float volume, bool persist) {
 	al_attach_sample_instance_to_mixer(game->data->audio.loops[i].sample_instance, game->audio.fx);
 	al_set_sample_instance_playmode(game->data->audio.loops[i].sample_instance, ALLEGRO_PLAYMODE_LOOP);
 	al_set_sample_instance_gain(game->data->audio.loops[i].sample_instance, volume);
+	al_set_sample_instance_speed(game->data->audio.loops[i].sample_instance, GetGameSpeed(game));
 	al_play_sample_instance(game->data->audio.loops[i].sample_instance);
 }
 
