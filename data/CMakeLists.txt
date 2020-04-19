@@ -152,49 +152,28 @@ if (EMSCRIPTEN)
 
 	set(ANIMATIONS
 		naparstki_00_poczatek.awebp
-		naparstki_00_poczatek.ini
 		naparstki_01_kapelusz_jaszczurka_wersja1.awebp
-		naparstki_01_kapelusz_jaszczurka_wersja1.ini
 		naparstki_01_kapelusz_jaszczurka_wersja2.awebp
-		naparstki_01_kapelusz_jaszczurka_wersja2.ini
 		naparstki_01_kapelusz_jaszczurka_wersja3_najlepsza.awebp
-		naparstki_01_kapelusz_jaszczurka_wersja3_najlepsza.ini
 		naparstki_02_jaszczurka_kredki.awebp
-		naparstki_02_jaszczurka_kredki.ini
 		naparstki_03_paski_okno.awebp
-		naparstki_03_paski_okno.ini
 		naparstki_04_dzwoneczek_kwiatki.awebp
-		naparstki_04_dzwoneczek_kwiatki.ini
 		naparstki_05_kwiatki_czarno_biale.awebp
-		naparstki_05_kwiatki_czarno_biale.ini
 		naparstki_06_czarno_bialy_bambus.awebp
-		naparstki_06_czarno_bialy_bambus.ini
 	)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES sprites/naparstki/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data05/sprites/naparstki")
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data05/animations")
 	endforeach()
 
 	# -------------------
 
 	set(ANIMATIONS
 		naparstki_07_panda_babuszka_wersja_krotsza2_lepsza.awebp
-		naparstki_07_panda_babuszka_wersja_krotsza2_lepsza.ini
 		naparstki_08_babuszka_zlote.awebp
-		naparstki_08_babuszka_zlote.ini
 		naparstki_09_zloty_statki.awebp
-		naparstki_09_zloty_statki.ini
 		naparstki_PUSTE_01_kapelusz.awebp
-		naparstki_PUSTE_01_kapelusz.ini
 		naparstki_PUSTE_02_jaszczurka.awebp
-		naparstki_PUSTE_02_jaszczurka.ini
-	)
-
-	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES sprites/naparstki/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data06/sprites/naparstki")
-	endforeach()
-
-	set(ANIMATIONS
 		naparstki_10_latarnia_zbija_wszystko.awebp
 		naparstki_10a_latarnia_pusta_sowka_piana_czesc1.awebp
 		naparstki_10a_latarnia_pusta_sowka_piana_czesc2.awebp
@@ -212,42 +191,20 @@ if (EMSCRIPTEN)
 
 	set(ANIMATIONS
 		naparstki_PUSTE_03_paski.awebp
-		naparstki_PUSTE_03_paski.ini
 		naparstki_PUSTE_04_dzwoneczek.awebp
-		naparstki_PUSTE_04_dzwoneczek.ini
 		naparstki_PUSTE_05_kwiatek.awebp
-		naparstki_PUSTE_05_kwiatek.ini
 		naparstki_PUSTE_06_czarno_bialy.awebp
-		naparstki_PUSTE_06_czarno_bialy.ini
 		naparstki_PUSTE_07_panda.awebp
-		naparstki_PUSTE_07_panda.ini
 		naparstki_PUSTE_08_babuszka.awebp
-		naparstki_PUSTE_08_babuszka.ini
 		naparstki_PUSTE_09_zloty.awebp
-		naparstki_PUSTE_09_zloty.ini
 		naparstki_PUSTE_10_latarnia.awebp
-		naparstki_PUSTE_10_latarnia.ini
 		naparstki_PUSTE_11_niebieskie_cos.awebp
-		naparstki_PUSTE_11_niebieskie_cos.ini
 		naparstki_PUSTE_12_Krakow.awebp
-		naparstki_PUSTE_12_Krakow.ini
 		naparstki_PUSTE_13_Mallorca.awebp
-		naparstki_PUSTE_13_Mallorca.ini
 		naparstki_PUSTE_14_sztuka_wspolczesna.awebp
-		naparstki_PUSTE_14_sztuka_wspolczesna.ini
 		naparstki_PUSTE_15_Toscania.awebp
-		naparstki_PUSTE_15_Toscania.ini
 		naparstki_PUSTE_16_maluszek.awebp
-		naparstki_PUSTE_16_maluszek.ini
 		naparstki_PUSTE_17_Praha.awebp
-		naparstki_PUSTE_17_Praha.ini
-	)
-
-	foreach (FILE IN ITEMS ${ANIMATIONS})
-		install(FILES sprites/naparstki/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data07/sprites/naparstki")
-	endforeach()
-
-	set(ANIMATIONS
 		pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK.awebp
 	)
 

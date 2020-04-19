@@ -38,7 +38,7 @@ static char* ANIMS_EMPTY[] = {
 };
 
 struct GamestateResources {
-	struct Character* bg;
+	struct Player* player;
 	ALLEGRO_BITMAP* mask;
 	ALLEGRO_BITMAP *kokardki[9], *tasiemki[9];
 	int enabled;
@@ -46,29 +46,28 @@ struct GamestateResources {
 	bool first;
 };
 
-int Gamestate_ProgressCount = 79;
-
-static CHARACTER_CALLBACK(ShowMouseCb) {
-	ShowMouse(game);
-	PlayMusic(game, "ambient", 1.0);
-}
+int Gamestate_ProgressCount = 20;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	if (game->data->footnote) { return; }
 
-	AnimateCharacter(game, data->bg, delta, 1.0);
+	UpdatePlayer(game, data->player, delta);
 	ALLEGRO_COLOR color = CheckMask(game, data->mask);
 	int nr = round(((color.r * 255) + (color.g * 255) + (color.b * 255)) / 40.0);
 	game->data->hover = nr < 17 && nr >= data->enabled - 1;
 
 	if (data->first && game->data->cursor) {
 		data->first = false;
+		PlayMusic(game, "ambient", 1.0);
+	}
+
+	if (PlayerIsFinished(game, data->player)) {
+		ShowMouse(game);
 	}
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
-	SetCharacterPosition(game, data->bg, game->viewport.width / 2.0, game->viewport.height / 2.0, 0);
-	DrawCharacter(game, data->bg);
+	DrawPlayer(game, data->player);
 	if (game->data->cursor && data->enabled > 0) {
 		for (int i = 0; i < data->enabled - 1; i++) {
 			al_draw_bitmap(data->tasiemki[i], 0, 0, 0);
@@ -89,24 +88,24 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		int nr = round(((color.r * 255) + (color.g * 255) + (color.b * 255)) / 40.0);
 		if (nr < 17 && nr >= data->enabled - 1) {
 			if ((nr != data->enabled) && (nr != data->enabled - 1)) {
-				SelectSpritesheet(game, data->bg, ANIMS_EMPTY[nr]);
+				LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){ANIMS_EMPTY[nr]});
 				PlaySound(game, "K STUD 01 25 13-001", 1.0);
 			} else {
 				if (nr == 9) {
 					ChangeCurrentGamestate(game, "anim");
 					return;
 				}
-				SelectSpritesheet(game, data->bg, ANIMS[nr]);
+				LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){ANIMS[nr]});
 				if (nr == data->enabled) {
 					data->enabled++;
 				}
 				PlaySound(game, "K STUD 01 39 48-001", 1.0);
 				if (nr == 0) {
 					if (data->jaszczur == 1) {
-						SelectSpritesheet(game, data->bg, "naparstki_01_kapelusz_jaszczurka_wersja1");
+						LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){"naparstki_01_kapelusz_jaszczurka_wersja1"});
 					}
 					if (data->jaszczur == 2) {
-						SelectSpritesheet(game, data->bg, "naparstki_01_kapelusz_jaszczurka_wersja2");
+						LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){"naparstki_01_kapelusz_jaszczurka_wersja2"});
 					}
 					data->jaszczur++;
 					if (data->jaszczur == 3) {
@@ -115,7 +114,6 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				}
 			}
 			HideMouse(game);
-			data->bg->callback = ShowMouseCb;
 		}
 	}
 
@@ -132,47 +130,8 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	struct GamestateResources* data = calloc(1, sizeof(struct GamestateResources));
-	data->bg = CreateCharacter(game, "naparstki");
-
-	char* anims[] = {
-		"naparstki_00_poczatek",
-		"naparstki_01_kapelusz_jaszczurka_wersja1",
-		"naparstki_01_kapelusz_jaszczurka_wersja2",
-		"naparstki_01_kapelusz_jaszczurka_wersja3_najlepsza",
-		"naparstki_02_jaszczurka_kredki",
-		"naparstki_03_paski_okno",
-		"naparstki_04_dzwoneczek_kwiatki",
-		"naparstki_05_kwiatki_czarno_biale",
-		"naparstki_06_czarno_bialy_bambus",
-		"naparstki_07_panda_babuszka_wersja_krotsza2_lepsza",
-		"naparstki_08_babuszka_zlote",
-		"naparstki_09_zloty_statki",
-		"naparstki_PUSTE_01_kapelusz",
-		"naparstki_PUSTE_02_jaszczurka",
-		"naparstki_PUSTE_03_paski",
-		"naparstki_PUSTE_04_dzwoneczek",
-		"naparstki_PUSTE_05_kwiatek",
-		"naparstki_PUSTE_06_czarno_bialy",
-		"naparstki_PUSTE_07_panda",
-		"naparstki_PUSTE_08_babuszka",
-		"naparstki_PUSTE_09_zloty",
-		"naparstki_PUSTE_10_latarnia",
-		"naparstki_PUSTE_11_niebieskie_cos",
-		"naparstki_PUSTE_12_Krakow",
-		"naparstki_PUSTE_13_Mallorca",
-		"naparstki_PUSTE_14_sztuka_wspolczesna",
-		"naparstki_PUSTE_15_Toscania",
-		"naparstki_PUSTE_16_maluszek",
-		"naparstki_PUSTE_17_Praha",
-	};
-
-	for (size_t i = 0; i < sizeof(anims) / sizeof(anims[0]); i++) {
-		char path[255] = {};
-		snprintf(path, 255, "sprites/naparstki/%s.awebp", anims[i]);
-		RegisterStreamedSpritesheet(game, data->bg, anims[i], AnimationStream, DestroyStream, CreateAnimation(game, GetDataFilePath(game, path), false));
-		progress(game);
-	}
-	LoadSpritesheets(game, data->bg, progress);
+	data->player = CreatePlayer(game);
+	progress(game);
 
 	for (int i = 0; i < 9; i++) {
 		data->kokardki[i] = al_load_bitmap(GetDataFilePath(game, PunchNumber(game, "naparstki/kokardkaX.png", 'X', i + 1)));
@@ -187,7 +146,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 }
 
 void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
-	DestroyCharacter(game, data->bg);
+	DestroyPlayer(game, data->player);
 	al_destroy_bitmap(data->mask);
 	for (int i = 0; i < 9; i++) {
 		al_destroy_bitmap(data->kokardki[i]);
@@ -198,8 +157,7 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	HideMouse(game);
-	SelectSpritesheet(game, data->bg, "naparstki_00_poczatek");
-	data->bg->callback = ShowMouseCb;
+	LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){"naparstki_00_poczatek"});
 	data->enabled = 0;
 	data->first = true;
 	EnsureMusic(game, "JAMMIN K LAP L 18 10 23", 1.0);
