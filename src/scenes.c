@@ -907,6 +907,9 @@ void StartInitialGamestate(struct Game* game, bool show_menu) {
 		game->data->sceneid = sizeof(SCENES) / sizeof(struct SceneDefinition) - 2;
 	}
 	while (!SCENES[game->data->sceneid + 1].checkpoint) {
+		if (game->data->sceneid < 0) {
+			break;
+		}
 		game->data->sceneid--;
 	}
 	if (show_menu && game->data->sceneid > 0) {
