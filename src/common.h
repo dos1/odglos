@@ -196,7 +196,7 @@ void StartDownloading(struct Game* game);
 
 struct Player* CreatePlayer(struct Game* game);
 void DestroyPlayer(struct Game* game, struct Player* player);
-void LoadPlayerAnimation(struct Game* game, struct Player* player, struct SceneDefinition* scene, bool start_audio);
+void LoadPlayerAnimation(struct Game* game, struct Player* player, struct SceneDefinition* scene);
 bool UpdatePlayer(struct Game* game, struct Player* player, double delta);
 void DrawPlayer(struct Game* game, struct Player* player);
 void ProcessPlayerEvent(struct Game* game, struct Player* player, ALLEGRO_EVENT* ev);

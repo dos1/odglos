@@ -44,7 +44,7 @@ void DestroyPlayer(struct Game* game, struct Player* player) {
 	free(player);
 }
 
-void LoadPlayerAnimation(struct Game* game, struct Player* player, struct SceneDefinition* scene, bool start_audio) {
+void LoadPlayerAnimation(struct Game* game, struct Player* player, struct SceneDefinition* scene) {
 	player->scene = *scene;
 
 	char path[255] = {0};
@@ -122,9 +122,7 @@ void LoadPlayerAnimation(struct Game* game, struct Player* player, struct SceneD
 		}
 	}
 
-	if (start_audio) {
-		HandleAudio(game, player->scene.audio);
-	}
+	HandleAudio(game, player->scene.audio);
 
 	ResetAnimation(player->anim, true);
 	player->loaded = true;

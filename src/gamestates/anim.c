@@ -25,7 +25,7 @@ static bool HandleDispatch(struct Game* game, struct GamestateResources* data) {
 		return true;
 	}
 
-	LoadPlayerAnimation(game, data->player, &game->data->scene, true);
+	LoadPlayerAnimation(game, data->player, &game->data->scene);
 	return false;
 }
 
