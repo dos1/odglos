@@ -5,16 +5,16 @@
 #include "../common.h"
 #include <libsuperderpy.h>
 
-static char* ANIMS[] = {
-	"naparstki_01_kapelusz_jaszczurka_wersja3_najlepsza",
-	"naparstki_02_jaszczurka_kredki",
-	"naparstki_03_paski_okno",
-	"naparstki_04_dzwoneczek_kwiatki",
-	"naparstki_05_kwiatki_czarno_biale",
-	"naparstki_06_czarno_bialy_bambus",
-	"naparstki_07_panda_babuszka_wersja_krotsza2_lepsza",
-	"naparstki_08_babuszka_zlote",
-	"naparstki_09_zloty_statki",
+static struct SceneDefinition ANIMS[] = {
+	{"naparstki_01_kapelusz_jaszczurka_wersja3_najlepsza", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{9, {SOUND, "K OLD FX 08 14 79-001", .volume = 1.75}}}},
+	{"naparstki_02_jaszczurka_kredki", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{9, {SOUND, "SWOOSH 4S LIST FX 00 07 10-001 "}}}},
+	{"naparstki_03_paski_okno", .audio = {SOUND, "K STUD 01 39 48-001"}, .speed = 0.8, .sounds = {{1, {SOUND, "MADAT S LIST FX 14 09 89-001 R"}}}},
+	{"naparstki_04_dzwoneczek_kwiatki", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{9, {SOUND, "SWARM SZ ENTER L 06 22 11"}}}},
+	{"naparstki_05_kwiatki_czarno_biale", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{9, {SOUND, "POLTERGEIST SZ PULS L 00 06 00 31 - 02 14"}}}},
+	{"naparstki_06_czarno_bialy_bambus", .audio = {SOUND, "K STUD 01 39 48-001"}, .speed = 0.9, .sounds = {{4, {SOUND, "happy_pointslines"}}, {9, {SOUND, "S RHAP FX 01 08 03-001", .volume = 0.75}}}},
+	{"naparstki_07_panda_babuszka_wersja_krotsza2_lepsza", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{9, {SOUND, "ija_agentorange", .volume = 0.75}}}},
+	{"naparstki_08_babuszka_zlote", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{9, {SOUND, "S LIST FX 00 43 16-001"}}}},
+	{"naparstki_09_zloty_statki", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{9, {SOUND, "noise"}}}},
 };
 
 static char* ANIMS_EMPTY[] = {
@@ -86,25 +86,30 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				PlaySound(game, "K STUD 01 25 13-001", 1.0);
 			} else {
 				if (nr == 9) {
+					Enqueue(game, (struct SceneDefinition){"naparstki_10_latarnia_zbija_wszystko", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{16, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {22, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {27, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {32, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {36, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {40, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {44, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {51, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {55, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {60, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {65, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {69, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {74, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {80, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {85, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {90, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}}, .freezes = {{93, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
+					Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc1", .audio = {SOUND, "K STUD 01 36 84-001"}, .freezes = {{25, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
+					Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc2", .audio = {SOUND, "BIG BOING S LIST FX 00 10 32-001 "}, .freezes = {{25, "naparstki2", .links = {{{-1.0, -1.0, 1.0}, .skip = true}, {{-1.0, -1.0, 0.0}, .ignore = true}}}}});
+					Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc3", .audio = {SOUND, "long_pointslines"}});
 					ChangeCurrentGamestate(game, "anim");
 					return;
 				}
-				LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){ANIMS[nr]});
 				if (nr == data->enabled) {
 					data->enabled++;
 				}
-				PlaySound(game, "K STUD 01 39 48-001", 1.0);
 				if (nr == 0) {
 					if (data->jaszczur == 1) {
-						LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){"naparstki_01_kapelusz_jaszczurka_wersja1"});
-					}
-					if (data->jaszczur == 2) {
-						LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){"naparstki_01_kapelusz_jaszczurka_wersja2"});
+						LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){"naparstki_01_kapelusz_jaszczurka_wersja1", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{9, {SOUND, "K OLD FX 08 14 79-001", .volume = 1.75}}}});
+					} else if (data->jaszczur == 2) {
+						LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){"naparstki_01_kapelusz_jaszczurka_wersja2", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{9, {SOUND, "K OLD FX 08 14 79-001", .volume = 1.75}}}});
+					} else {
+						LoadPlayerAnimation(game, data->player, &ANIMS[nr]);
 					}
 					data->jaszczur++;
 					if (data->jaszczur == 3) {
 						data->jaszczur = 0;
 					}
+				} else {
+					LoadPlayerAnimation(game, data->player, &ANIMS[nr]);
 				}
 			}
 			HideMouse(game);
@@ -153,11 +158,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	HideMouse(game);
 	LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){"naparstki_00_poczatek"});
 	data->enabled = 0;
-	EnsureMusic(game, "smok2_lapis", 0.8);
-	Enqueue(game, (struct SceneDefinition){"naparstki_10_latarnia_zbija_wszystko", .freezes = {{93, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
-	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc1", .audio = {SOUND, "K STUD 01 39 48-001"}, .freezes = {{25, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
-	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc2", .audio = {SOUND, "pudelko2"}, .freezes = {{25, "naparstki2", .links = {{{-1.0, -1.0, 1.0}, .skip = true}, {{-1.0, -1.0, 0.0}, .ignore = true}}}}});
-	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc3", .audio = {SOUND, "pudelko3"}});
+	EnsureMusic(game, "smok2_lapis", 0.75);
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
