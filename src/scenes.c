@@ -768,7 +768,7 @@ static struct SceneDefinition SCENES[] = {
 		},
 		.checkpoint = true}, //
 
-	{"ciemna_trawa_samochod_sowka", .audio = {MUSIC, "silence"}, .sounds = {{6, {SOUND, "S LIST FX 01 37 00-001"}}, {23, {SOUND, "S LIST FX 01 53 86-001"}}}, .speed = 1.25}, //
+	{"ciemna_trawa_samochod_sowka", .audio = {MUSIC, "silence"}, .sounds = {{4, {SOUND, "S LIST FX 01 37 00-001"}}, {20, {SOUND, "S LIST FX 01 53 86-001"}}}, .speed = 1.35}, //
 	{"ciemna_trawa_waz", .sounds = {{2, {SOUND, "S LIST FX 07 17 05-001"}}}, .speed = 1.25}, //
 	{"wchodzenie_po_schodach_samochod_sowka", .audio = {MUSIC, "dwor"}, .freezes = {{19, "maska_schodek1", .audio = {SOUND, "pac"}}, {23, "maska_schodek2", .audio = {SOUND, "pac"}}, {26, "maska_schodek3", .audio = {SOUND, "pac"}}, {29, "maska_schodek4", .audio = {SOUND, "pac"}}}, .checkpoint = true}, //
 	{"schodzenie_ze_schodow_waz"}, //
