@@ -27,6 +27,7 @@ void PlayMusic(struct Game* game, char* name, float volume) {
 	PrintConsole(game, "Starting music: %s", name);
 	game->data->audio.music_sample = al_load_sample(GetDataFilePath(game, path));
 	game->data->audio.music = al_create_sample_instance(game->data->audio.music_sample);
+	game->data->audio.music_name = strdup(name);
 	al_attach_sample_instance_to_mixer(game->data->audio.music, game->audio.music);
 	al_set_sample_instance_playmode(game->data->audio.music, ALLEGRO_PLAYMODE_LOOP);
 	al_set_sample_instance_gain(game->data->audio.music, volume);
@@ -38,14 +39,16 @@ void StopMusic(struct Game* game) {
 	if (game->data->audio.music) {
 		al_destroy_sample_instance(game->data->audio.music);
 		al_destroy_sample(game->data->audio.music_sample);
+		free(game->data->audio.music_name);
 		game->data->audio.music = NULL;
 		game->data->audio.music_sample = NULL;
+		game->data->audio.music_name = NULL;
 	}
 	PrintConsole(game, "Music stopped.");
 }
 
 void EnsureMusic(struct Game* game, char* name, float volume) {
-	if (!game->data->audio.music) {
+	if (!game->data->audio.music_name || strcmp(name, game->data->audio.music_name)) {
 		PlayMusic(game, name, volume);
 	}
 }

@@ -121,6 +121,7 @@ struct CommonResources {
 		ALLEGRO_SAMPLE_INSTANCE* music;
 		ALLEGRO_SAMPLE* music_sample;
 		double music_pos;
+		char* music_name;
 		struct {
 			ALLEGRO_SAMPLE_INSTANCE* sample_instance;
 			ALLEGRO_SAMPLE* sample;
