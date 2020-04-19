@@ -59,27 +59,27 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	switch (data->myszol) {
 		case MYSZOL_RIGHT:
 			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				(2500 * SCALE * data->pos) * 0.6666, (1080 * SCALE / 2.0 + data->rand * 1080 * SCALE) * 0.666, 0.25, 0.25, data->angle * 0.2 - 0.1, 0);
+				(2500 * SCALE * data->pos) * 0.666, (1080 * SCALE / 2.0 + data->rand * 1080 * SCALE) * 0.666, 1.0, 1.0, data->angle * 0.2 - 0.1, 0);
 			break;
 		case MYSZOL_LEFT:
 			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				(2500 * SCALE * (1.0 - data->pos) - 500 * SCALE) * 0.666, (1080 * SCALE / 2.0 + data->rand * 1080 * SCALE) * 0.666, 0.25, 0.25, data->angle * 0.2 - 0.1, 0);
+				(2500 * SCALE * (1.0 - data->pos) - 500 * SCALE) * 0.666, (1080 * SCALE / 2.0 + data->rand * 1080 * SCALE) * 0.666, 1.0, 1.0, data->angle * 0.2 - 0.1, 0);
 			break;
 		case MYSZOL_TOP:
 			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				(1920 * SCALE / 2.0 + 1920 * data->rand) * 0.666, (1300 * SCALE * (1.0 - data->pos) - 200 * SCALE) * 0.666, 0.25, 0.25, data->angle * 0.2 - 0.1, 0);
+				(1920 * SCALE / 2.0 + 1920 * data->rand) * 0.666, (1300 * SCALE * (1.0 - data->pos) - 200 * SCALE) * 0.666, 1.0, 1.0, data->angle * 0.2 - 0.1, 0);
 			break;
 		case MYSZOL_BOTTOM:
 			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				(1920 * SCALE / 2.0 + 1920 * data->rand) * 0.666, (1300 * SCALE * data->pos) * 0.666, 0.25, 0.25, data->angle * 0.2 - 0.1, 0);
+				(1920 * SCALE / 2.0 + 1920 * data->rand) * 0.666, (1300 * SCALE * data->pos) * 0.666, 1.0, 1.0, data->angle * 0.2 - 0.1, 0);
 			break;
 		case MYSZOL_BOTTOM_LEFT:
 			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				(2500 * SCALE * (1.0 - data->pos) - 500 * SCALE) * 0.666, (1300 * SCALE * data->pos) * 0.666, 0.25, 0.25, data->angle * 0.2 - 0.1, 0);
+				(2500 * SCALE * (1.0 - data->pos) - 500 * SCALE) * 0.666, (1300 * SCALE * data->pos) * 0.666, 1.0, 1.0, data->angle * 0.2 - 0.1, 0);
 			break;
 		case MYSZOL_TOP_RIGHT:
 			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				(2500 * SCALE * data->pos) * 0.666, (1300 * SCALE * (1.0 - data->pos) - 200 * SCALE) * 0.666, 0.25, 0.25, data->angle * 0.2 - 0.1, 0);
+				(2500 * SCALE * data->pos) * 0.666, (1300 * SCALE * (1.0 - data->pos) - 200 * SCALE) * 0.666, 1.0, 1.0, data->angle * 0.2 - 0.1, 0);
 			break;
 	}
 }
@@ -107,25 +107,25 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	progress(game);
 
 	for (int i = 0; i < 2; i++) {
-		data->myszole.lewo[i] = al_load_bitmap(GetDataFilePath(game, PunchNumber(game, "myszki/lewoX.webp", 'X', i)));
+		data->myszole.lewo[i] = al_load_bitmap(GetDataFilePath(game, PunchNumber(game, "myszki/lewoX.png", 'X', i)));
 		progress(game);
 	}
 	for (int i = 0; i < 3; i++) {
-		data->myszole.prawo[i] = al_load_bitmap(GetDataFilePath(game, PunchNumber(game, "myszki/prawoX.webp", 'X', i)));
+		data->myszole.prawo[i] = al_load_bitmap(GetDataFilePath(game, PunchNumber(game, "myszki/prawoX.png", 'X', i)));
 		progress(game);
 	}
 	for (int i = 0; i < 3; i++) {
-		data->myszole.gora[i] = al_load_bitmap(GetDataFilePath(game, PunchNumber(game, "myszki/goraX.webp", 'X', i)));
+		data->myszole.gora[i] = al_load_bitmap(GetDataFilePath(game, PunchNumber(game, "myszki/goraX.png", 'X', i)));
 		progress(game);
 	}
 	for (int i = 0; i < 4; i++) {
-		data->myszole.dol[i] = al_load_bitmap(GetDataFilePath(game, PunchNumber(game, "myszki/dolX.webp", 'X', i)));
+		data->myszole.dol[i] = al_load_bitmap(GetDataFilePath(game, PunchNumber(game, "myszki/dolX.png", 'X', i)));
 		progress(game);
 	}
-	data->myszole.lewodol = al_load_bitmap(GetDataFilePath(game, "myszki/lewodol.webp"));
+	data->myszole.lewodol = al_load_bitmap(GetDataFilePath(game, "myszki/lewodol.png"));
 	progress(game);
 
-	data->myszole.prawogora = al_load_bitmap(GetDataFilePath(game, "myszki/prawogora.webp"));
+	data->myszole.prawogora = al_load_bitmap(GetDataFilePath(game, "myszki/prawogora.png"));
 
 	return data;
 }
