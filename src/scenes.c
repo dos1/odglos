@@ -811,7 +811,7 @@ static struct SceneDefinition SCENES[] = {
 	{"siatka_na_drzewie_myszka", .audio = {MUSIC, "myszki"}}, //
 	{"drzewko_kolorowe1_maskotki_podwojne_moze_lepsze_TAK"}, //
 	{">pudelka", .checkpoint = true}, //
-	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}, .checkpoint = true, .pack = 7}, //
+	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .sounds = {{52, {MUSIC, "smok_lapis"}}, {95, {SOUND, "smok_agentorange", .volume = 0.5}}, {101, {MUSIC, "smok2_lapis", .volume = 0.8}}}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}, .checkpoint = true, .pack = 7}, //
 	{">naparstki"}, //
 	{"naparstki_10b_KONCOWKA_chodaki_owce", .audio = {MUSIC, "odwilz_trickstar1"}}, //
 	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar1", 1.0}, .sounds = {{5, {MUSIC, "odwilz_trickstar2"}}, {70, {SOUND, "NOISE LONG SZ ENTER 00 30 96", .volume = 0.5}}}, .checkpoint = true, .pack = 8}, //

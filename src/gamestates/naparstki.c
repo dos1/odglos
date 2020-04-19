@@ -43,7 +43,6 @@ struct GamestateResources {
 	ALLEGRO_BITMAP *kokardki[9], *tasiemki[9];
 	int enabled;
 	int jaszczur;
-	bool first;
 };
 
 int Gamestate_ProgressCount = 20;
@@ -55,11 +54,6 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	ALLEGRO_COLOR color = CheckMask(game, data->mask);
 	int nr = round(((color.r * 255) + (color.g * 255) + (color.b * 255)) / 40.0);
 	game->data->hover = nr < 17 && nr >= data->enabled - 1;
-
-	if (data->first && game->data->cursor) {
-		data->first = false;
-		PlayMusic(game, "ambient", 1.0);
-	}
 
 	if (PlayerIsFinished(game, data->player)) {
 		ShowMouse(game);
@@ -159,8 +153,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	HideMouse(game);
 	LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){"naparstki_00_poczatek"});
 	data->enabled = 0;
-	data->first = true;
-	EnsureMusic(game, "JAMMIN K LAP L 18 10 23", 1.0);
+	EnsureMusic(game, "smok2_lapis", 0.8);
 	Enqueue(game, (struct SceneDefinition){"naparstki_10_latarnia_zbija_wszystko", .freezes = {{93, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
 	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc1", .audio = {SOUND, "K STUD 01 39 48-001"}, .freezes = {{25, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
 	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc2", .audio = {SOUND, "pudelko2"}, .freezes = {{25, "naparstki2", .links = {{{-1.0, -1.0, 1.0}, .skip = true}, {{-1.0, -1.0, 0.0}, .ignore = true}}}}});
