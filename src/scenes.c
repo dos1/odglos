@@ -699,7 +699,7 @@ static struct SceneDefinition SCENES[] = {
 	{"swiecznik3_TAK", .audio = {LOOP, "MAD CASPER SZ AGNT L 00 02 10 45 - 13 89"}}, //
 	{"samochody_w_lesie", .audio = {MUSIC, "silence"}, .freezes = {{0, "DSCF2433_maska", .audio = {LOOP, "MEGAFLANGE SZ POINTS1 L 00 04 48- 51 "}}}, .sounds = {{24, {SOUND, "S RHAP FX 05 56 09-001", .volume = 0.5}}, {37, {LOOP, "ULTRAFLANGE"}}}, .checkpoint = true, .pack = 1}, //
 	{"aksamitki_samochod_sowka", .speed = 1.25, .audio = {LOOP, "PIXEL BUBBLES K ROB L 05 29 10 ", .stop_music = true}, .checkpoint = true}, //
-	{"donice_02_samochod_duzy_jedzie_w_lewo", .audio = {SOUND, "donice1_points"}, .speed = 0.5}, //
+	{"donice_02_samochod_duzy_jedzie_w_lewo", .audio = {SOUND, "donice1_points"}, .speed = 0.75}, //
 	{"donice_10_sowka_srednia_wjezdza_do_donicy_z_prawej", .audio = {SOUND, "donice2_points"}}, //
 
 	{"donice_01_samochod_duzy_jedzie_w_prawo", .audio = {SOUND, "donice3_points"}, .freezes = {{18, "donice_w_ogrodzie_maski", .links = {{{1.0, 0.0, 0.0}, .ignore = true}}}}}, //
