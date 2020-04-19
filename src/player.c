@@ -122,9 +122,9 @@ void LoadPlayerAnimation(struct Game* game, struct Player* player, struct SceneD
 		}
 	}
 
+	ResetAnimation(player->anim, true);
 	HandleAudio(game, player->scene.audio);
 
-	ResetAnimation(player->anim, true);
 	player->loaded = true;
 	player->finished = false;
 	//PrintConsole(game, "Loaded: %s", path);

@@ -25,6 +25,7 @@ struct AnimationDecoder {
 	int frames;
 	char* name;
 	bool repeat;
+	bool first;
 	struct Game* game;
 };
 
@@ -97,6 +98,7 @@ struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename
 	anim->position = -1;
 	anim->frame = -1;
 	anim->initialized = false;
+	anim->first = true;
 
 	anim->width = anim_info.canvas_width;
 	anim->height = anim_info.canvas_height;
@@ -119,6 +121,7 @@ void ResetAnimation(struct AnimationDecoder* anim, bool reset_bitmap) {
 		return;
 	}
 	if (!anim->initialized) {
+		anim->first = true;
 		anim->bitmap = al_create_bitmap(anim->width, anim->height);
 		anim->swap = al_create_bitmap(anim->width, anim->height);
 		//PrintConsole(anim->game, "[AnimationStream] Initialized: %s", anim->name);
@@ -143,15 +146,22 @@ void ResetAnimation(struct AnimationDecoder* anim, bool reset_bitmap) {
 
 	if (reset_bitmap) {
 		anim->position = 0;
+		anim->first = true;
 	}
 	anim->frame = 0;
 	anim->done = false;
 	anim->initialized = true;
+
+	UpdateAnimation(anim, 0);
 }
 
 bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 	if (!anim->initialized) {
 		ResetAnimation(anim, true);
+	}
+	if (anim->first && timestamp) {
+		anim->first = false;
+		return true;
 	}
 
 	anim->position += timestamp * 1000;
