@@ -32,7 +32,29 @@ struct GamestateResources {
 	ALLEGRO_BITMAP* mask;
 };
 
-int Gamestate_ProgressCount = 24;
+int Gamestate_ProgressCount = 8;
+
+static void SwitchAnimation(struct Game* game, struct GamestateResources* data, struct Character* character, char* name) {
+	if (!GetSpritesheet(game, data->left.character, name)) {
+		char path[255] = {};
+		snprintf(path, 255, "sprites/pudelka/%s.awebp", name);
+		RegisterStreamedSpritesheet(game, data->left.character, name, AnimationStream, DestroyStream, CreateAnimation(game, GetDataFilePath(game, path), false));
+		data->center.character->spritesheets = data->left.character->spritesheets;
+		data->right.character->spritesheets = data->left.character->spritesheets;
+	}
+	SelectSpritesheet(game, character, name);
+}
+
+static void EnqueueAnimation(struct Game* game, struct GamestateResources* data, struct Character* character, char* name) {
+	if (!GetSpritesheet(game, data->left.character, name)) {
+		char path[255] = {};
+		snprintf(path, 255, "sprites/pudelka/%s.awebp", name);
+		RegisterStreamedSpritesheet(game, data->left.character, name, AnimationStream, DestroyStream, CreateAnimation(game, GetDataFilePath(game, path), false));
+		data->center.character->spritesheets = data->left.character->spritesheets;
+		data->right.character->spritesheets = data->left.character->spritesheets;
+	}
+	EnqueueSpritesheet(game, character, name);
+}
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	if (game->data->footnote) { return; }
@@ -88,15 +110,15 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				PlaySound(game, "S LIST FX 13 58 55-001", 1.0);
 				switch (data->stack[--data->stackpos]) {
 					case BALL_TYPE_RED:
-						SelectSpritesheet(game, data->left.character, "pudelko_1_czer_r");
+						SwitchAnimation(game, data, data->left.character, "pudelko_1_czer_r");
 						data->left.type = BALL_TYPE_RED;
 						break;
 					case BALL_TYPE_YELLOW:
-						SelectSpritesheet(game, data->left.character, "pudelko_1_zolte_r");
+						SwitchAnimation(game, data, data->left.character, "pudelko_1_zolte_r");
 						data->left.type = BALL_TYPE_YELLOW;
 						break;
 					case BALL_TYPE_ORANGE:
-						SelectSpritesheet(game, data->left.character, "pudelko_1_pom_r");
+						SwitchAnimation(game, data, data->left.character, "pudelko_1_pom_r");
 						data->left.type = BALL_TYPE_ORANGE;
 						break;
 					case BALL_TYPE_NONE:
@@ -106,18 +128,18 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				PlaySound(game, "S LIST FX 14 09 89-001", 1.0);
 				switch (data->left.type) {
 					case BALL_TYPE_RED:
-						SelectSpritesheet(game, data->left.character, "pudelko_1_czer");
+						SwitchAnimation(game, data, data->left.character, "pudelko_1_czer");
 						break;
 					case BALL_TYPE_YELLOW:
-						SelectSpritesheet(game, data->left.character, "pudelko_1_zolte");
+						SwitchAnimation(game, data, data->left.character, "pudelko_1_zolte");
 						break;
 					case BALL_TYPE_ORANGE:
-						SelectSpritesheet(game, data->left.character, "pudelko_1_pom");
+						SwitchAnimation(game, data, data->left.character, "pudelko_1_pom");
 						break;
 					case BALL_TYPE_NONE:
 						break;
 				}
-				EnqueueSpritesheet(game, data->left.character, "pudelko_1_memlanie");
+				EnqueueAnimation(game, data, data->left.character, "pudelko_1_memlanie");
 				HideMouse(game);
 			}
 		}
@@ -128,15 +150,15 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				PlaySound(game, "S LIST FX 13 58 55-001", 1.0);
 				switch (data->stack[--data->stackpos]) {
 					case BALL_TYPE_RED:
-						SelectSpritesheet(game, data->center.character, "pudelko_2_czer_r");
+						SwitchAnimation(game, data, data->center.character, "pudelko_2_czer_r");
 						data->center.type = BALL_TYPE_RED;
 						break;
 					case BALL_TYPE_YELLOW:
-						SelectSpritesheet(game, data->center.character, "pudelko_2_zolte_r");
+						SwitchAnimation(game, data, data->center.character, "pudelko_2_zolte_r");
 						data->center.type = BALL_TYPE_YELLOW;
 						break;
 					case BALL_TYPE_ORANGE:
-						SelectSpritesheet(game, data->center.character, "pudelko_2_pom_r");
+						SwitchAnimation(game, data, data->center.character, "pudelko_2_pom_r");
 						data->center.type = BALL_TYPE_ORANGE;
 						break;
 					case BALL_TYPE_NONE:
@@ -146,18 +168,18 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				PlaySound(game, "S LIST FX 14 09 89-001", 1.0);
 				switch (data->center.type) {
 					case BALL_TYPE_RED:
-						SelectSpritesheet(game, data->center.character, "pudelko_2_czer");
+						SwitchAnimation(game, data, data->center.character, "pudelko_2_czer");
 						break;
 					case BALL_TYPE_YELLOW:
-						SelectSpritesheet(game, data->center.character, "pudelko_2_zolte");
+						SwitchAnimation(game, data, data->center.character, "pudelko_2_zolte");
 						break;
 					case BALL_TYPE_ORANGE:
-						SelectSpritesheet(game, data->center.character, "pudelko_2_pom");
+						SwitchAnimation(game, data, data->center.character, "pudelko_2_pom");
 						break;
 					case BALL_TYPE_NONE:
 						break;
 				}
-				EnqueueSpritesheet(game, data->center.character, "pudelko_2_memlanie");
+				EnqueueAnimation(game, data, data->center.character, "pudelko_2_memlanie");
 				HideMouse(game);
 			}
 		}
@@ -168,15 +190,15 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				PlaySound(game, "S LIST FX 13 58 55-001", 1.0);
 				switch (data->stack[--data->stackpos]) {
 					case BALL_TYPE_RED:
-						SelectSpritesheet(game, data->right.character, "pudelko_3_czer_r");
+						SwitchAnimation(game, data, data->right.character, "pudelko_3_czer_r");
 						data->right.type = BALL_TYPE_RED;
 						break;
 					case BALL_TYPE_YELLOW:
-						SelectSpritesheet(game, data->right.character, "pudelko_3_zolte_r");
+						SwitchAnimation(game, data, data->right.character, "pudelko_3_zolte_r");
 						data->right.type = BALL_TYPE_YELLOW;
 						break;
 					case BALL_TYPE_ORANGE:
-						SelectSpritesheet(game, data->right.character, "pudelko_3_pom_r");
+						SwitchAnimation(game, data, data->right.character, "pudelko_3_pom_r");
 						data->right.type = BALL_TYPE_ORANGE;
 						break;
 					case BALL_TYPE_NONE:
@@ -186,18 +208,18 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				PlaySound(game, "S LIST FX 14 09 89-001", 1.0);
 				switch (data->right.type) {
 					case BALL_TYPE_RED:
-						SelectSpritesheet(game, data->right.character, "pudelko_3_czer");
+						SwitchAnimation(game, data, data->right.character, "pudelko_3_czer");
 						break;
 					case BALL_TYPE_YELLOW:
-						SelectSpritesheet(game, data->right.character, "pudelko_3_zolte");
+						SwitchAnimation(game, data, data->right.character, "pudelko_3_zolte");
 						break;
 					case BALL_TYPE_ORANGE:
-						SelectSpritesheet(game, data->right.character, "pudelko_3_pom");
+						SwitchAnimation(game, data, data->right.character, "pudelko_3_pom");
 						break;
 					case BALL_TYPE_NONE:
 						break;
 				}
-				EnqueueSpritesheet(game, data->right.character, "pudelko_3_memlanie");
+				EnqueueAnimation(game, data, data->right.character, "pudelko_3_memlanie");
 				HideMouse(game);
 			}
 		}
@@ -219,28 +241,12 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 
 	char* anims[] = {
 		"pudelka_poczatek",
-		"pudelka_tancowanie",
 		"pudelka_waz",
-		"pudelko_1_memlanie",
-		"pudelko_2_memlanie",
-		"pudelko_3_memlanie",
 		"pudelko_1_czer",
-		"pudelko_1_pom",
-		"pudelko_1_zolte",
-		"pudelko_2_czer",
 		"pudelko_2_pom",
-		"pudelko_2_zolte",
-		"pudelko_3_czer",
-		"pudelko_3_pom",
 		"pudelko_3_zolte",
 		"pudelko_1_czer_r",
-		"pudelko_1_pom_r",
-		"pudelko_1_zolte_r",
-		"pudelko_2_czer_r",
 		"pudelko_2_pom_r",
-		"pudelko_2_zolte_r",
-		"pudelko_3_czer_r",
-		"pudelko_3_pom_r",
 		"pudelko_3_zolte_r",
 	};
 
@@ -279,15 +285,15 @@ static void CheckWin(struct Game* game, struct GamestateResources* data) {
 	if (data->left.type == BALL_TYPE_RED && data->center.type == BALL_TYPE_ORANGE && data->right.type == BALL_TYPE_YELLOW) {
 		data->won = true;
 		HideMouse(game);
-		SelectSpritesheet(game, data->left.character, "pudelko_1_czer");
-		SelectSpritesheet(game, data->center.character, "pudelko_2_pom");
-		SelectSpritesheet(game, data->right.character, "pudelko_3_zolte");
+		SwitchAnimation(game, data, data->left.character, "pudelko_1_czer");
+		SwitchAnimation(game, data, data->center.character, "pudelko_2_pom");
+		SwitchAnimation(game, data, data->right.character, "pudelko_3_zolte");
 		data->left.character->delta = 0;
 		data->center.character->delta = 0;
 		data->right.character->delta = 0;
 		PlayMusic(game, "pudelka_metrograph", 1.0);
 
-		EnqueueSpritesheet(game, data->center.character, "pudelka_tancowanie");
+		EnqueueAnimation(game, data, data->center.character, "pudelka_tancowanie");
 	}
 }
 
@@ -320,9 +326,9 @@ static CHARACTER_CALLBACK(HandleCenter) {
 		if (strcmp("pudelka_poczatek", old->name) == 0 && old != new) {
 			ShowMouse(game);
 			d->frames = true;
-			SelectSpritesheet(game, d->left.character, "pudelko_1_zolte_r");
-			SelectSpritesheet(game, d->center.character, "pudelko_2_czer_r");
-			SelectSpritesheet(game, d->right.character, "pudelko_3_pom_r");
+			SwitchAnimation(game, data, d->left.character, "pudelko_1_zolte_r");
+			SwitchAnimation(game, data, d->center.character, "pudelko_2_czer_r");
+			SwitchAnimation(game, data, d->right.character, "pudelko_3_pom_r");
 		}
 		if (strcmp("pudelka_tancowanie", new->name) == 0) {
 			d->frames = false;
@@ -361,8 +367,8 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	SetCharacterPosition(game, data->left.character, 0, 0, 0);
 	SetCharacterPosition(game, data->center.character, 0, 0, 0);
 	SetCharacterPosition(game, data->right.character, 0, 0, 0);
-	SelectSpritesheet(game, data->center.character, "pudelka_poczatek");
-	EnqueueSpritesheet(game, data->center.character, "pudelko_2_czer_r");
+	SwitchAnimation(game, data, data->center.character, "pudelka_poczatek");
+	EnqueueAnimation(game, data, data->center.character, "pudelko_2_czer_r");
 	//data->left.character->pos = 1;
 	//data->left.character->delta = 120;
 	//data->right.character->pos = 2;
