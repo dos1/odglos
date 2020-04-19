@@ -12,18 +12,17 @@ struct GamestateResources {
 int Gamestate_ProgressCount = 1;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
+	LoadGamestate(game, "blank");
+	LoadGamestate(game, "end");
 	LoadGamestate(game, "logo");
 	LoadGamestate(game, "anim");
 	LoadGamestate(game, "myszka");
-	LoadGamestate(game, "naparstki");
-	LoadGamestate(game, "naparstki2");
-	LoadGamestate(game, "end");
-	LoadGamestate(game, "lawka");
 	LoadGamestate(game, "byk");
-	LoadGamestate(game, "blank");
+	LoadGamestate(game, "naparstki");
+	LoadGamestate(game, "lawka");
 	LoadGamestate(game, "pudelka");
-	LoadGamestate(game, "pergola");
 	LoadGamestate(game, "armata");
+	LoadGamestate(game, "pergola");
 	game->data->sceneid = -1;
 	ChangeCurrentGamestate(game, "anim");
 }

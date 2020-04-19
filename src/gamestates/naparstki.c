@@ -93,7 +93,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				PlaySound(game, "K STUD 01 25 13-001", 1.0);
 			} else {
 				if (nr == 9) {
-					ChangeCurrentGamestate(game, "naparstki2");
+					ChangeCurrentGamestate(game, "anim");
 					return;
 				}
 				SelectSpritesheet(game, data->bg, ANIMS[nr]);
@@ -120,10 +120,12 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	}
 
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
-		ChangeCurrentGamestate(game, "naparstki2");
+		ChangeCurrentGamestate(game, "anim");
 	}
 	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
 		game->data->sceneid--;
+		game->data->queue_handled = 0;
+		game->data->queue_pos = 0;
 		ChangeCurrentGamestate(game, "anim");
 	}
 }
@@ -145,11 +147,6 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 		"naparstki_07_panda_babuszka_wersja_krotsza2_lepsza",
 		"naparstki_08_babuszka_zlote",
 		"naparstki_09_zloty_statki",
-		"naparstki_10_latarnia_zbija_wszystko",
-		//"naparstki_10a_latarnia_pusta_sowka_piana_czesc1",
-		//"naparstki_10a_latarnia_pusta_sowka_piana_czesc2",
-		//"naparstki_10a_latarnia_pusta_sowka_piana_czesc3",
-		//"naparstki_10b_KONCOWKA_chodaki_owce",
 		"naparstki_PUSTE_01_kapelusz",
 		"naparstki_PUSTE_02_jaszczurka",
 		"naparstki_PUSTE_03_paski",
@@ -184,7 +181,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 		progress(game);
 	}
 
-	data->mask = al_load_bitmap(GetDataFilePath(game, "naparstki.png"));
+	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/naparstki.mask"));
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 	return data;
 }
@@ -206,6 +203,10 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->enabled = 0;
 	data->first = true;
 	EnsureMusic(game, "JAMMIN K LAP L 18 10 23", 1.0);
+	Enqueue(game, (struct SceneDefinition){"naparstki_10_latarnia_zbija_wszystko", .freezes = {{93, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
+	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc1", .audio = {SOUND, "K STUD 01 39 48-001"}, .freezes = {{25, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
+	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc2", .audio = {SOUND, "pudelko2"}, .freezes = {{25, "naparstki2", .links = {{{-1.0, -1.0, 1.0}, .skip = true}, {{-1.0, -1.0, 0.0}, .ignore = true}}}}});
+	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc3", .audio = {SOUND, "pudelko3"}});
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}

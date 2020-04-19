@@ -201,3 +201,4 @@ bool UpdatePlayer(struct Game* game, struct Player* player, double delta);
 void DrawPlayer(struct Game* game, struct Player* player);
 void ProcessPlayerEvent(struct Game* game, struct Player* player, ALLEGRO_EVENT* ev);
 bool PlayerIsFinished(struct Game* game, struct Player* player);
+void SkipPlayerAnim(struct Game* game, struct Player* player);

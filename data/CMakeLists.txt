@@ -184,16 +184,6 @@ if (EMSCRIPTEN)
 		naparstki_08_babuszka_zlote.ini
 		naparstki_09_zloty_statki.awebp
 		naparstki_09_zloty_statki.ini
-		naparstki_10a_latarnia_pusta_sowka_piana_czesc1.awebp
-		naparstki_10a_latarnia_pusta_sowka_piana_czesc1.ini
-		naparstki_10a_latarnia_pusta_sowka_piana_czesc2.awebp
-		naparstki_10a_latarnia_pusta_sowka_piana_czesc2.ini
-		naparstki_10a_latarnia_pusta_sowka_piana_czesc3.awebp
-		naparstki_10a_latarnia_pusta_sowka_piana_czesc3.ini
-		naparstki_10b_KONCOWKA_chodaki_owce.awebp
-		naparstki_10b_KONCOWKA_chodaki_owce.ini
-		naparstki_10_latarnia_zbija_wszystko.awebp
-		naparstki_10_latarnia_zbija_wszystko.ini
 		naparstki_PUSTE_01_kapelusz.awebp
 		naparstki_PUSTE_01_kapelusz.ini
 		naparstki_PUSTE_02_jaszczurka.awebp
@@ -202,6 +192,18 @@ if (EMSCRIPTEN)
 
 	foreach (FILE IN ITEMS ${ANIMATIONS})
 		install(FILES sprites/naparstki/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data06/sprites/naparstki")
+	endforeach()
+
+	set(ANIMATIONS
+		naparstki_10_latarnia_zbija_wszystko.awebp
+		naparstki_10a_latarnia_pusta_sowka_piana_czesc1.awebp
+		naparstki_10a_latarnia_pusta_sowka_piana_czesc2.awebp
+		naparstki_10a_latarnia_pusta_sowka_piana_czesc3.awebp
+		naparstki_10b_KONCOWKA_chodaki_owce.awebp
+	)
+
+	foreach (FILE IN ITEMS ${ANIMATIONS})
+		install(FILES animations/${FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${LIBSUPERDERPY_GAMENAME}/assets/data06/animations")
 	endforeach()
 
 	# -------------------

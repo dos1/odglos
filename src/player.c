@@ -132,15 +132,31 @@ void LoadPlayerAnimation(struct Game* game, struct Player* player, struct SceneD
 	//PrintConsole(game, "Loaded: %s", path);
 }
 
+static bool CheckColor(ALLEGRO_COLOR color, ALLEGRO_COLOR link) {
+	if (color.r < 0) {
+		color.r = link.r;
+	}
+	if (color.g < 0) {
+		color.g = link.g;
+	}
+	if (color.b < 0) {
+		color.b = link.b;
+	}
+	return al_color_distance_ciede2000(color, link) < 0.01;
+}
+
 static void CheckHover(struct Game* game, struct Player* player) {
 	if (player->mask) {
 		ALLEGRO_COLOR color = CheckMask(game, player->mask);
 		for (int i = 0; i < 8; i++) {
-			if (al_color_distance_ciede2000(player->scene.freezes[player->freezeno].links[i].color, color) < 0.01) {
-				if (player->scene.freezes[player->freezeno].links[i].ignore) {
-					game->data->hover = false;
+			if (player->scene.freezes[player->freezeno].links[i].callback || player->scene.freezes[player->freezeno].links[i].name || player->scene.freezes[player->freezeno].links[i].skip || player->scene.freezes[player->freezeno].links[i].ignore) {
+				if (CheckColor(player->scene.freezes[player->freezeno].links[i].color, color)) {
+					if (!player->scene.freezes[player->freezeno].links[i].ignore) {
+						game->data->hover = true;
+					} else {
+						game->data->hover = false;
+					}
 				}
-				break;
 			}
 		}
 	} else {
@@ -155,7 +171,7 @@ static void CheckHover(struct Game* game, struct Player* player) {
 	}
 }
 
-static void SkipAnim(struct Game* game, struct Player* player) {
+void SkipPlayerAnim(struct Game* game, struct Player* player) {
 	player->delay = 0.01;
 	player->finished = true;
 	player->frozen = false;
@@ -231,7 +247,7 @@ bool UpdatePlayer(struct Game* game, struct Player* player, double delta) {
 
 	if (player->scene.callback) {
 		if (player->scene.callback(game, GetAnimationFrameNo(player->anim) + GetAnimationFrameCount(player->anim) * (player->scene.repeats - player->repeats), &player->x, &player->y, &player->scale, player->character, &player->callback_data)) {
-			SkipAnim(game, player);
+			SkipPlayerAnim(game, player);
 		}
 	} else {
 		player->x = 0;
@@ -279,8 +295,8 @@ void ProcessPlayerEvent(struct Game* game, struct Player* player, ALLEGRO_EVENT*
 			HandleAudio(game, player->scene.freezes[player->freezeno].audio);
 
 			for (int i = 0; i < 8; i++) {
-				if (player->scene.freezes[player->freezeno].links[i].callback || player->scene.freezes[player->freezeno].links[i].name) {
-					if (al_color_distance_ciede2000(player->scene.freezes[player->freezeno].links[i].color, CheckMask(game, player->mask)) < 0.01) {
+				if (player->scene.freezes[player->freezeno].links[i].callback || player->scene.freezes[player->freezeno].links[i].name || player->scene.freezes[player->freezeno].links[i].skip) {
+					if (CheckColor(player->scene.freezes[player->freezeno].links[i].color, CheckMask(game, player->mask))) {
 						PrintConsole(game, "Linked!");
 						if (player->character && player->scene.freezes[player->freezeno].links[i].name) {
 							SelectSpritesheet(game, player->character, player->scene.freezes[player->freezeno].links[i].name);
@@ -297,7 +313,7 @@ void ProcessPlayerEvent(struct Game* game, struct Player* player, ALLEGRO_EVENT*
 						}
 						HandleAudio(game, player->scene.freezes[player->freezeno].links[i].audio);
 						if (player->scene.freezes[player->freezeno].links[i].skip) {
-							SkipAnim(game, player);
+							SkipPlayerAnim(game, player);
 							return;
 						}
 					}
@@ -307,7 +323,7 @@ void ProcessPlayerEvent(struct Game* game, struct Player* player, ALLEGRO_EVENT*
 				player->scene.freezes[player->freezeno].callback(game, player->character, &player->callback_data);
 			}
 			if (player->scene.freezes[player->freezeno].skip) {
-				SkipAnim(game, player);
+				SkipPlayerAnim(game, player);
 				return;
 			}
 			player->freezeno++;
@@ -316,17 +332,6 @@ void ProcessPlayerEvent(struct Game* game, struct Player* player, ALLEGRO_EVENT*
 			player->frozen = false;
 			HideMouse(game);
 			PrintConsole(game, "Unfreeze!");
-		}
-	}
-
-	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
-		SkipAnim(game, player);
-	}
-	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
-		SkipAnim(game, player);
-		game->data->sceneid--;
-		if (game->data->sceneid < -1) {
-			game->data->sceneid = -1;
 		}
 	}
 }

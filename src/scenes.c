@@ -658,7 +658,7 @@ static char* PACK_POSTLOAD[DOWNLOAD_PARTS][3] = {
 	{"pudelka"},
 	{},
 	{},
-	{"naparstki", "naparstki2"},
+	{"naparstki"},
 	{"armata"},
 	{},
 	{},
@@ -813,6 +813,7 @@ static struct SceneDefinition SCENES[] = {
 	{">pudelka", .checkpoint = true}, //
 	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}, .checkpoint = true, .pack = 7}, //
 	{">naparstki"}, //
+	{"naparstki_10b_KONCOWKA_chodaki_owce", .audio = {MUSIC, "odwilz_trickstar1"}}, //
 	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar1", 1.0}, .sounds = {{5, {MUSIC, "odwilz_trickstar2"}}, {70, {SOUND, "NOISE LONG SZ ENTER 00 30 96", .volume = 0.5}}}, .checkpoint = true, .pack = 8}, //
 	{"02statki_szyszki_tasmy_animacja2", .speed = 0.96}, //
 	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}}, //

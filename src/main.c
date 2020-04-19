@@ -91,7 +91,6 @@ int main(int argc, char** argv) {
 #ifndef __EMSCRIPTEN__
 		LoadGamestate(game, "byk");
 		LoadGamestate(game, "naparstki");
-		LoadGamestate(game, "naparstki2");
 		LoadGamestate(game, "lawka");
 		LoadGamestate(game, "pudelka");
 		LoadGamestate(game, "pergola");

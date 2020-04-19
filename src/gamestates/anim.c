@@ -54,6 +54,19 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (game->data->footnote) { return; }
 	ProcessPlayerEvent(game, data->player, ev);
+
+	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_FULLSTOP))) {
+		SkipPlayerAnim(game, data->player);
+	}
+	if (game->show_console && ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_COMMA))) {
+		SkipPlayerAnim(game, data->player);
+		game->data->queue_handled = 0;
+		game->data->queue_pos = 0;
+		game->data->sceneid--;
+		if (game->data->sceneid < -1) {
+			game->data->sceneid = -1;
+		}
+	}
 }
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
