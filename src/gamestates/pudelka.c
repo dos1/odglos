@@ -12,6 +12,12 @@ enum BallType {
 	BALL_TYPE_ORANGE,
 };
 
+enum BoxType {
+	BOX_TYPE_YELLOW,
+	BOX_TYPE_RED,
+	BOX_TYPE_ORANGE
+};
+
 struct GamestateResources {
 	struct {
 		enum BallType type;
@@ -19,6 +25,7 @@ struct GamestateResources {
 	} left, center, right;
 
 	enum BallType stack[3];
+	enum BoxType last;
 	int stackpos;
 	bool frames;
 	bool won;
@@ -76,6 +83,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			return;
 		}
 		if (game->data->mouseX < 0.333) {
+			data->last = BOX_TYPE_RED;
 			if (data->left.type == BALL_TYPE_NONE) {
 				PlaySound(game, "S LIST FX 13 58 55-001", 1.0);
 				switch (data->stack[--data->stackpos]) {
@@ -115,6 +123,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		}
 
 		if (game->data->mouseX > 0.333 && game->data->mouseX < 0.666) {
+			data->last = BOX_TYPE_ORANGE;
 			if (data->center.type == BALL_TYPE_NONE) {
 				PlaySound(game, "S LIST FX 13 58 55-001", 1.0);
 				switch (data->stack[--data->stackpos]) {
@@ -154,6 +163,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 		}
 
 		if (game->data->mouseX > 0.666) {
+			data->last = BOX_TYPE_YELLOW;
 			if (data->right.type == BALL_TYPE_NONE) {
 				PlaySound(game, "S LIST FX 13 58 55-001", 1.0);
 				switch (data->stack[--data->stackpos]) {
@@ -292,7 +302,9 @@ static CHARACTER_CALLBACK(HandleLeft) {
 		}
 	}
 	if (old && strcmp("pudelko_1_czer_r", old->name) == 0 && !new) {
-		CheckWin(game, data);
+		if (d->last == BOX_TYPE_RED) {
+			CheckWin(game, data);
+		}
 	}
 }
 
@@ -317,7 +329,9 @@ static CHARACTER_CALLBACK(HandleCenter) {
 		}
 	}
 	if (old && strcmp("pudelko_2_pom_r", old->name) == 0 && !new) {
-		CheckWin(game, data);
+		if (d->last == BOX_TYPE_ORANGE) {
+			CheckWin(game, data);
+		}
 	}
 	if (old && strcmp("pudelka_waz", old->name) == 0) {
 		ChangeCurrentGamestate(game, "anim");
@@ -335,7 +349,9 @@ static CHARACTER_CALLBACK(HandleRight) {
 		}
 	}
 	if (old && strcmp("pudelko_3_zolte_r", old->name) == 0 && !new) {
-		CheckWin(game, data);
+		if (d->last == BOX_TYPE_YELLOW) {
+			CheckWin(game, data);
+		}
 	}
 }
 
