@@ -468,9 +468,11 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 				game->data->sceneid = -1;
 			}
 		}
+	}
 
 #ifdef LIBSUPERDERPY_IMGUI
-		if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && ev->mouse.button == 2) {
+	if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && ev->mouse.button == 2) {
+		if (game->show_console || game->data->toolbox) {
 			PrintConsole(game, "Debug interface toggled.");
 			game->data->toolbox = !game->data->toolbox;
 			if (game->data->toolbox) {
@@ -478,10 +480,10 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 			} else {
 				al_hide_mouse_cursor(game->display);
 			}
-			return true;
 		}
-#endif
+		return true;
 	}
+#endif
 
 	HandlePointerEmulation(game, ev);
 
