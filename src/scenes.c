@@ -679,7 +679,6 @@ void StartDownloadPacks(struct Game* game) {
 }
 
 static struct SceneDefinition SCENES[] = {
-	{"kostki_animacja01_tworzy_sie_kostka", .bg = "ekran_startowy_tlo_przyciete", .checkpoint = true}, //
 	{"kostki_animacja02_cwierc_obrotu_zapetlic", .repeats = 3, .freezes = {{23, ""}}, .bg = "ekran_startowy_tlo_przyciete"}, //
 	{"kostki_animacja03_waz", .audio = {LOOP, "odlot"}, .bg = "ekran_startowy_tlo_przyciete"}, //
 	{">logo"}, //
@@ -794,12 +793,14 @@ static struct SceneDefinition SCENES[] = {
 	{"donice_26_sowka_srednia_wchodzi_do_prawej_donicy", .audio = {SOUND, "donice2_points"}}, //
 	{"donice_27_sowka_duza_wychodzi_z_lewej_donicy", .audio = {SOUND, "donice1_points"}}, //
 	{"donice_11_waz_buszuje_w_prawo_w_lewo_i_wchodzi_z_lewej", .audio = {SOUND, "donice3_points"}}, //
+
 	{"donica_w_hortensjach_06_waz", .freezes = {{0, "donica_w_hortensjach_maska", .audio = {SOUND, "S LIST FX 07 17 05-001"}}, {10, "donica_w_hortensjach_maska", .audio = {SOUND, "pac"}}}, .checkpoint = true}, //
 
 	{"aksamitki_waz", .speed = 1.25, .audio = {MUSIC, "waz_poko"}}, //
 	{"waz_zmienia_sie_w_kostke", .freezes = {{14, "IMG_0770_maska", .audio = {LOOP, "ELVES S LIST L 08 57 95"}}}, .audio = {MUSIC, "waz2_poko"}, .speed = 1.2}, //
 	{"sowka_wchodzi_do_miski_ciemniejsze", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF1595_maska", .audio = {MUSIC, "chill"}}}, .checkpoint = true, .pack = 3}, //
 	{"duza_sowka_na_drewnianym_kole", .audio = {SOUND, "K RESZT FX 03 27 28-001"}, .speed = 0.8, .sounds = {{12, {STOP_MUSIC}}}, .freezes = {{13, "IMG_1010_maska", .audio = {SOUND, "dryndryn"}}}}, //
+
 	{"animacja_poczatkowa", .audio = {SOUND, "pergola_trickstar"}, .repeats = 2, .callback = Pergola, .checkpoint = true}, //
 	{">pergola"}, //
 	{"pergola_animacja_koncowa2", .callback = Pergola2, .audio = {MUSIC, "pergola2_trickstar"}}, //
@@ -810,6 +811,7 @@ static struct SceneDefinition SCENES[] = {
 	{"portal_ze_stolika_bialego", .freezes = {{9, "DSCF8382_maska", .audio = {SOUND, "pac"}}, {14, "DSCF8387_maska", .audio = {SOUND, "pac"}}}}, //
 	{"siatka_na_drzewie_myszka", .audio = {MUSIC, "myszki"}}, //
 	{"drzewko_kolorowe1_maskotki_podwojne_moze_lepsze_TAK"}, //
+
 	{">pudelka", .checkpoint = true}, //
 	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .sounds = {{52, {MUSIC, "smok_lapis"}}, {95, {SOUND, "smok_agentorange", .volume = 0.5}}, {101, {MUSIC, "smok2_lapis", .volume = 0.8}}}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}, .checkpoint = true, .pack = 7}, //
 	{">naparstki"}, //
@@ -919,6 +921,9 @@ void StartInitialGamestate(struct Game* game, bool show_menu) {
 		StartGamestate(game, SCENES[game->data->sceneid + 1].name + 1);
 		Dispatch(game);
 		return;
+	}
+	if (game->data->sceneid == -1) {
+		Enqueue(game, (struct SceneDefinition){"kostki_animacja01_tworzy_sie_kostka", .bg = "ekran_startowy_tlo_przyciete"});
 	}
 	StartGamestate(game, "anim");
 }
