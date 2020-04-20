@@ -685,8 +685,8 @@ static struct SceneDefinition SCENES[] = {
 	{"sowka_pokazuje_mordke_i_wraca"}, //
 	{"buty_drewniane", .audio = {STOP_MUSIC}, .sounds = {{0, {SOUND, "buciki_trickstar"}}}, .checkpoint = true}, //
 	{"regal_animacja_sam", .freezes = {{0, "", .audio = {MUSIC, "dmuchawa_metrographfuture"}}}, .repeats = 1, .bg = "regal_dmuchawa_100_9254_tlo_przyciete", .callback = RegalDmuchawa, .character = {"dmuchawa", {"dmuchawa_ptaszor_sam"}, .repeat = true}}, //
-	{"generator_animacja_wstepna", .audio = {STOP_MUSIC}, .freezes = {{0, "", .audio = {LOOP, "generator_metrographfuture"}}}, .callback = Generator, .bg = "generator_tlo_liscie_przyciete", .character = {"generator", {"generator_wloski"}, .repeat = true}}, //
-	{"sucha_trawa_aksamitki_samochod_stary", .audio = {SOUND, "K ROB FX 03 26 00-001"}}, //
+	{"generator_animacja_wstepna", .audio = {STOP_MUSIC}, .freezes = {{0, "", .audio = {LOOP, "generator_metrographfuture", .volume = 0.85}}}, .callback = Generator, .bg = "generator_tlo_liscie_przyciete", .character = {"generator", {"generator_wloski"}, .repeat = true}}, //
+	{"sucha_trawa_aksamitki_samochod_stary", .audio = {SOUND, "K ROB FX 03 26 00-001", .volume = 0.85}}, //
 	{"sowka_konfrontacja_z_rzezba", .audio = {STOP_MUSIC}, .freezes = {{0, "DSCF8160_maska", .audio = {MUSIC, "BIRDY K K LAP L 05 29 08"}}}, .checkpoint = true}, //
 	{"wrzosy_kuzyn_i_sowka2", .audio = {MUSIC, "DIGI DOGZ K NOR L 04 16 61"}}, //
 	{"samochod_kominek", .audio = {MUSIC, "LASER SHOWER S LIST L 12 35 45"}}, //
