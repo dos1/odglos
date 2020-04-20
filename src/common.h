@@ -59,6 +59,7 @@ struct SceneDefinition {
 	float speed;
 	int repeats;
 	int pack;
+	int length;
 	bool checkpoint;
 	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
 	void (*draw)(struct Game*, int, void**);

@@ -188,7 +188,7 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	HideMouse(game);
-	StopMusic(game);
+	PlayMusic(game, "dwor", 0.25);
 	data->current = 0;
 	data->playing = false;
 	data->play = 16;

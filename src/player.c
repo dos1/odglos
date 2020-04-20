@@ -253,6 +253,10 @@ bool UpdatePlayer(struct Game* game, struct Player* player, double delta) {
 		player->scale = 1.0;
 	}
 
+	if (player->scene.length && frame > player->scene.length) {
+		player->finished = true;
+	}
+
 	return player->finished;
 }
 
