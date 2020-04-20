@@ -21,7 +21,9 @@ static void CollectSounds(struct Game* game) {
 }
 
 void PlayMusic(struct Game* game, char* name, float volume) {
-	StopMusic(game);
+	ALLEGRO_SAMPLE_INSTANCE* old_sample_instance = game->data->audio.music;
+	ALLEGRO_SAMPLE* old_sample = game->data->audio.music_sample;
+	char* old_name = game->data->audio.music_name;
 	char path[255] = {};
 	snprintf(path, 255, "sounds/%s.flac", name);
 	PrintConsole(game, "Starting music: %s", name);
@@ -33,6 +35,11 @@ void PlayMusic(struct Game* game, char* name, float volume) {
 	al_set_sample_instance_gain(game->data->audio.music, volume);
 	al_set_sample_instance_speed(game->data->audio.music, GetGameSpeed(game));
 	al_play_sample_instance(game->data->audio.music);
+	if (old_sample_instance) {
+		al_destroy_sample_instance(old_sample_instance);
+		al_destroy_sample(old_sample);
+		free(old_name);
+	}
 }
 
 void StopMusic(struct Game* game) {
