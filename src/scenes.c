@@ -814,15 +814,15 @@ static struct SceneDefinition SCENES[] = {
 	{"pudelko_wypluwa_szczypczyki_smok_bez_dyn_TAK", .audio = {STOP_MUSIC}, .sounds = {{52, {MUSIC, "smok_lapis"}}, {95, {SOUND, "smok_agentorange", .volume = 0.5}}, {101, {MUSIC, "smok2_lapis", .volume = 0.8}}}, .freezes = {{0, "DSCF5025_maska", .audio = {MUSIC, "JAMMIN K LAP L 18 10 23"}}}, .checkpoint = true, .pack = 7}, //
 	{">naparstki"}, //
 	{"naparstki_10b_KONCOWKA_chodaki_owce", .audio = {MUSIC, "odwilz_trickstar1"}}, //
-	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar1", 1.0}, .sounds = {{5, {MUSIC, "odwilz_trickstar2"}}, {70, {SOUND, "NOISE LONG SZ ENTER 00 30 96", .volume = 0.5}}}, .checkpoint = true, .pack = 8}, //
+	{"01statki_szyszki_tasmy_animacja1", .audio = {ENSURE_MUSIC, "odwilz_trickstar1", 1.0}, .sounds = {{10, {MUSIC, "odwilz_trickstar2"}}, {69, {SOUND, "NOISE LONG SZ ENTER 00 30 96", .volume = 0.5}}}, .checkpoint = true, .pack = 8}, //
 	{"02statki_szyszki_tasmy_animacja2", .speed = 0.96}, //
 	{"03statki_szyszki_tasmy_animacja3", .callback = Dzwieki, .freezes = {{40, "DSCF4234_maska", .links = {{{0.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek1}, {{10.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek2}, {{20.0 / 255.0, 0.0, 0.0}, .callback = Dzwiek3}}}}}, //
 	{"05statki_szyszki_tasmy_animacja4", .freezes = {{69, "DSCF4999_maska", .audio = {SOUND, "tasma_metrograph"}}}, .sounds = {{10, {SOUND, "PIANO SPIILL SZ TRIC L 04 17 48 - 22 44", .volume = 2.0}}, {64, {SOUND, "SWOOSH 4S LIST FX 00 07 10-001 ", .volume = 0.8}}}}, //
 	{"06statki_szyszki_tasmy_animacja5"}, //
-	{"magnetofon2_bez_myszek", .freezes = {{0, "DSCF9467_maska_magnetofon", .audio = {MUSIC, "odwilz_trickstar3"}}}, .sounds = {{3, {SOUND, "BARREL HIT 2 K STUD 3 FX 05 23 65"}}, {50, {MUSIC, "odwilz_trickstar4"}}}}, //
+	{"magnetofon2_bez_myszek", .freezes = {{0, "DSCF9467_maska_magnetofon", .audio = {MUSIC, "odwilz_trickstar3"}}}, .sounds = {{3, {SOUND, "BARREL HIT 2 K STUD 3 FX 05 23 65"}}, {48, {MUSIC, "odwilz_trickstar4"}}}}, //
 	{"duch_portalu_animacja2_zlozona_TAK", .callback = DuchPortalu, .speed = 0.92}, //
 	{">armata"}, //
-	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska", .audio = {SOUND, "BARREL HIT 1K STUD 3 FX 02 00 37 ", .volume = 1.25}}}, .sounds = {{14, {SOUND, "trickstar_koniec", .stop_music = true, .volume = 0.7}}}}, //
+	{"podniebny_generator_z_kosmosem", .freezes = {{0, "podniebny_generator_z_kosmosem00_maska", .audio = {SOUND, "BARREL HIT 1K STUD 3 FX 02 00 37 ", .volume = 1.25}}}, .sounds = {{13, {SOUND, "trickstar_koniec", .volume = 0.7}}, {15, {STOP_MUSIC}}}}, //
 
 	{"makieta_w_kosmosie_bez_tla", .audio = {MUSIC, "kosmos_metrograph1"}, .bg = "kosmos", .freezes = {{28, .footnote = 2}}, .checkpoint = true, .pack = 10}, //
 	{"makieta_pusta", .audio = {STOP_LOOP, "dwor"}}, //
