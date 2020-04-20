@@ -937,7 +937,13 @@ void DrawSceneToolbox(struct Game* game) {
 
 	igSetNextWindowSize((ImVec2){1024, 700}, ImGuiCond_FirstUseEver);
 	igBegin("Scene Selector", NULL, 0);
+	igInputText("", game->data->search, 255, ImGuiInputTextFlags_AutoSelectAll, NULL, NULL);
 	for (unsigned int i = 0; i < sizeof(SCENES) / sizeof(struct SceneDefinition); i++) {
+		if (game->data->search[0]) {
+			if (!strstr(SCENES[i].name, game->data->search)) {
+				continue;
+			}
+		}
 		char name[255];
 		snprintf(name, 255, "%d: %s", i, SCENES[i].name);
 		if (igSelectable(name, game->data->sceneid == (int)i, 0, (ImVec2){0, 0})) {

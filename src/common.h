@@ -109,6 +109,8 @@ struct CommonResources {
 
 	bool dark_loading;
 
+	char search[255];
+
 	struct {
 		float progress[DOWNLOAD_PARTS];
 		bool loaded[DOWNLOAD_PARTS];
