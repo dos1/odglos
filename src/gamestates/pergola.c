@@ -129,29 +129,37 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				if (c->j < 0) {
 					data->hint = 255;
 					c->j = 0;
+					PlaySound(game, "nope_trickstar", 2.0);
+				} else {
+					PlaySound(game, "S LIST FX 08 40 33-001", 1.0);
 				}
-				PlaySound(game, "S LIST FX 08 40 33-001", 1.0);
 			} else if (ev->keyboard.keycode == ALLEGRO_KEY_DOWN) {
 				c->j += 1;
 				if (c->j > 3) {
 					data->hint = 255;
 					c->j = 3;
+					PlaySound(game, "nope_trickstar", 2.0);
+				} else {
+					PlaySound(game, "S LIST FX 08 00 42-001", 1.0);
 				}
-				PlaySound(game, "S LIST FX 08 00 42-001", 1.0);
 			} else if (ev->keyboard.keycode == ALLEGRO_KEY_LEFT) {
 				c->i -= 1;
 				if (c->i < 0) {
 					data->hint = 255;
 					c->i = 0;
+					PlaySound(game, "nope_trickstar", 2.0);
+				} else {
+					PlaySound(game, "S LIST FX 08 07 74-001", 1.0);
 				}
-				PlaySound(game, "S LIST FX 08 07 74-001", 1.0);
 			} else if (ev->keyboard.keycode == ALLEGRO_KEY_RIGHT) {
 				c->i += 1;
 				if (c->i > 3) {
 					data->hint = 255;
 					c->i = 3;
+					PlaySound(game, "nope_trickstar", 2.0);
+				} else {
+					PlaySound(game, "S LIST FX 08 18 20-001", 1.0);
 				}
-				PlaySound(game, "S LIST FX 08 18 20-001", 1.0);
 			} else if (ev->keyboard.keycode == ALLEGRO_KEY_RSHIFT) {
 				data->mode = !data->mode;
 				PlaySound(game, "S LIST FX 09 42 19-001", 1.0);
