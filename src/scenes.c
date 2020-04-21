@@ -460,69 +460,85 @@ static bool Credits(struct Game* game, int frame, int* x, int* y, double* scale,
 }
 
 static void DrawCredits(struct Game* game, int frame, void** data) {
+	ALLEGRO_TRANSFORM transform;
+	al_identity_transform(&transform);
+	al_scale_transform(&transform, 0.5, 0.5);
+	PushTransform(game, &transform);
+
+	char* credits[13] = {};
 	if (frame < 12) {
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 0, ALLEGRO_ALIGN_LEFT, "ODGŁOS");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 1, ALLEGRO_ALIGN_LEFT, "by Holy Pangolin");
+		credits[0] = "ODGŁOS";
+		credits[1] = "by Holy Pangolin";
 
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 3, ALLEGRO_ALIGN_LEFT, "Agata Nawrot");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 4, ALLEGRO_ALIGN_LEFT, "Sebastian Krzyszkowiak");
+		credits[3] = "Agata Nawrot";
+		credits[4] = "Sebastian Krzyszkowiak";
 	} else if (frame < 30) {
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 0, ALLEGRO_ALIGN_LEFT, "Production:");
+		credits[0] = "Production:";
 
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 2, ALLEGRO_ALIGN_LEFT, "Jakub Marszałkowski");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 3, ALLEGRO_ALIGN_LEFT, "Vitruvio Foundation");
+		credits[2] = "Jakub Marszałkowski";
+		credits[3] = "Vitruvio Foundation";
 
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 5, ALLEGRO_ALIGN_LEFT, "Informational texts:");
+		credits[5] = "Informational texts:";
 
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 7, ALLEGRO_ALIGN_LEFT, "Bartek Chaciński");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 8, ALLEGRO_ALIGN_LEFT, "Jacek Hawryluk");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 9, ALLEGRO_ALIGN_LEFT, "Michał Mendyk");
+		credits[7] = "Bartek Chaciński";
+		credits[8] = "Jacek Hawryluk";
+		credits[9] = "Michał Mendyk";
 
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 11, ALLEGRO_ALIGN_LEFT, "Translation:");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 12, ALLEGRO_ALIGN_LEFT, "Anna Kwapiszewska");
+		credits[11] = "Translation:";
+		credits[12] = "Anna Kwapiszewska";
 	} else if (frame < 50) {
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 0, ALLEGRO_ALIGN_LEFT, "SPECIAL THANKS");
+		credits[0] = "SPECIAL THANKS";
 
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 2, ALLEGRO_ALIGN_LEFT, "Handicraft:");
+		credits[2] = "Handicraft:";
 
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 4, ALLEGRO_ALIGN_LEFT, "Fundacja Pogotowie Społeczne");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 5, ALLEGRO_ALIGN_LEFT, "Aleksandra Nawrot");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 6, ALLEGRO_ALIGN_LEFT, "Leszek Puchalski");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 7, ALLEGRO_ALIGN_LEFT, "Zela Monika Pytko");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 8, ALLEGRO_ALIGN_LEFT, "Zośka Koszałkowska");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 9, ALLEGRO_ALIGN_LEFT, "Lisa Slater");
+		credits[4] = "Fundacja Pogotowie Społeczne";
+		credits[5] = "Aleksandra Nawrot";
+		credits[6] = "Leszek Puchalski";
+		credits[7] = "Zela Monika Pytko";
+		credits[8] = "Zośka Koszałkowska";
+		credits[9] = "Lisa Slater";
 
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 11, ALLEGRO_ALIGN_LEFT, "PRES model:");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 12, ALLEGRO_ALIGN_LEFT, "Museum of Modern Art in Warsaw");
+		credits[11] = "PRES model:";
+		credits[12] = "Museum of Modern Art in Warsaw";
 
 	} else if (frame < 69) {
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 0, ALLEGRO_ALIGN_LEFT, "SPECIAL THANKS");
+		credits[0] = "SPECIAL THANKS";
 
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 2, ALLEGRO_ALIGN_LEFT, "Instruments:");
+		credits[2] = "Instruments:";
 
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 4, ALLEGRO_ALIGN_LEFT, "Bartosz Izbicki");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 5, ALLEGRO_ALIGN_LEFT, "Małgorzata Izbicka");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 6, ALLEGRO_ALIGN_LEFT, "Bartosz Żłobiński");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 7, ALLEGRO_ALIGN_LEFT, "Leszek Pelc");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 8, ALLEGRO_ALIGN_LEFT, "Zbigniew Butryn");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 9, ALLEGRO_ALIGN_LEFT, "Hermann Knoch");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 10, ALLEGRO_ALIGN_LEFT, "Béla Szerényi");
+		credits[4] = "Bartosz Izbicki";
+		credits[5] = "Małgorzata Izbicka";
+		credits[6] = "Bartosz Żłobiński";
+		credits[7] = "Leszek Pelc";
+		credits[8] = "Zbigniew Butryn";
+		credits[9] = "Hermann Knoch";
+		credits[10] = "Béla Szerényi";
 	} else if (frame < 85) {
-		al_draw_multiline_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180, 500, 30, ALLEGRO_ALIGN_LEFT, "All music and sounds created in Polish Radio Experimental Studio by:");
+		credits[0] = "All music and sounds created in Polish Radio Experimental Studio by:";
 
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 4, ALLEGRO_ALIGN_LEFT, "Krzysztof Knittel");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 5, ALLEGRO_ALIGN_LEFT, "Elżbieta Sikora");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 6, ALLEGRO_ALIGN_LEFT, "Ryszard Szeremeta");
+		credits[4] = "Krzysztof Knittel";
+		credits[5] = "Elżbieta Sikora";
+		credits[6] = "Ryszard Szeremeta";
 
-		al_draw_multiline_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 10 - 5, 500, 30, ALLEGRO_ALIGN_LEFT, "The game originates from the Geek Jam held during the Game Industry Conference 2018.");
+		credits[10] = "The game originates from the Geek Jam held during the Game Industry Conference 2018.";
 	} else if (frame < 100) {
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 0, ALLEGRO_ALIGN_LEFT, "© 2019 Adam Mickiewicz Institute");
-		al_draw_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 1, ALLEGRO_ALIGN_LEFT, "       Vitruvio Foundation");
+		credits[0] = "© 2019 Adam Mickiewicz Institute";
+		credits[1] = "       Vitruvio Foundation";
 
-		al_draw_multiline_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 720, 180 + 28 * 3, 500, 30, ALLEGRO_ALIGN_LEFT, "Financed by the Ministry of Culture and National Heritage of the Republic of Poland as part of the multi-annual programme NIEPODLEGŁA 2017–2022.");
-
-		al_draw_bitmap(game->data->banner, 720, 490, 0);
+		credits[3] = "Financed by the Ministry of Culture and National Heritage of the Republic of Poland as part of the multi-annual programme NIEPODLEGŁA 2017–2022.";
 	}
+
+	for (int i = 0; i < 13; i++) {
+		if (credits[i]) {
+			al_draw_multiline_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 1440, 356 + i * 56, 1000, 56, ALLEGRO_ALIGN_LEFT, credits[i]);
+		}
+	}
+
+	if (frame >= 85 && frame < 100) {
+		al_draw_bitmap(game->data->banner, 1440, 356 + 620, 0);
+	}
+
+	PopTransform(game);
 }
 
 struct KosmosData {

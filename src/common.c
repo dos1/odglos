@@ -516,7 +516,7 @@ struct CommonResources* CreateGameData(struct Game* game) {
 #endif
 	data->pause = false;
 	data->font = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 42, 0);
-	data->creditsfont = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 24, 0);
+	data->creditsfont = al_load_font(GetDataFilePath(game, "fonts/DejaVuSansMono.ttf"), 48, 0);
 	data->gradient = al_load_bitmap(GetDataFilePath(game, "gradient.png"));
 	data->banner = al_load_bitmap(GetDataFilePath(game, "banner.png"));
 	data->mute = al_load_bitmap(GetDataFilePath(game, "mute.png"));
