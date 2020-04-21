@@ -15,7 +15,6 @@ struct AnimationDecoder {
 	double position;
 	WebPAnimDecoder* decoder;
 	ALLEGRO_BITMAP *bitmap, *swap;
-	int fd;
 	uint8_t* buf;
 	bool mmaped, shouldload;
 	int frame;
@@ -36,54 +35,48 @@ struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename
 
 	anim->game = game;
 
-	/*
-	anim->fd = open(filename, O_RDONLY | O_CLOEXEC);
+	int fd = open(filename, O_RDONLY | O_CLOEXEC);
 
-	if (anim->fd == -1) {
-		FatalError(game, true, "Could not open animation %s", filename);
-		free(anim);
-		return NULL;
-	}
-
-	struct stat s;
-	fstat(anim->fd, &s);
-	anim->data.size = s.st_size;
-
-	anim->buf = NULL;
-#ifndef __SWITCH__
-	anim->buf = mmap(0, anim->data.size, PROT_READ, MAP_SHARED, anim->fd, 0);
-#endif
-
-	if (!anim->buf) {
-		anim->buf = malloc(anim->data.size * sizeof(uint8_t));
-
-		if (read(anim->fd, anim->buf, anim->data.size) != (ssize_t)anim->data.size) {
-			free(anim->buf);
-			close(anim->fd);
+	if (fd == -1) {
+		ALLEGRO_FILE* file = al_fopen(filename, "r");
+		if (!file) {
+			FatalError(game, true, "Could not open animation %s", filename);
 			free(anim);
 			return NULL;
 		}
-		close(anim->fd);
+
+		anim->data.size = al_fsize(file);
+		anim->buf = malloc(anim->data.size * sizeof(uint8_t));
+		anim->data.bytes = anim->buf;
+		al_fread(file, anim->buf, anim->data.size);
 		anim->mmaped = false;
+		al_fclose(file);
 	} else {
-		anim->mmaped = true;
-	}
-	anim->data.bytes = anim->buf;
-*/
+		struct stat s;
+		fstat(fd, &s);
+		anim->data.size = s.st_size;
 
-	ALLEGRO_FILE* file = al_fopen(filename, "r");
-	if (!file) {
-		FatalError(game, true, "Could not open animation %s", filename);
-		free(anim);
-		return NULL;
-	}
+		anim->buf = NULL;
+#ifndef __SWITCH__
+		anim->buf = mmap(0, anim->data.size, PROT_READ, MAP_SHARED, fd, 0);
+#endif
 
-	anim->data.size = al_fsize(file);
-	anim->buf = malloc(anim->data.size * sizeof(uint8_t));
-	anim->data.bytes = anim->buf;
-	al_fread(file, anim->buf, anim->data.size);
-	anim->mmaped = false;
-	al_fclose(file);
+		if (!anim->buf) {
+			anim->buf = malloc(anim->data.size * sizeof(uint8_t));
+
+			if (read(fd, anim->buf, anim->data.size) != (ssize_t)anim->data.size) {
+				free(anim->buf);
+				close(fd);
+				free(anim);
+				return NULL;
+			}
+			anim->mmaped = false;
+		} else {
+			anim->mmaped = true;
+		}
+		anim->data.bytes = anim->buf;
+		close(fd);
+	}
 
 	WebPAnimDecoderOptions dec_options;
 	WebPAnimDecoderOptionsInit(&dec_options);
@@ -242,7 +235,6 @@ void DestroyAnimation(struct AnimationDecoder* anim) {
 #ifndef __SWITCH__
 	if (anim->mmaped) {
 		munmap(anim->buf, anim->data.size);
-		close(anim->fd);
 		anim->data.bytes = NULL;
 	}
 #endif
