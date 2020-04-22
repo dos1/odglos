@@ -68,6 +68,9 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	}
 
 	if (game->data->skip_requested) {
+		for (int i = data->enabled; i < 9; i++) {
+			Enqueue(game, ANIMS[i]);
+		}
 		GoForward(game, data);
 		UnsetSkip(game);
 	}
