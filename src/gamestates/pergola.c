@@ -46,6 +46,11 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
 	ALLEGRO_COLOR color = CheckMask(game, c->controls);
 	game->data->hover = color.a > 0.5;
+
+	if (game->data->skip_requested) {
+		UnsetSkip(game);
+		ChangeCurrentGamestate(game, "anim");
+	}
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
@@ -236,6 +241,9 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->mode = false;
 	data->hint = 255;
 	data->counter = 0;
+	game->data->skip_available = true;
 }
 
-void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
+void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
+	game->data->skip_available = false;
+}

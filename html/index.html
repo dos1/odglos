@@ -317,6 +317,15 @@
         height: 163px;
         margin: 0 24px;
       }
+      .menu .button.skip {
+        text-align: right;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 100px;
+        height: 75px;
+        background-size: 100%;
+      }
       .menu .button.credits {
         text-align: right;
       }
@@ -340,6 +349,13 @@
       }
       .menu .button.credits > div > span, .menu .button.reset > div > span {
         padding-top: 136px;
+      }
+      .menu .button.skip > div > span {
+        width: 180px;
+        padding-top: 0;
+        position: absolute;
+        top: -32px;
+        right: 0;
       }
       .menu .button:not(.hidden):hover {
         filter: none;
@@ -387,6 +403,9 @@
       }
       .menu .reset > div {
         background-image: url('menu/_0011_strzalka.png');
+      }
+      .menu .skip > div {
+        background-image: url('menu/_0013_strzalka2.png');
       }
       a, a:visited, a:hover {
         color: white;
@@ -460,6 +479,7 @@
             <div class="button credits" onclick="window.ODGLOS.showFootnote(0)"><div><span>Credits</span></div></div>
             <div class="button reset" onclick="window.ODGLOS.resetProgress()"><div><span>Reset</span></div></div>
           </div>
+          <div class="button skip" onclick="window.ODGLOS.skipPuzzle()"><div><span>Skip current puzzle</span></div></div>
         </div>
       </div>
 
@@ -769,6 +789,7 @@
             }
           }
           document.getElementById('wrapper').classList.add('withMenu');
+          document.querySelector('.menu .button.skip').style.display = window.ODGLOS.skip_available ? '' : 'none';
           window.ODGLOS.menu = true;
         },
         hideMenu: function() {
@@ -779,6 +800,12 @@
           if (window.confirm('Are you sure you want to reset your progress and start over?')) {
             window.localStorage.clear();
             window.location.reload();
+          }
+        },
+        skipPuzzle: function() {
+          if (window.confirm('Are you sure you want to skip the current puzzle?')) {
+            window.ODGLOS.skip = true;
+            window.ODGLOS.hideMenu();
           }
         }
       };

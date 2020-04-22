@@ -103,6 +103,20 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	}
 
 	CheckMask(game, data->mask);
+
+	if (game->data->skip_requested) {
+		UnsetSkip(game);
+		data->playing = true;
+		data->success = true;
+		data->counter = true;
+		data->delay = 0;
+		game->data->skip_available = false;
+		HideMouse(game);
+	}
+
+	if (!data->success && data->buffered) {
+		game->data->skip_available = true;
+	}
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
@@ -148,6 +162,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 			}
 			if (data->user == 3) {
 				data->success = true;
+				game->data->skip_available = false;
 				HideMouse(game);
 			}
 		}
@@ -212,4 +227,6 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	ResetAnimation(data->animation, true);
 }
 
-void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
+void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
+	game->data->skip_available = false;
+}

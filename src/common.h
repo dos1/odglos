@@ -101,6 +101,8 @@ struct CommonResources {
 
 	bool footnote;
 	bool menu_requested;
+	bool skip_requested;
+	bool skip_available;
 
 	bool touch;
 	bool toolbox;
@@ -160,6 +162,7 @@ void ResetAnimation(struct AnimationDecoder* anim, bool reset_bitmap);
 bool IsAnimationComplete(struct AnimationDecoder* anim);
 int GetAnimationFrameCount(struct AnimationDecoder* anim);
 
+void UnsetSkip(struct Game* game);
 void DrawBuildInfo(struct Game* game);
 void PreLogic(struct Game* game, double delta);
 void PostLogic(struct Game* game, double delta);

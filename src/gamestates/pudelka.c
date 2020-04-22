@@ -56,6 +56,22 @@ static void EnqueueAnimation(struct Game* game, struct GamestateResources* data,
 	EnqueueSpritesheet(game, character, name);
 }
 
+static void GoForward(struct Game* game, struct GamestateResources* data) {
+	data->won = true;
+	HideMouse(game);
+	SwitchAnimation(game, data, data->left.character, "pudelko_1_czer");
+	SwitchAnimation(game, data, data->center.character, "pudelko_2_pom");
+	SwitchAnimation(game, data, data->right.character, "pudelko_3_zolte");
+	data->left.character->delta = 0;
+	data->center.character->delta = 0;
+	data->right.character->delta = 0;
+	data->frames = true;
+	PlayMusic(game, "pudelka_metrograph", 1.0);
+
+	EnqueueAnimation(game, data, data->center.character, "pudelka_tancowanie");
+	game->data->skip_available = false;
+}
+
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	if (game->data->footnote) { return; }
 
@@ -68,6 +84,11 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	}
 
 	CheckMask(game, data->mask);
+
+	if (game->data->skip_requested) {
+		GoForward(game, data);
+		UnsetSkip(game);
+	}
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
@@ -283,17 +304,7 @@ static void CheckWin(struct Game* game, struct GamestateResources* data) {
 		return;
 	}
 	if (data->left.type == BALL_TYPE_RED && data->center.type == BALL_TYPE_ORANGE && data->right.type == BALL_TYPE_YELLOW) {
-		data->won = true;
-		HideMouse(game);
-		SwitchAnimation(game, data, data->left.character, "pudelko_1_czer");
-		SwitchAnimation(game, data, data->center.character, "pudelko_2_pom");
-		SwitchAnimation(game, data, data->right.character, "pudelko_3_zolte");
-		data->left.character->delta = 0;
-		data->center.character->delta = 0;
-		data->right.character->delta = 0;
-		PlayMusic(game, "pudelka_metrograph", 1.0);
-
-		EnqueueAnimation(game, data, data->center.character, "pudelka_tancowanie");
+		GoForward(game, data);
 	}
 }
 
@@ -395,6 +406,10 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->won = false;
 
 	HideMouse(game);
+
+	game->data->skip_available = true;
 }
 
-void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
+void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
+	game->data->skip_available = false;
+}

@@ -2,8 +2,23 @@
 #include "defines.h"
 #include <libsuperderpy.h>
 
+void UnsetSkip(struct Game* game) {
+#ifdef __EMSCRIPTEN__
+	EM_ASM({ window.ODGLOS && (window.ODGLOS.skip = false); });
+#endif
+	game->data->skip_requested = false;
+}
+
 void PreLogic(struct Game* game, double delta) {
 	game->data->hover = false;
+
+#ifdef __EMSCRIPTEN__
+	game->data->skip_requested = EM_ASM_INT({
+		window.ODGLOS && (window.ODGLOS.skip_available = $0);
+		return window.ODGLOS && window.ODGLOS.skip;
+	},
+		game->data->skip_available);
+#endif
 
 	if (game->data->footnote) {
 #ifdef __EMSCRIPTEN__
@@ -63,6 +78,7 @@ void SetHTMLLoadingValue(struct Game* game, float value) {
 #endif
 
 void ShowFootnote(struct Game* game, int id) {
+	PrintConsole(game, "Footnote %d", id);
 	game->data->footnote = true;
 	char buf[255];
 	snprintf(buf, 255, "footnote%d", id);
@@ -467,6 +483,11 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 			if (game->data->sceneid < -1) {
 				game->data->sceneid = -1;
 			}
+		}
+
+		if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_SLASH) && game->data->skip_available) {
+			PrintConsole(game, "Skip requested!");
+			game->data->skip_requested = true;
 		}
 	}
 

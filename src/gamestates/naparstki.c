@@ -47,6 +47,14 @@ struct GamestateResources {
 
 int Gamestate_ProgressCount = 20;
 
+static void GoForward(struct Game* game, struct GamestateResources* data) {
+	Enqueue(game, (struct SceneDefinition){"naparstki_10_latarnia_zbija_wszystko", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{15, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {22, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {27, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {32, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {36, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {40, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {44, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {51, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {55, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {60, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {65, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {69, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {74, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {80, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {85, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {90, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}}, .freezes = {{93, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
+	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc1", .audio = {SOUND, "K STUD 01 36 84-001"}, .freezes = {{25, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
+	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc2", .audio = {SOUND, "BIG BOING S LIST FX 00 10 32-001 "}, .freezes = {{25, "naparstki2", .links = {{{-1.0, -1.0, 1.0}, .skip = true}, {{-1.0, -1.0, 0.0}, .ignore = true}}}}});
+	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc3", .audio = {SOUND, "piana_lapis", .stop_music = true}});
+	ChangeCurrentGamestate(game, "anim");
+}
+
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	if (game->data->footnote) { return; }
 
@@ -57,6 +65,11 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 
 	if (PlayerIsFinished(game, data->player)) {
 		ShowMouse(game);
+	}
+
+	if (game->data->skip_requested) {
+		GoForward(game, data);
+		UnsetSkip(game);
 	}
 }
 
@@ -86,11 +99,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 				PlaySound(game, "K STUD 01 25 13-001", 1.0);
 			} else {
 				if (nr == 9) {
-					Enqueue(game, (struct SceneDefinition){"naparstki_10_latarnia_zbija_wszystko", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{15, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {22, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {27, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {32, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {36, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {40, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {44, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {51, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {55, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {60, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {65, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {69, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {74, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {80, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {85, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {90, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}}, .freezes = {{93, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
-					Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc1", .audio = {SOUND, "K STUD 01 36 84-001"}, .freezes = {{25, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
-					Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc2", .audio = {SOUND, "BIG BOING S LIST FX 00 10 32-001 "}, .freezes = {{25, "naparstki2", .links = {{{-1.0, -1.0, 1.0}, .skip = true}, {{-1.0, -1.0, 0.0}, .ignore = true}}}}});
-					Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc3", .audio = {SOUND, "piana_lapis", .stop_music = true}});
-					ChangeCurrentGamestate(game, "anim");
+					GoForward(game, data);
 					return;
 				}
 				if (nr == data->enabled) {
@@ -159,6 +168,9 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	LoadPlayerAnimation(game, data->player, &(struct SceneDefinition){"naparstki_00_poczatek"});
 	data->enabled = 0;
 	EnsureMusic(game, "smok2_lapis", 0.75);
+	game->data->skip_available = true;
 }
 
-void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {}
+void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
+	game->data->skip_available = false;
+}
