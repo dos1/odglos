@@ -311,26 +311,17 @@
         height: 120px;
         filter: grayscale(69%);
       }
-      .menu .button.credits, .menu .button.reset {
+      .menu .big.row .button {
         background-image: url('menu/_0012_karteczka2.png');
         width: 166px;
         height: 163px;
         margin: 0 24px;
       }
-      .menu .button.skip {
-        text-align: right;
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        width: 100px;
-        height: 75px;
-        background-size: 100%;
-      }
       .menu .button.credits {
-        text-align: right;
-      }
-      .menu .button.reset {
         text-align: left;
+      }
+      .menu .button.reset, .menu .button.skip {
+        text-align: right;
       }
       .menu .button:not(.hidden):hover {
         cursor: pointer;
@@ -347,15 +338,8 @@
         padding-top: 124px;
         opacity: 0;
       }
-      .menu .button.credits > div > span, .menu .button.reset > div > span {
+      .menu .big.row .button > div > span {
         padding-top: 136px;
-      }
-      .menu .button.skip > div > span {
-        width: 180px;
-        padding-top: 0;
-        position: absolute;
-        top: -32px;
-        right: 0;
       }
       .menu .button:not(.hidden):hover {
         filter: none;
@@ -475,11 +459,11 @@
             <div class="button button2" onclick="window.ODGLOS.showFootnote(2)"><div><span>Cosmos</span></div></div>
             <div class="button button1" onclick="window.ODGLOS.showFootnote(1)"><div><span>The Black Room</span></div></div>
           </div>
-          <div class="row">
-            <div class="button credits" onclick="window.ODGLOS.showFootnote(0)"><div><span>Credits</span></div></div>
+          <div class="big row">
             <div class="button reset" onclick="window.ODGLOS.resetProgress()"><div><span>Reset</span></div></div>
+            <div class="button credits" onclick="window.ODGLOS.showFootnote(0)"><div><span>Credits</span></div></div>
+            <div class="button skip" onclick="window.ODGLOS.skipPuzzle()"><div><span>Skip</span></div></div>
           </div>
-          <div class="button skip" onclick="window.ODGLOS.skipPuzzle()"><div><span>Skip current puzzle</span></div></div>
         </div>
       </div>
 
