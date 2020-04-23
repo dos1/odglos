@@ -7,7 +7,8 @@
 
 struct GamestateResources {
 	struct AnimationDecoder* animation;
-	ALLEGRO_BITMAP *bmps[17], *mask;
+	struct Character* button;
+	ALLEGRO_BITMAP *bmps[17], *mask, *btn;
 	int current;
 
 	bool playing;
@@ -27,7 +28,7 @@ struct GamestateResources {
 	int user;
 };
 
-int Gamestate_ProgressCount = 3;
+int Gamestate_ProgressCount = 4;
 
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	if (game->data->footnote) { return; }
@@ -54,7 +55,6 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	}
 
 	if (IsAnimationComplete(data->animation) && !data->buffered) {
-		ShowMouse(game);
 		data->buffered = true;
 		data->delay = 1.0;
 		data->playing = true;
@@ -67,7 +67,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 				data->delay = 0.1 + ((rand() % 50) / 1000.0);
 				data->play = rand() % 17;
 			} else if (data->pressed) {
-				data->delay = data->user ? 8.0 : 2.0;
+				data->delay = data->user ? 8.0 : 4.0;
 				data->pressed = false;
 				data->play = 16;
 				data->position = 0;
@@ -76,7 +76,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 				data->delay = 0.4;
 				data->play = data->sequence[data->position++];
 			} else if (data->position == 3) {
-				data->delay = 6.0;
+				data->delay = 8.0;
 				data->position = 0;
 				data->play = 16;
 				ShowMouse(game);
@@ -117,6 +117,10 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	if (!data->success && data->buffered) {
 		game->data->skip_available = true;
 	}
+
+	if (game->data->cursor && IsOnCharacter(game, data->button, game->viewport.width * game->data->mouseX, game->viewport.height * game->data->mouseY, true)) {
+		game->data->hover = true;
+	}
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
@@ -127,6 +131,7 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 		bitmap = GetAnimationFrame(data->animation);
 	}
 	al_draw_scaled_bitmap(bitmap, 0, 0, al_get_bitmap_width(bitmap), al_get_bitmap_height(bitmap), 0, 0, game->viewport.width, game->viewport.height, 0);
+	DrawCharacter(game, data->button);
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
@@ -134,7 +139,18 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 
 	ALLEGRO_COLOR color = CheckMask(game, data->mask);
 
-	if (IsAnimationComplete(data->animation) && game->data->hover && data->play == 16 && !data->success) {
+	if (game->data->cursor && IsOnCharacter(game, data->button, game->viewport.width * game->data->mouseX, game->viewport.height * game->data->mouseY, true)) {
+		if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) ||
+			(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) ||
+			(ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
+			data->delay = 0;
+			data->position = 0;
+			data->play = 16;
+		}
+		return;
+	}
+
+	if (game->data->cursor && game->data->hover && data->play == 16 && !data->success) {
 		if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) ||
 			(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) ||
 			(ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
@@ -185,6 +201,12 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->bmps[0] = al_clone_bitmap(GetAnimationFrame(data->animation));
 	progress(game);
 
+	data->btn = al_load_bitmap(GetDataFilePath(game, "lawka_w_parku/button.png"));
+	data->button = CreateCharacter(game, "button");
+	RegisterSpritesheetFromBitmap(game, data->button, "button", data->btn);
+	SelectSpritesheet(game, data->button, "button");
+	LoadSpritesheets(game, data->button, progress);
+
 	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/lawka_w_parku_maski.mask"));
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 
@@ -198,6 +220,8 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 		al_destroy_bitmap(data->bmps[i]);
 	}
 	al_destroy_bitmap(data->mask);
+	al_destroy_bitmap(data->btn);
+	DestroyCharacter(game, data->button);
 	free(data);
 }
 
@@ -224,6 +248,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 			}
 		}
 	}
+	SetCharacterPosition(game, data->button, 946 + 62 / 2, 486 + 41 / 2, 0);
 	ResetAnimation(data->animation, true);
 }
 
