@@ -617,7 +617,7 @@ static bool KosmosSowka(struct Game* game, struct Character* character, void** d
 		data->krzatanie = true;
 		Enqueue(game, (struct SceneDefinition){"sowka1_wlacza_konsole_z_daleka2", .bg = "kosmos", .sounds = {{7, {LOOP, "NEEDLES SZ ENTER L 04 03 11", .volume = 0.5}}, {40, {SOUND, "S LIST FX 00 36 10-001", .volume = 0.5}}}});
 	}
-	Enqueue(game, (struct SceneDefinition){"sowka1_wlacza_konsole_z_bliska_lewa_konsola", .callback_data = data, .freezes = {{0, "DSCF0067_maska_ze_stolem", .skip = true, .links = {{{0.0, 0.0, 1.0}, .callback = KosmosBack}, {{1.0, 0.0, 0.0}, .callback = KosmosSowkaLeft}, {{0.0, 1.0, 0.0}, .callback = KosmosSowkaMiddle}, {{0.0, 0.0, 0.0}, .callback = KosmosSowkaRight}}}}});
+	Enqueue(game, (struct SceneDefinition){"sowka1_wlacza_konsole_z_bliska_lewa_konsola", .callback_data = data, .freezes = {{0, "DSCF0067_maska_ze_stolem", .skip = true, .links = {{{0.0, 0.0, 1.0}, .back = true, .callback = KosmosBack}, {{1.0, 0.0, 0.0}, .callback = KosmosSowkaLeft}, {{0.0, 1.0, 0.0}, .callback = KosmosSowkaMiddle}, {{0.0, 0.0, 0.0}, .callback = KosmosSowkaRight}}}}});
 	return true;
 }
 
@@ -657,7 +657,7 @@ static bool KosmosRudnik(struct Game* game, struct Character* character, void** 
 		free(*d);
 		return true;
 	}
-	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_prawa", .callback_data = data, .freezes = {{0, "DSCF0286_maska", .skip = true, .links = {{{0.0, 0.0, 1.0}, .callback = KosmosBack}, {{1.0, 0.0, 0.0}, .callback = KosmosRudnikLeft}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnikRight}}}}});
+	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_prawa", .callback_data = data, .freezes = {{0, "DSCF0286_maska", .skip = true, .links = {{{0.0, 0.0, 1.0}, .back = true, .callback = KosmosBack}, {{1.0, 0.0, 0.0}, .callback = KosmosRudnikLeft}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnikRight}}}}});
 	return true;
 }
 

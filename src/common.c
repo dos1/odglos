@@ -11,6 +11,7 @@ void UnsetSkip(struct Game* game) {
 
 void PreLogic(struct Game* game, double delta) {
 	game->data->hover = false;
+	game->data->hover_back = false;
 
 #ifdef __EMSCRIPTEN__
 	game->data->skip_requested = EM_ASM_INT({
@@ -224,7 +225,7 @@ void Compositor(struct Game* game) {
 #endif
 
 		if (!game->data->touch) {
-			al_draw_scaled_rotated_bitmap(hover ? game->data->cursorhover : game->data->cursorbmp, 9, 4, game->data->mouseX * game->clip_rect.w + game->clip_rect.x, game->data->mouseY * game->clip_rect.h + game->clip_rect.y, game->clip_rect.w / (double)game->viewport.width * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, game->clip_rect.h / (double)game->viewport.height * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, 0, 0);
+			al_draw_scaled_rotated_bitmap(hover ? game->data->cursorhover : game->data->cursorbmp, game->data->hover_back ? 80 : 9, game->data->hover_back ? 30 : 4, game->data->mouseX * game->clip_rect.w + game->clip_rect.x, game->data->mouseY * game->clip_rect.h + game->clip_rect.y, game->clip_rect.w / (double)game->viewport.width * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, game->clip_rect.h / (double)game->viewport.height * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, game->data->hover_back ? ALLEGRO_PI * 1.25 : 0, 0);
 		}
 	}
 }

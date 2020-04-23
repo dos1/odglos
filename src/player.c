@@ -151,6 +151,9 @@ static void CheckHover(struct Game* game, struct Player* player) {
 				if (CheckColor(player->scene.freezes[player->freezeno].links[i].color, color)) {
 					if (!player->scene.freezes[player->freezeno].links[i].ignore) {
 						game->data->hover = true;
+						if (player->scene.freezes[player->freezeno].links[i].back) {
+							game->data->hover_back = true;
+						}
 					} else {
 						game->data->hover = false;
 					}

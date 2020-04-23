@@ -34,6 +34,7 @@ struct FreezeLink {
 	bool (*callback)(struct Game*, struct Character*, void**);
 	bool ignore;
 	bool skip;
+	bool back;
 	struct Audio audio;
 };
 
@@ -86,6 +87,7 @@ struct CommonResources {
 	double mouseX, mouseY;
 	bool cursor;
 	bool hover;
+	bool hover_back;
 	double start_time;
 	ALLEGRO_BITMAP *cursorbmp, *cursorhover, *gradient;
 	bool pause;
