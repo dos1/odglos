@@ -30,9 +30,10 @@ struct GamestateResources {
 	bool frames;
 	bool won;
 	ALLEGRO_BITMAP* mask;
+	ALLEGRO_BITMAP* balls[4];
 };
 
-int Gamestate_ProgressCount = 8;
+int Gamestate_ProgressCount = 9;
 
 static void SwitchAnimation(struct Game* game, struct GamestateResources* data, struct Character* character, char* name) {
 	if (!GetSpritesheet(game, data->left.character, name)) {
@@ -58,6 +59,7 @@ static void EnqueueAnimation(struct Game* game, struct GamestateResources* data,
 
 static void GoForward(struct Game* game, struct GamestateResources* data) {
 	data->won = true;
+	data->stackpos = 0;
 	HideMouse(game);
 	SwitchAnimation(game, data, data->left.character, "pudelko_1_czer");
 	SwitchAnimation(game, data, data->center.character, "pudelko_2_pom");
@@ -112,6 +114,17 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 		if (!data->won) {
 			al_draw_filled_rectangle(game->viewport.width / 3.0 - twenty, 0, game->viewport.width / 3.0, game->viewport.height, al_map_rgb(0, 0, 0));
 			al_draw_filled_rectangle(game->viewport.width * 0.65104166666666666667, 0, game->viewport.width * 0.65104166666666666667 + twenty, game->viewport.height, al_map_rgb(0, 0, 0));
+		}
+	}
+	ResetClippingRectangle();
+
+	if (data->stackpos) {
+		al_draw_filled_rectangle(0, 0, 66 + 10, 77, al_map_rgba(0, 0, 0, 100));
+		DrawHorizontalGradientRect(66 + 10, 0, game->viewport.width / 3.0 - 66 + 10, 77, al_map_rgba(0, 0, 0, 100), al_map_rgba(0, 0, 0, 0));
+	}
+	for (int i = 0; i < data->stackpos; i++) {
+		if (data->stack[i]) {
+			al_draw_bitmap(data->balls[data->stack[i]], i * 66 + 10, 10, 0);
 		}
 	}
 }
@@ -287,6 +300,12 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->right.character->spritesheets = data->left.character->spritesheets;
 
 	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/pudelka_od_cioci_maska.mask"));
+	progress(game);
+
+	data->balls[0] = NULL;
+	data->balls[1] = al_load_bitmap(GetDataFilePath(game, "kulka_zolta.png"));
+	data->balls[2] = al_load_bitmap(GetDataFilePath(game, "kulka_czerwona.png"));
+	data->balls[3] = al_load_bitmap(GetDataFilePath(game, "kulka_pomaranczowa.png"));
 
 	return data;
 }
@@ -296,6 +315,9 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	DestroyCharacter(game, data->center.character);
 	DestroyCharacter(game, data->left.character);
 	al_destroy_bitmap(data->mask);
+	al_destroy_bitmap(data->balls[1]);
+	al_destroy_bitmap(data->balls[2]);
+	al_destroy_bitmap(data->balls[3]);
 	free(data);
 }
 
