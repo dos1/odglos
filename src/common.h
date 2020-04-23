@@ -60,6 +60,7 @@ struct SceneDefinition {
 	int repeats;
 	int pack;
 	int length;
+	ALLEGRO_COLOR color;
 	bool checkpoint;
 	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
 	void (*draw)(struct Game*, int, void**);

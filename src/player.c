@@ -265,6 +265,8 @@ void DrawPlayer(struct Game* game, struct Player* player) {
 		return;
 	}
 
+	al_clear_to_color(player->scene.color);
+
 	ALLEGRO_BITMAP* bitmap;
 	if (player->bg) {
 		bitmap = player->bg;
