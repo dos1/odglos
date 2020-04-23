@@ -557,8 +557,8 @@ static bool Kosmos(struct Game* game, int frame, int* x, int* y, double* scale, 
 	return false;
 }
 
-static bool KosmosFinish(struct Game* game, struct KosmosData* data) {
-	return data->krzatanie && data->buzia && data->cyrk && data->kolo && data->samochod && data->myszkowanie;
+static bool KosmosFinish(struct Game* game, int num, struct KosmosData* data) {
+	return data->krzatanie && data->buzia >= num && data->cyrk >= num && data->kolo >= num && data->samochod >= num && data->myszkowanie >= num;
 }
 
 static bool KosmosBack(struct Game* game, struct Character* character, void** d);
@@ -609,6 +609,10 @@ static bool KosmosSowkaRight(struct Game* game, struct Character* character, voi
 
 static bool KosmosSowka(struct Game* game, struct Character* character, void** d) {
 	struct KosmosData* data = *d;
+	if (KosmosFinish(game, 2, *d)) {
+		free(*d);
+		return true;
+	}
 	if (!data->krzatanie) {
 		data->krzatanie = true;
 		Enqueue(game, (struct SceneDefinition){"sowka1_wlacza_konsole_z_daleka2", .bg = "kosmos", .sounds = {{7, {LOOP, "NEEDLES SZ ENTER L 04 03 11", .volume = 0.5}}, {40, {SOUND, "S LIST FX 00 36 10-001", .volume = 0.5}}}});
@@ -649,13 +653,17 @@ static bool KosmosRudnikRight(struct Game* game, struct Character* character, vo
 
 static bool KosmosRudnik(struct Game* game, struct Character* character, void** d) {
 	struct KosmosData* data = *d;
+	if (KosmosFinish(game, 2, *d)) {
+		free(*d);
+		return true;
+	}
 	Enqueue(game, (struct SceneDefinition){"sowka2_klika_konsole_prawa", .callback_data = data, .freezes = {{0, "DSCF0286_maska", .skip = true, .links = {{{0.0, 0.0, 1.0}, .callback = KosmosBack}, {{1.0, 0.0, 0.0}, .callback = KosmosRudnikLeft}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnikRight}}}}});
 	return true;
 }
 
 static bool KosmosBack(struct Game* game, struct Character* character, void** d) {
 	struct KosmosData* data = *d;
-	if (KosmosFinish(game, *d)) {
+	if (KosmosFinish(game, 1, *d)) {
 		free(*d);
 		return true;
 	}
