@@ -225,7 +225,7 @@ void Compositor(struct Game* game) {
 #endif
 
 		if (!game->data->touch) {
-			al_draw_scaled_rotated_bitmap(hover ? game->data->cursorhover : game->data->cursorbmp, game->data->hover_back ? 80 : 9, game->data->hover_back ? 30 : 4, game->data->mouseX * game->clip_rect.w + game->clip_rect.x, game->data->mouseY * game->clip_rect.h + game->clip_rect.y, game->clip_rect.w / (double)game->viewport.width * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, game->clip_rect.h / (double)game->viewport.height * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, game->data->hover_back ? ALLEGRO_PI * 1.25 : 0, 0);
+			al_draw_scaled_rotated_bitmap(hover ? (game->data->hover_back ? game->data->cursorback : game->data->cursorhover) : game->data->cursorbmp, game->data->hover_back ? 50 : 9, game->data->hover_back ? 30 : 4, game->data->mouseX * game->clip_rect.w + game->clip_rect.x, game->data->mouseY * game->clip_rect.h + game->clip_rect.y, game->clip_rect.w / (double)game->viewport.width * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, game->clip_rect.h / (double)game->viewport.height * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, 0, 0);
 		}
 	}
 }
@@ -528,6 +528,7 @@ struct CommonResources* CreateGameData(struct Game* game) {
 	data->cursor = false;
 	data->cursorbmp = al_load_bitmap(GetDataFilePath(game, "kursor_standby.png"));
 	data->cursorhover = al_load_bitmap(GetDataFilePath(game, "kursor_hover.png"));
+	data->cursorback = al_load_bitmap(GetDataFilePath(game, "kursor_hover3.png"));
 	data->menu = al_load_bitmap(GetDataFilePath(game, "menu_przycisk1_standby.png"));
 	data->menu2 = al_load_bitmap(GetDataFilePath(game, "menu_przycisk2_hover.png"));
 	data->start_time = al_get_time();
@@ -551,6 +552,7 @@ void DestroyGameData(struct Game* game) {
 	DestroyShader(game, game->data->grain);
 	al_destroy_bitmap(game->data->cursorbmp);
 	al_destroy_bitmap(game->data->cursorhover);
+	al_destroy_bitmap(game->data->cursorback);
 	al_destroy_bitmap(game->data->gradient);
 	al_destroy_bitmap(game->data->menu);
 	al_destroy_bitmap(game->data->menu2);
