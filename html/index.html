@@ -751,6 +751,9 @@
           if (x > 0 && !window.localStorage.getItem('[odglos] footnote'+x)) {
             return;
           }
+          if (window.ODGLOS.disableFootnotes && !window.ODGLOS.menu) {
+            return;
+          }
           var template = document.getElementById('template'+x);
           var title = template.querySelector('.title').innerHTML;
           var content = template.querySelector('.content').innerHTML;
