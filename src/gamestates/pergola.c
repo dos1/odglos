@@ -22,6 +22,106 @@ struct GamestateResources {
 
 int Gamestate_ProgressCount = 6;
 
+float BRIGHTNESS[2][4][4][3] =
+	{{{{0.429445,
+			 0.422976,
+			 0.423182},
+			{0.420133,
+				0.417356,
+				0.423023},
+			{0.422727,
+				0.417609,
+				0.420959},
+			{0.422167,
+				0.413627,
+				0.417971}},
+		 {{0.416591,
+				0.421105,
+				0.389477},
+			 {0.397391,
+				 0.397295,
+				 0.390782},
+			 {0.393090,
+				 0.391678,
+				 0.399707},
+			 {0.399766,
+				 0.367680,
+				 0.365255}},
+		 {{0.364033,
+				0.364854,
+				0.406830},
+			 {0.358815,
+				 0.362573,
+				 0.402446},
+			 {0.393973,
+				 0.403466,
+				 0.400498},
+			 {0.399304,
+				 0.398248,
+				 0.399912}},
+		 {{0.397074,
+				0.393895,
+				0.397157},
+			 {0.361461,
+				 0.398764,
+				 0.389823},
+			 {0.398074,
+				 0.408518,
+				 0.402227},
+			 {0.406123,
+				 0.400608,
+				 0.397482}}},
+		{{{0.397364,
+				0.408421,
+				0.389514},
+			 {0.403829,
+				 0.396523,
+				 0.401344},
+			 {0.411836,
+				 0.418055,
+				 0.406306},
+			 {0.411300,
+				 0.414891,
+				 0.416158}},
+			{{0.398842,
+				 0.405234,
+				 0.405471},
+				{0.399524,
+					0.397318,
+					0.402588},
+				{0.406852,
+					0.404524,
+					0.413710},
+				{0.396889,
+					0.404395,
+					0.408580}},
+			{{0.404804,
+				 0.404335,
+				 0.402160},
+				{0.407603,
+					0.402100,
+					0.416626},
+				{0.405895,
+					0.405490,
+					0.411845},
+				{0.409412,
+					0.413337,
+					0.407946}},
+			{{
+				 0.409304,
+				 0.400492,
+				 0.404624,
+			 },
+				{0.403495,
+					0.396108,
+					0.410076},
+				{0.408871,
+					0.393835,
+					0.407455},
+				{0.404495,
+					0.392346,
+					0.401287}}}};
+
 static bool IsCompleted(struct Game* game, struct GamestateResources* data) {
 	return data->left.i == 3 && data->left.j == 3 && data->right.i == 0 && data->right.j == 0;
 }
@@ -67,17 +167,12 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 
 	float hint = pow(data->hint / 255.0, 0.9);
 
-	if (data->mode) {
-		int frame = GetAnimationFrameNo(data->right.animation) + data->right.j + data->right.i;
-		al_draw_tinted_scaled_bitmap(data->right.controls, al_map_rgba(255 - frame * 4, 255 - frame * 4, 255 - frame * 4, 255),
-			0, 0, al_get_bitmap_width(data->right.controls), al_get_bitmap_height(data->right.controls),
-			0, 0, game->viewport.width, game->viewport.height, 0);
-	} else {
-		int frame = GetAnimationFrameNo(data->left.animation) + data->left.j + data->left.i;
-		al_draw_tinted_scaled_bitmap(data->left.controls, al_map_rgba(255 - frame * 4, 255 - frame * 4, 255 - frame * 4, 255),
-			0, 0, al_get_bitmap_width(data->left.controls), al_get_bitmap_height(data->left.controls),
-			0, 0, game->viewport.width, game->viewport.height, 0);
-	}
+	struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
+	float brightness = 1.0 + ((BRIGHTNESS[data->mode][c->j][c->i][GetAnimationFrameNo(c->animation)] - 0.35881502787272146) / 0.07063002268473278) * 0.16 - 0.08;
+	ALLEGRO_COLOR tint = al_map_rgba_f(brightness, brightness, brightness, 1.0);
+	al_draw_tinted_scaled_bitmap(c->controls, tint,
+		0, 0, al_get_bitmap_width(c->controls), al_get_bitmap_height(c->controls),
+		0, 0, game->viewport.width, game->viewport.height, 0);
 
 	al_draw_tinted_scaled_bitmap(data->left.hint, al_map_rgba_f(hint, hint, hint, hint),
 		0, 0, al_get_bitmap_width(data->left.hint), al_get_bitmap_height(data->left.hint),
