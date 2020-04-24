@@ -20,7 +20,7 @@ struct GamestateResources {
 	double hint;
 };
 
-int Gamestate_ProgressCount = 6;
+int Gamestate_ProgressCount = 4;
 
 float BRIGHTNESS[2][4][4][3] =
 	{{{{0.429445,
@@ -299,10 +299,6 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 
 	data->timeline = TM_Init(game, data, "timeline");
 
-	data->left.animation = CreateAnimation(game, GetDataFilePath(game, "pergola/sowka_1/rzad_1_kolumna_1/anim.awebp"), false);
-	progress(game);
-	data->right.animation = CreateAnimation(game, GetDataFilePath(game, "pergola/sowka_2/rzad_4_kolumna_4/anim.awebp"), false);
-	progress(game);
 	data->left.controls = al_load_bitmap(GetDataFilePath(game, "pergola/pergola_strzalki_lewe.png"));
 	progress(game);
 	data->right.controls = al_load_bitmap(GetDataFilePath(game, "pergola/pergola_strzalki_prawe.png"));
@@ -316,8 +312,12 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 }
 
 void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
-	DestroyAnimation(data->left.animation);
-	DestroyAnimation(data->right.animation);
+	if (data->left.animation) {
+		DestroyAnimation(data->left.animation);
+	}
+	if (data->right.animation) {
+		DestroyAnimation(data->right.animation);
+	}
 	al_destroy_bitmap(data->left.hint);
 	al_destroy_bitmap(data->right.hint);
 	al_destroy_bitmap(data->left.controls);
@@ -337,6 +337,12 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->hint = 255;
 	data->counter = 0;
 	game->data->skip_available = true;
+
+	char filename[255];
+	snprintf(filename, 255, "pergola/sowka_1/rzad_%d_kolumna_%d/anim.awebp", data->left.j + 1, data->left.i + 1);
+	data->left.animation = CreateAnimation(game, GetDataFilePath(game, filename), false);
+	snprintf(filename, 255, "pergola/sowka_2/rzad_%d_kolumna_%d/anim.awebp", data->right.j + 1, data->right.i + 1);
+	data->right.animation = CreateAnimation(game, GetDataFilePath(game, filename), false);
 }
 
 void Gamestate_Stop(struct Game* game, struct GamestateResources* data) {
