@@ -144,7 +144,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->leaf = al_load_bitmap(GetDataFilePath(game, "byk/lisc.png"));
 	progress(game);
 
-	data->sample = al_load_sample(GetDataFilePath(game, "byk/crunch.flac"));
+	data->sample = al_load_sample(GetDataFilePath(game, "sounds/crunch.flac"));
 	data->sound = al_create_sample_instance(data->sample);
 	al_attach_sample_instance_to_mixer(data->sound, game->audio.fx);
 	al_set_sample_instance_gain(data->sound, 0.0);
