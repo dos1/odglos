@@ -984,6 +984,8 @@ void DrawSceneToolbox(struct Game* game) {
 			game->data->sceneid = i;
 			game->data->scene = SCENES[i];
 			game->data->force_anim_reload = true;
+			game->data->queue_pos = 0;
+			game->data->queue_handled = 0;
 			if (game->data->scene.name[0] != '>') {
 				game->data->sceneid--;
 				ChangeCurrentGamestate(game, "anim");
