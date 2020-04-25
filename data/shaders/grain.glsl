@@ -3,6 +3,7 @@ precision highp float;
 #endif
 
 uniform sampler2D al_tex;
+uniform bool al_use_tex;
 varying vec2 varying_texcoord;
 varying vec4 varying_color;
 
@@ -54,7 +55,7 @@ vec3 soft_light(vec3 a, vec3 b, float w) {
 
 void main() {
     vec2 uv = varying_texcoord;
-    vec4 color = texture2D(al_tex, varying_texcoord) * varying_color;
+    vec4 color = al_use_tex ? (texture2D(al_tex, varying_texcoord) * varying_color) : varying_color;
     #if SRGB
     color = pow(color, vec4(2.2));
     #endif
