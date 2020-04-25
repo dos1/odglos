@@ -1008,8 +1008,11 @@
       (function() {
 
         var canvas = document.createElement("canvas");
+        canvas.addEventListener('webglcontextcreationerror', function(e) {
+          console.error(e.statusMessage || 'Unknown error');
+        }, false);
         // Get WebGLRenderingContext from canvas element.
-        var gl = canvas.getContext("webgl");
+        var gl = canvas.getContext("webgl", { failIfMajorPerformanceCaveat: true });
         // Report the result.
         if (!(gl && gl instanceof WebGLRenderingContext)) {
           Module.setError('Error 104: 0x0000014S0WK4 - WebGL not supported');
