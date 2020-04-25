@@ -859,7 +859,7 @@ static struct SceneDefinition SCENES[] = {
 	{"sowka1_wchodzi_na_stol_z_bliska_pojawia_sie_TAK", .audio = {STOP_LOOP, "dwor"}, .sounds = {{1, {SOUND, "pac", .volume = 0.2}}}}, // fade?
 	{"sowka2_zaluzje_pojawia_sie2_TAK", .speed = 0.15, .sounds = {{1, {SOUND, "pac", .volume = 0.2}}}}, // fade?
 	{"sowki_zamieniaja_sie_krzeslami_po_dwa_i_nie_znikaja_TAK", .freezes = {{85, .footnote = 1}}}, //
-	{"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .callback = Kosmos, .freezes = {{0, "DSCF0566_maska_obszary", .links = {{{1.0, 0.0, 0.0}, .callback = KosmosSowka, .audio = {MUSIC, "kosmos_metrograph3", .volume = 2.0}}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnik, .audio = {MUSIC, "kosmos_metrograph3", .volume = 2.0}}}}}}, //
+	{"sowki_zamieniaja_sie_krzeslami_po_dwa_freeze", .callback = Kosmos, .audio = {MUSIC, "kosmos_metrograph3", .volume = 2.0}, .freezes = {{0, "DSCF0566_maska_obszary", .links = {{{1.0, 0.0, 0.0}, .callback = KosmosSowka}, {{0.0, 1.0, 0.0}, .callback = KosmosRudnik}}}}}, //
 	{"drzwi_zamykaja_sie_same", .audio = {MUSIC, "koniec_lapis"}, .bg = "kosmos"}, //
 	{"okna_sie_otwieraja_z_sowka2", .bg = "kosmos", .repeats = 1}, //
 	{"sowka2_zaluzje_nie_znika_TAK", .repeats = 1}, //
