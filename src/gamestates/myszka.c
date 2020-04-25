@@ -10,40 +10,43 @@ enum Myszol {
 	MYSZOL_TOP_RIGHT = 5
 };
 
-#define SCALE (1.0 / LIBSUPERDERPY_IMAGE_SCALE)
+#define MICE 1
 
 struct GamestateResources {
 	// This struct is for every resource allocated and used by your gamestate.
 	// It gets created on load and then gets passed around to all other function calls.
-	ALLEGRO_BITMAP* myszka;
 
 	struct {
 		ALLEGRO_BITMAP *lewo[2], *prawo[3], *gora[3], *dol[4], *lewodol, *prawogora;
 	} myszole;
 
-	enum Myszol myszol;
+	struct {
+		enum Myszol myszol;
+		double angle;
+		double pos;
+		ALLEGRO_BITMAP* myszka;
+		double rand;
+	} mice[MICE];
+
 	int counter;
-	double pos;
-	double angle;
-	double rand;
 	int con;
 };
 
 int Gamestate_ProgressCount = 14; // number of loading steps as reported by Gamestate_Load; 0 when missing
 
-void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
-	// Here you should do all your game logic as if <delta> seconds have passed.
-	if (game->data->footnote) { return; }
-}
+void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {}
 
 void Gamestate_Tick(struct Game* game, struct GamestateResources* data) {
 	// Here you should do all your game logic as if <delta> seconds have passed.
+	if (game->data->footnote) { return; }
 	data->counter++;
-	if (data->counter % 6 == 0) {
-		data->pos += 0.04; //al_get_audio_stream_position_secs(data->music) / al_get_audio_stream_length_secs(data->music);
-		data->angle = rand() / (double)RAND_MAX;
+	for (int i = 0; i < MICE; i++) {
+		if (data->counter % 6 == i % 6) {
+			data->mice[i].pos += 0.04; //al_get_audio_stream_position_secs(data->music) / al_get_audio_stream_length_secs(data->music);
+			data->mice[i].angle = rand() / (double)RAND_MAX;
+		}
 	}
-	if (data->pos >= 0.92) {
+	if (data->mice[0].pos >= 0.92) {
 		data->con++;
 		if (data->con > 20) {
 			ChangeCurrentGamestate(game, "anim");
@@ -56,31 +59,33 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	if (data->con) {
 		return;
 	}
-	switch (data->myszol) {
-		case MYSZOL_RIGHT:
-			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				(2500 * SCALE * data->pos) * 0.666, (1080 * SCALE / 2.0 + data->rand * 1080 * SCALE) * 0.666, 1.0, 1.0, data->angle * 0.2 - 0.1, 0);
-			break;
-		case MYSZOL_LEFT:
-			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				(2500 * SCALE * (1.0 - data->pos) - 500 * SCALE) * 0.666, (1080 * SCALE / 2.0 + data->rand * 1080 * SCALE) * 0.666, 1.0, 1.0, data->angle * 0.2 - 0.1, 0);
-			break;
-		case MYSZOL_TOP:
-			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				(1920 * SCALE / 2.0 + 1920 * data->rand) * 0.666, (1300 * SCALE * (1.0 - data->pos) - 200 * SCALE) * 0.666, 1.0, 1.0, data->angle * 0.2 - 0.1, 0);
-			break;
-		case MYSZOL_BOTTOM:
-			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				(1920 * SCALE / 2.0 + 1920 * data->rand) * 0.666, (1300 * SCALE * data->pos) * 0.666, 1.0, 1.0, data->angle * 0.2 - 0.1, 0);
-			break;
-		case MYSZOL_BOTTOM_LEFT:
-			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				(2500 * SCALE * (1.0 - data->pos) - 500 * SCALE) * 0.666, (1300 * SCALE * data->pos) * 0.666, 1.0, 1.0, data->angle * 0.2 - 0.1, 0);
-			break;
-		case MYSZOL_TOP_RIGHT:
-			al_draw_scaled_rotated_bitmap(data->myszka, al_get_bitmap_width(data->myszka) / 2.0, al_get_bitmap_height(data->myszka) / 2.0,
-				(2500 * SCALE * data->pos) * 0.666, (1300 * SCALE * (1.0 - data->pos) - 200 * SCALE) * 0.666, 1.0, 1.0, data->angle * 0.2 - 0.1, 0);
-			break;
+	for (int i = 0; i < MICE; i++) {
+		switch (data->mice[i].myszol) {
+			case MYSZOL_RIGHT:
+				al_draw_scaled_rotated_bitmap(data->mice[i].myszka, al_get_bitmap_width(data->mice[i].myszka) / 2.0, al_get_bitmap_height(data->mice[i].myszka) / 2.0,
+					(2500 / LIBSUPERDERPY_IMAGE_SCALE * data->mice[i].pos) * 0.666, (1080 / LIBSUPERDERPY_IMAGE_SCALE / 2.0 + data->mice[i].rand * 1080 / LIBSUPERDERPY_IMAGE_SCALE) * 0.666, 1.0, 1.0, data->mice[i].angle * 0.2 - 0.1, 0);
+				break;
+			case MYSZOL_LEFT:
+				al_draw_scaled_rotated_bitmap(data->mice[i].myszka, al_get_bitmap_width(data->mice[i].myszka) / 2.0, al_get_bitmap_height(data->mice[i].myszka) / 2.0,
+					(2500 / LIBSUPERDERPY_IMAGE_SCALE * (1.0 - data->mice[i].pos) - 500 / LIBSUPERDERPY_IMAGE_SCALE) * 0.666, (1080 / LIBSUPERDERPY_IMAGE_SCALE / 2.0 + data->mice[i].rand * 1080 / LIBSUPERDERPY_IMAGE_SCALE) * 0.666, 1.0, 1.0, data->mice[i].angle * 0.2 - 0.1, 0);
+				break;
+			case MYSZOL_TOP:
+				al_draw_scaled_rotated_bitmap(data->mice[i].myszka, al_get_bitmap_width(data->mice[i].myszka) / 2.0, al_get_bitmap_height(data->mice[i].myszka) / 2.0,
+					(1920 / LIBSUPERDERPY_IMAGE_SCALE / 2.0 + 1920 * data->mice[i].rand) * 0.666, (1300 / LIBSUPERDERPY_IMAGE_SCALE * (1.0 - data->mice[i].pos) - 200 / LIBSUPERDERPY_IMAGE_SCALE) * 0.666, 1.0, 1.0, data->mice[i].angle * 0.2 - 0.1, 0);
+				break;
+			case MYSZOL_BOTTOM:
+				al_draw_scaled_rotated_bitmap(data->mice[i].myszka, al_get_bitmap_width(data->mice[i].myszka) / 2.0, al_get_bitmap_height(data->mice[i].myszka) / 2.0,
+					(1920 / LIBSUPERDERPY_IMAGE_SCALE / 2.0 + 1920 * data->mice[i].rand) * 0.666, (1300 / LIBSUPERDERPY_IMAGE_SCALE * data->mice[i].pos) * 0.666, 1.0, 1.0, data->mice[i].angle * 0.2 - 0.1, 0);
+				break;
+			case MYSZOL_BOTTOM_LEFT:
+				al_draw_scaled_rotated_bitmap(data->mice[i].myszka, al_get_bitmap_width(data->mice[i].myszka) / 2.0, al_get_bitmap_height(data->mice[i].myszka) / 2.0,
+					(2500 / LIBSUPERDERPY_IMAGE_SCALE * (1.0 - data->mice[i].pos) - 500 / LIBSUPERDERPY_IMAGE_SCALE) * 0.666, (1300 / LIBSUPERDERPY_IMAGE_SCALE * data->mice[i].pos) * 0.666, 1.0, 1.0, data->mice[i].angle * 0.2 - 0.1, 0);
+				break;
+			case MYSZOL_TOP_RIGHT:
+				al_draw_scaled_rotated_bitmap(data->mice[i].myszka, al_get_bitmap_width(data->mice[i].myszka) / 2.0, al_get_bitmap_height(data->mice[i].myszka) / 2.0,
+					(2500 / LIBSUPERDERPY_IMAGE_SCALE * data->mice[i].pos) * 0.666, (1300 / LIBSUPERDERPY_IMAGE_SCALE * (1.0 - data->mice[i].pos) - 200 / LIBSUPERDERPY_IMAGE_SCALE) * 0.666, 1.0, 1.0, data->mice[i].angle * 0.2 - 0.1, 0);
+				break;
+		}
 	}
 }
 
@@ -158,32 +163,33 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	PlaySound(game, "przejscie2", 1.5);
 	data->counter = 0;
 	data->con = 0;
-	data->pos = 0;
-	data->angle = 0;
 
-	data->myszol = rand() % 6;
+	for (int i = 0; i < MICE; i++) {
+		data->mice[i].pos = 0;
+		data->mice[i].angle = 0;
+		data->mice[i].myszol = rand() % 6; //i % 6;
+		data->mice[i].rand = (rand() / (double)RAND_MAX) * 0.5 - 0.25;
 
-	data->rand = (rand() / (double)RAND_MAX) * 0.5 - 0.25;
-
-	switch (data->myszol) {
-		case MYSZOL_LEFT:
-			data->myszka = data->myszole.lewo[rand() % 2];
-			break;
-		case MYSZOL_RIGHT:
-			data->myszka = data->myszole.prawo[rand() % 3];
-			break;
-		case MYSZOL_TOP:
-			data->myszka = data->myszole.gora[rand() % 3];
-			break;
-		case MYSZOL_BOTTOM:
-			data->myszka = data->myszole.dol[rand() % 4];
-			break;
-		case MYSZOL_BOTTOM_LEFT:
-			data->myszka = data->myszole.lewodol;
-			break;
-		case MYSZOL_TOP_RIGHT:
-			data->myszka = data->myszole.prawogora;
-			break;
+		switch (data->mice[i].myszol) {
+			case MYSZOL_LEFT:
+				data->mice[i].myszka = data->myszole.lewo[rand() % 2];
+				break;
+			case MYSZOL_RIGHT:
+				data->mice[i].myszka = data->myszole.prawo[rand() % 3];
+				break;
+			case MYSZOL_TOP:
+				data->mice[i].myszka = data->myszole.gora[rand() % 3];
+				break;
+			case MYSZOL_BOTTOM:
+				data->mice[i].myszka = data->myszole.dol[rand() % 4];
+				break;
+			case MYSZOL_BOTTOM_LEFT:
+				data->mice[i].myszka = data->myszole.lewodol;
+				break;
+			case MYSZOL_TOP_RIGHT:
+				data->mice[i].myszka = data->myszole.prawogora;
+				break;
+		}
 	}
 }
 
