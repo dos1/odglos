@@ -9,11 +9,18 @@ struct PergolaCharacter {
 	struct AnimationDecoder* animation;
 	int i;
 	int j;
-	ALLEGRO_BITMAP *controls, *hint;
+	ALLEGRO_BITMAP* hint;
+	struct {
+		int x, y;
+	} offset;
 };
 
 struct GamestateResources {
 	struct PergolaCharacter left, right;
+	ALLEGRO_BITMAP *btn, *controls;
+	struct {
+		int x, y;
+	} offset;
 	double counter;
 	bool mode;
 	struct Timeline* timeline;
@@ -144,8 +151,10 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 	}
 
 	struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
-	ALLEGRO_COLOR color = CheckMask(game, c->controls);
-	game->data->hover = color.a > 0.5;
+	ALLEGRO_COLOR color = CheckMaskSized(game, data->controls, c->offset.x, c->offset.y, game->viewport.width, game->viewport.height);
+	bool hover = color.a > 0.5;
+	color = CheckMaskSized(game, data->btn, data->offset.x, data->offset.y, game->viewport.width, game->viewport.height);
+	game->data->hover = hover || color.a > 0.5;
 
 	if (game->data->skip_requested) {
 		UnsetSkip(game);
@@ -170,24 +179,23 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
 	float brightness = 1.0 + ((BRIGHTNESS[data->mode][c->j][c->i][GetAnimationFrameNo(c->animation)] - 0.35881502787272146) / 0.07063002268473278) * 0.16 - 0.08;
 	ALLEGRO_COLOR tint = al_map_rgba_f(brightness, brightness, brightness, 1.0);
-	al_draw_tinted_scaled_bitmap(c->controls, tint,
-		0, 0, al_get_bitmap_width(c->controls), al_get_bitmap_height(c->controls),
-		0, 0, game->viewport.width, game->viewport.height, 0);
+	al_draw_tinted_bitmap(data->controls, tint, c->offset.x, c->offset.y, 0);
+	al_draw_tinted_bitmap(data->btn, tint, data->offset.x, data->offset.y, 0);
 
-	al_draw_tinted_scaled_bitmap(data->left.hint, al_map_rgba_f(hint, hint, hint, hint),
-		0, 0, al_get_bitmap_width(data->left.hint), al_get_bitmap_height(data->left.hint),
-		0, 0, game->viewport.width, game->viewport.height, 0);
+	al_draw_tinted_bitmap(data->left.hint, al_map_rgba_f(hint, hint, hint, hint), 490, 116, 0);
 	al_draw_tinted_scaled_rotated_bitmap(data->right.hint, al_map_rgba_f(hint, hint, hint, hint),
-		al_get_bitmap_width(data->right.hint) / 2.0, al_get_bitmap_height(data->right.hint) / 2.0,
-		655, 353, 1355.0 / 1280.0, 1355.0 / 1280.0, 0, 0);
+		1280 / 2.0 - 658, 720 / 2.0 - 314,
+		655, 353 + (data->mode ? 0 : 7), 1355.0 / 1280.0, 1355.0 / 1280.0, 0, 0);
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
 	if (game->data->footnote) { return; }
 
 	struct PergolaCharacter* c = data->mode ? &data->right : &data->left;
-	ALLEGRO_COLOR color = CheckMask(game, c->controls);
-	game->data->hover = color.a > 0.5;
+	ALLEGRO_COLOR color = CheckMaskSized(game, data->controls, c->offset.x, c->offset.y, game->viewport.width, game->viewport.height);
+	bool hover = color.a > 0.5;
+	color = CheckMaskSized(game, data->btn, data->offset.x, data->offset.y, game->viewport.width, game->viewport.height);
+	game->data->hover = hover || color.a > 0.5;
 
 	if (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN || ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) {
 		if (game->data->hover) {
@@ -299,13 +307,19 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 
 	data->timeline = TM_Init(game, data, "timeline");
 
-	data->left.controls = al_load_bitmap(GetDataFilePath(game, "pergola/pergola_strzalki_lewe.png"));
-	progress(game);
-	data->right.controls = al_load_bitmap(GetDataFilePath(game, "pergola/pergola_strzalki_prawe.png"));
+	data->controls = al_load_bitmap(GetDataFilePath(game, "pergola/pergola_strzalki.png"));
+	data->left.offset.x = 200;
+	data->left.offset.y = 57;
+	data->right.offset.x = 1099;
+	data->right.offset.y = 78;
 	progress(game);
 	data->left.hint = al_load_bitmap(GetDataFilePath(game, "pergola/tasma_lewa.png"));
 	progress(game);
 	data->right.hint = al_load_bitmap(GetDataFilePath(game, "pergola/DSCF7662_tasma_prawa.png"));
+	progress(game);
+	data->btn = al_load_bitmap(GetDataFilePath(game, "pergola/switch.png"));
+	data->offset.x = 639;
+	data->offset.y = 603;
 	progress(game);
 
 	return data;
@@ -320,8 +334,7 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 	}
 	al_destroy_bitmap(data->left.hint);
 	al_destroy_bitmap(data->right.hint);
-	al_destroy_bitmap(data->left.controls);
-	al_destroy_bitmap(data->right.controls);
+	al_destroy_bitmap(data->controls);
 	TM_Destroy(data->timeline);
 	free(data);
 }

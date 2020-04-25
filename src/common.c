@@ -117,10 +117,20 @@ void ShowMenu(struct Game* game) {
 #endif
 }
 
-ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap) {
-	ALLEGRO_COLOR color = al_get_pixel(bitmap, (int)(Clamp(0.0, 1.0, game->data->mouseX) * (al_get_bitmap_width(bitmap) - 1)), (int)(Clamp(0.0, 1.0, game->data->mouseY) * (al_get_bitmap_height(bitmap) - 1)));
+ALLEGRO_COLOR CheckMaskSized(struct Game* game, ALLEGRO_BITMAP* bitmap, int x, int y, int width, int height) {
+	x = Clamp(0.0, 1.0, game->data->mouseX) * (width - 1) - x;
+	y = Clamp(0.0, 1.0, game->data->mouseY) * (height - 1) - y;
+	if (x < 0 || y < 0 || x >= al_get_bitmap_width(bitmap) || y >= al_get_bitmap_height(bitmap)) {
+		game->data->hover = false;
+		return al_map_rgba(0, 0, 0, 0);
+	}
+	ALLEGRO_COLOR color = al_get_pixel(bitmap, x, y);
 	game->data->hover = (color.r < 0.5) || (color.g < 0.5) || (color.b < 0.5);
 	return color;
+}
+
+ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap) {
+	return CheckMaskSized(game, bitmap, 0, 0, al_get_bitmap_width(bitmap), al_get_bitmap_height(bitmap));
 }
 
 void DrawTexturedRectangle(float x1, float y1, float x2, float y2, ALLEGRO_COLOR color) {

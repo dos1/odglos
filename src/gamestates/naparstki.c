@@ -37,6 +37,31 @@ static char* ANIMS_EMPTY[] = {
 	"naparstki_PUSTE_17_Praha",
 };
 
+static int KOKARDKA_OFFSETS[][2] = {
+	{647, 189},
+	{765, 420},
+	{519, 121},
+	{801, 61},
+	{456, 430},
+	{624, 352},
+	{906, 326},
+	{332, 359},
+	{640, 68},
+	{309, 179},
+};
+
+static int TASIEMKA_OFFSETS[][2] = {
+	{616, 198},
+	{754, 483},
+	{512, 179},
+	{743, 137},
+	{445, 480},
+	{604, 403},
+	{881, 366},
+	{353, 403},
+	{629, 146},
+};
+
 struct GamestateResources {
 	struct Player* player;
 	ALLEGRO_BITMAP* mask;
@@ -80,9 +105,9 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	DrawPlayer(game, data->player);
 	if (game->data->cursor && data->enabled > 0) {
 		for (int i = 0; i < data->enabled - 1; i++) {
-			al_draw_bitmap(data->tasiemki[i], 0, 0, 0);
+			al_draw_bitmap(data->tasiemki[i], TASIEMKA_OFFSETS[i][0], TASIEMKA_OFFSETS[i][1], 0);
 		}
-		al_draw_bitmap(data->kokardki[data->enabled - 1], 0, 0, 0);
+		al_draw_bitmap(data->kokardki[data->enabled - 1], KOKARDKA_OFFSETS[data->enabled - 1][0], KOKARDKA_OFFSETS[data->enabled - 1][1], 0);
 	}
 }
 

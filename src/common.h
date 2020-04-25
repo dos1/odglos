@@ -169,6 +169,7 @@ void UnsetSkip(struct Game* game);
 void DrawBuildInfo(struct Game* game);
 void PreLogic(struct Game* game, double delta);
 void PostLogic(struct Game* game, double delta);
+ALLEGRO_COLOR CheckMaskSized(struct Game* game, ALLEGRO_BITMAP* bitmap, int x, int y, int width, int height);
 ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap);
 void DrawTexturedRectangle(float x1, float y1, float x2, float y2, ALLEGRO_COLOR color);
 struct CommonResources* CreateGameData(struct Game* game);

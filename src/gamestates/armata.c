@@ -50,18 +50,17 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	al_draw_scaled_bitmap(data->bg, 0, 0, al_get_bitmap_width(data->bg), al_get_bitmap_height(data->bg), 0, 0, game->viewport.width, game->viewport.height, 0);
-	al_draw_scaled_bitmap(data->dol, 0, 0, al_get_bitmap_width(data->dol), al_get_bitmap_height(data->dol), 0, 0, game->viewport.width, game->viewport.height, 0);
+	al_draw_bitmap(data->dol, 815, 236, 0);
 
 	ALLEGRO_BITMAP* bitmap = GetAnimationFrame(data->anim);
 	al_draw_scaled_rotated_bitmap(bitmap, 888, 269, 888, 269, game->viewport.width / (float)al_get_bitmap_width(bitmap), game->viewport.height / (float)al_get_bitmap_height(bitmap), data->angle, 0);
 
 	if (data->finished) {
 		DrawCharacter(game, data->makieta);
-		al_draw_scaled_rotated_bitmap(data->maska, 888, 269, 888, 269, game->viewport.width / (float)al_get_bitmap_width(data->maska), game->viewport.height / (float)al_get_bitmap_height(data->maska), data->angle, 0);
-		//al_draw_scaled_bitmap(data->maska, 0, 0, al_get_bitmap_width(data->maska), al_get_bitmap_height(data->maska), 0, 0, game->viewport.width, game->viewport.height, 0);
+		al_draw_scaled_rotated_bitmap(data->maska, 888 - 659, 269 - 202, 888, 269, 1.0, 1.0, data->angle, 0);
 	}
 
-	al_draw_scaled_bitmap(data->drzewo, 0, 0, al_get_bitmap_width(data->drzewo), al_get_bitmap_height(data->drzewo), 0, 0, game->viewport.width, game->viewport.height, 0);
+	al_draw_bitmap(data->drzewo, 125, 0, 0);
 }
 
 void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, ALLEGRO_EVENT* ev) {
