@@ -409,7 +409,7 @@ static bool SwiecznikPrawy(struct Game* game, struct Character* character, void*
 
 static void Swiecznik(struct Game* game, void** data) {
 	bool* d = *data;
-	char* name;
+	char* name = NULL;
 	if (!*d && !*(d + 1)) {
 		name = "DSCF2449";
 	} else if (*d && !*(d + 1)) {

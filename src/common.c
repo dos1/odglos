@@ -135,7 +135,7 @@ ALLEGRO_COLOR CheckMask(struct Game* game, ALLEGRO_BITMAP* bitmap) {
 
 void DrawTexturedRectangle(float x1, float y1, float x2, float y2, ALLEGRO_COLOR color) {
 	ALLEGRO_VERTEX vtx[4];
-	int ii;
+	int ii = 0;
 
 	vtx[0].x = x1;
 	vtx[0].y = y1;
@@ -243,7 +243,7 @@ void Compositor(struct Game* game) {
 void DrawBuildInfo(struct Game* game) {
 	SUPPRESS_WARNING("-Wdeprecated-declarations")
 	if (game->show_console) {
-		int x, y, w, h;
+		int x = 0, y = 0, w = 0, h = 0;
 		al_get_clipping_rectangle(&x, &y, &w, &h);
 		al_hold_bitmap_drawing(true);
 		DrawTextWithShadow(game->_priv.font_console, al_map_rgb(255, 255, 255), w - 10, h * 0.935, ALLEGRO_ALIGN_RIGHT, "ODGŁOS");

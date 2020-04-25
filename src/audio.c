@@ -55,13 +55,13 @@ void StopMusic(struct Game* game) {
 }
 
 void EnsureMusic(struct Game* game, char* name, float volume) {
-	if (!game->data->audio.music_name || strcmp(name, game->data->audio.music_name)) {
+	if (!game->data->audio.music_name || strcmp(name, game->data->audio.music_name) != 0) {
 		PlayMusic(game, name, volume);
 	}
 }
 
 void PlaySound(struct Game* game, char* name, float volume) {
-	int i;
+	int i = 0;
 	CollectSounds(game);
 	for (i = 0; i <= 32; i++) {
 		if (i == 32) {

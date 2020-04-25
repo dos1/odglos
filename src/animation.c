@@ -121,7 +121,7 @@ void ResetAnimation(struct AnimationDecoder* anim, bool reset_bitmap) {
 	}
 	WebPAnimDecoderReset(anim->decoder);
 
-	uint8_t* buf;
+	uint8_t* buf = NULL;
 	WebPAnimDecoderGetNext(anim->decoder, &buf, &anim->timestamp);
 	if (reset_bitmap) {
 		ALLEGRO_LOCKED_REGION* lock = al_lock_bitmap(anim->bitmap, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
@@ -169,7 +169,7 @@ bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 			anim->done = true;
 			return false;
 		}
-		uint8_t* buf;
+		uint8_t* buf = NULL;
 		if (WebPAnimDecoderGetNext(anim->decoder, &buf, &anim->timestamp)) {
 			lock = al_lock_bitmap(anim->swap, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
 			for (int i = 0; i < al_get_bitmap_height(anim->swap); i++) {

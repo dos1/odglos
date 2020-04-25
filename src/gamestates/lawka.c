@@ -124,7 +124,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
-	ALLEGRO_BITMAP* bitmap;
+	ALLEGRO_BITMAP* bitmap = NULL;
 	if (data->playing) {
 		bitmap = data->bmps[data->play];
 	} else {
@@ -248,7 +248,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 			}
 		}
 	}
-	SetCharacterPosition(game, data->button, 946 + 62 / 2, 486 + 41 / 2, 0);
+	SetCharacterPosition(game, data->button, 946 + 62 / 2.0, 486 + 41 / 2.0, 0);
 	ResetAnimation(data->animation, true);
 }
 

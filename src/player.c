@@ -270,7 +270,7 @@ void DrawPlayer(struct Game* game, struct Player* player) {
 
 	al_clear_to_color(player->scene.color);
 
-	ALLEGRO_BITMAP* bitmap;
+	ALLEGRO_BITMAP* bitmap = NULL;
 	if (player->bg) {
 		bitmap = player->bg;
 		al_draw_scaled_bitmap(bitmap, 0, 0, al_get_bitmap_width(bitmap), al_get_bitmap_height(bitmap), 0, 0, game->viewport.width, game->viewport.height, 0);
