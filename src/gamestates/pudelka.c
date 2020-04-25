@@ -372,6 +372,9 @@ static CHARACTER_CALLBACK(HandleCenter) {
 			CheckWin(game, data);
 		}
 	}
+	if ((new) && strcmp("pudelka_waz", new->name) == 0) {
+		PlayLoop(game, "crunch", 0.5, false);
+	}
 	if (old && strcmp("pudelka_waz", old->name) == 0) {
 		ChangeCurrentGamestate(game, "anim");
 	}
