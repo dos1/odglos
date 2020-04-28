@@ -118,9 +118,14 @@ struct CommonResources {
 	char search[255];
 
 	struct {
-		float progress[DOWNLOAD_PARTS];
-		bool loaded[DOWNLOAD_PARTS];
-		bool started[DOWNLOAD_PARTS];
+		struct {
+			bool requested;
+			bool loaded;
+			bool mounted;
+			float progress;
+			void* data;
+			unsigned int size;
+		} pack[DOWNLOAD_PARTS];
 		int requested;
 		bool additional;
 	} download;
@@ -147,7 +152,6 @@ struct CommonResources {
 	} audio;
 };
 
-void StartDownloadPacks(struct Game* game);
 void RequestPack(struct Game* game, int sceneid);
 bool Dispatch(struct Game* game);
 void Enqueue(struct Game* game, struct SceneDefinition scene);
@@ -203,6 +207,8 @@ void PauseAudio(struct Game* game);
 void ResumeAudio(struct Game* game);
 
 void StartDownloading(struct Game* game);
+void MountDataPacks(struct Game* game);
+float GetDownloadProgress(struct Game* game);
 
 struct Player* CreatePlayer(struct Game* game);
 void DestroyPlayer(struct Game* game, struct Player* player);

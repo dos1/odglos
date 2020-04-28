@@ -14,27 +14,16 @@ struct GamestateResources {
 
 int Gamestate_ProgressCount = 1; // number of loading steps as reported by Gamestate_Load; 0 when missing
 
-static float GetProgress(struct Game* game, struct GamestateResources* data) {
-	int n = 0;
-	float val = 0.0;
-	for (int i = 0; i <= game->data->download.requested; i++) {
-		val += game->data->download.progress[i];
-		n += 1;
-	}
-	val /= (float)n;
-	if (val == 1.0) {
-		return 1.0;
-	}
-	return (val - data->starting_point) / (1.0 - data->starting_point);
-}
-
 void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double delta) {
 	// Here you should do all your game logic as if <delta> seconds have passed.
 }
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	// Draw everything to the screen here.
-	float progress = GetProgress(game, data);
+	float progress = GetDownloadProgress(game);
+	if (data->starting_point < 1.0) {
+		progress = (progress - data->starting_point) / (1.0 - data->starting_point);
+	}
 
 	al_draw_tinted_scaled_rotated_bitmap(data->fg, al_map_rgba_f(0.2, 0.2, 0.2, 0.1), 0, 0,
 		464, 341, game->viewport.width / 1280.0, game->viewport.height / 720.0, 0, 0);
@@ -48,8 +37,8 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	SetHTMLLoadingValue(game, progress);
 #endif
 
-	if (game->data->download.loaded[game->data->download.requested]) {
-		StartDownloadPacks(game);
+	if (game->data->download.pack[game->data->download.requested].loaded) {
+		MountDataPacks(game);
 		StopCurrentGamestate(game);
 		StartInitialGamestate(game, !game->data->download.additional);
 	}
@@ -79,10 +68,8 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	// Called when this gamestate gets control. Good place for initializing state,
 	// playing music etc.
-	// HACK
-	data->starting_point = 0.0;
-	data->starting_point = GetProgress(game, data);
-	if (!game->data->download.loaded[game->data->download.requested]) {
+	data->starting_point = GetDownloadProgress(game);
+	if (!game->data->download.pack[game->data->download.requested].loaded) {
 		StopMusic(game);
 	}
 }

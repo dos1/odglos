@@ -671,34 +671,6 @@ static bool KosmosBack(struct Game* game, struct Character* character, void** d)
 	return true;
 }
 
-static char* PACK_POSTLOAD[DOWNLOAD_PARTS][3] = {
-	{"byk"},
-	{"lawka"},
-	{},
-	{"pergola"},
-	{"pudelka"},
-	{},
-	{},
-	{"naparstki"},
-	{"armata"},
-	{},
-	{},
-};
-
-void StartDownloadPacks(struct Game* game) {
-	for (int i = 0; i < DOWNLOAD_PARTS; i++) {
-		if (game->data->download.started[i] || !game->data->download.loaded[i]) {
-			continue;
-		}
-		int j = 0;
-		while (PACK_POSTLOAD[i][j]) {
-			LoadGamestate(game, PACK_POSTLOAD[i][j]);
-			j++;
-		}
-		game->data->download.started[i] = true;
-	}
-}
-
 static struct SceneDefinition SCENES[] = {
 	{"kostki_animacja02_cwierc_obrotu_zapetlic", .audio = {STOP_MUSIC}, .repeats = 4, .freezes = {{23, "", .audio = {MUSIC, "odlot"}}}, .bg = "ekran_startowy_tlo_przyciete"}, //
 	{"kostki_animacja03_waz", .audio = {ENSURE_MUSIC, "odlot"}, .bg = "ekran_startowy_tlo_przyciete"}, //
@@ -909,7 +881,7 @@ bool Dispatch(struct Game* game) {
 
 	RequestPack(game, sceneid);
 
-	if (!game->data->download.started[game->data->download.requested]) {
+	if (!game->data->download.pack[game->data->download.requested].mounted) {
 		Enqueue(game, (struct SceneDefinition){">downloader"});
 		return Dispatch(game);
 	}
