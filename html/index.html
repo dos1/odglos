@@ -743,8 +743,8 @@
         setLoadingValue: function(value) {
           Module.drawProgress(window.ODGLOS.preloadingValue + (1.0 - window.ODGLOS.preloadingValue) * value);
         },
-        showFootnote: function(x) {
-          if (x > 0 && !window.localStorage.getItem('[odglos] footnote'+x)) {
+        showFootnote: function(x, force) {
+          if (!force && (x > 0 && !window.localStorage.getItem('[odglos] footnote'+x))) {
             return;
           }
           if (window.ODGLOS.disableFootnotes && !window.ODGLOS.menu) {
