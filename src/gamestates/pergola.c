@@ -29,7 +29,7 @@ struct GamestateResources {
 
 int Gamestate_ProgressCount = 4;
 
-float BRIGHTNESS[2][4][4][3] =
+static float BRIGHTNESS[2][4][4][3] =
 	{{{{0.429445,
 			 0.422976,
 			 0.423182},
