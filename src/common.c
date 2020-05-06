@@ -436,22 +436,6 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 		return false;
 	}
 
-	if (game->config.mute && game->data->mouseX < 0.05 && game->data->mouseY > 0.90 && game->data->mouseX > 0.01 && game->data->mouseY < 0.98) {
-		if ((game->data->cursor && ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (game->data->cursor && ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
-			ToggleMute(game);
-			return true;
-		}
-	}
-
-#ifdef __EMSCRIPTEN__
-	if (game->data->cursor && game->data->mouseX > 0.94 && game->data->mouseY > 0.90 && game->data->mouseX < 0.98 && game->data->mouseY < 0.98) {
-		if ((ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
-			ShowMenu(game);
-			return true;
-		}
-	}
-#endif
-
 #ifndef __EMSCRIPTEN__
 	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_F)) {
 		ToggleFullscreen(game);
@@ -479,6 +463,22 @@ bool GlobalEventHandler(struct Game* game, ALLEGRO_EVENT* ev) {
 		game->data->mouseX = Clamp(0, 1, (ev->touch.x - game->clip_rect.x) / (double)game->clip_rect.w);
 		game->data->mouseY = Clamp(0, 1, (ev->touch.y - game->clip_rect.y) / (double)game->clip_rect.h);
 		game->data->touch = true;
+	}
+
+#ifdef __EMSCRIPTEN__
+	if (game->data->cursor && game->data->mouseX > 0.94 && game->data->mouseY > 0.90 && game->data->mouseX < 0.98 && game->data->mouseY < 0.98) {
+		if ((ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
+			ShowMenu(game);
+			return true;
+		}
+	}
+#endif
+
+	if (game->config.mute && game->data->mouseX < 0.05 && game->data->mouseY > 0.90 && game->data->mouseX > 0.01 && game->data->mouseY < 0.98) {
+		if ((game->data->cursor && ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (game->data->cursor && ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
+			ToggleMute(game);
+			return true;
+		}
 	}
 
 	if ((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) {
