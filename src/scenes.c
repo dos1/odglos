@@ -472,6 +472,8 @@ static void DrawCredits(struct Game* game, int frame, void** data) {
 
 		credits[3] = "Agata Nawrot";
 		credits[4] = "Sebastian Krzyszkowiak";
+
+		al_draw_bitmap(game->data->logo, 1440, 356 + 320, 0);
 	} else if (frame < 30) {
 		credits[0] = "Production:";
 

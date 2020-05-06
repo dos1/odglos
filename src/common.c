@@ -553,6 +553,7 @@ struct CommonResources* CreateGameData(struct Game* game) {
 	data->gradient = al_load_bitmap(GetDataFilePath(game, "gradient.png"));
 	data->banner = al_load_bitmap(GetDataFilePath(game, "banner.png"));
 	data->mute = al_load_bitmap(GetDataFilePath(game, "mute.png"));
+	data->logo = al_load_bitmap(GetDataFilePath(game, "holypangolin.png"));
 	data->queue_pos = 0;
 	data->queue_handled = 0;
 	return data;
@@ -570,6 +571,7 @@ void DestroyGameData(struct Game* game) {
 	al_destroy_font(game->data->creditsfont);
 	al_destroy_bitmap(game->data->banner);
 	al_destroy_bitmap(game->data->mute);
+	al_destroy_bitmap(game->data->logo);
 
 	StopMusic(game);
 	StopLoops(game);

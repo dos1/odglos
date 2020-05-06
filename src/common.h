@@ -89,7 +89,7 @@ struct CommonResources {
 	bool hover;
 	bool hover_back;
 	double start_time;
-	ALLEGRO_BITMAP *cursorbmp, *cursorhover, *cursorback, *gradient;
+	ALLEGRO_BITMAP *cursorbmp, *cursorhover, *cursorback, *gradient, *logo;
 	bool pause;
 	int debuginfo;
 
