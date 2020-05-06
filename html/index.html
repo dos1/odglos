@@ -170,7 +170,6 @@
         background-color: black;
         width: 1280px;
         height: 720px;
-        box-shadow: 0px 0px 25px rgba(55, 55, 55, 0.75);
       }
       .loading, .loading-bar-wrapper, .loading > canvas {
         border: 0;
@@ -236,9 +235,6 @@
       }
       .footnote-close:hover, .menu .close:hover {
         opacity: 0.5;
-      }
-      #wrapper {
-        overflow: hidden;
       }
       #wrapper.withFootnote > canvas, #wrapper.withFootnote > img {
         filter: grayscale(100%) brightness(130%);
@@ -861,11 +857,15 @@
           var x = (window.innerWidth - 1280 * scale) / 2;
           var y = (window.innerHeight - 720 * scale) / 2;
           document.querySelector('body').style = 'padding-left: ' + x + 'px; padding-top: ' + y + 'px;';
-          if (scale != 1.0) {
-            document.getElementById('wrapper').style = 'transform: scale(' + scale + '); transform-origin: top left;';
-          } else {
-            document.getElementById('wrapper').style = '';
-          }
+          var wrapper = document.getElementById('wrapper');
+          wrapper.children.forEach(function(elem) {
+            if (scale != 1.0) {
+              elem.style.transform = 'scale(' + scale + ')';
+              elem.style.transformOrigin = 'top left';
+            } else {
+              elem.style.transform = '';
+            }
+          });
         }
       };
       Module.setStatus('Downloading...');
