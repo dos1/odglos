@@ -53,6 +53,7 @@ int main(int argc, char** argv) {
 	LoadGamestate(game, "myszka");
 	LoadGamestate(game, "end");
 	LoadGamestate(game, "blank");
+	LoadGamestate(game, "headphones");
 #ifndef __EMSCRIPTEN__
 	LoadGamestate(game, "byk");
 	LoadGamestate(game, "naparstki");

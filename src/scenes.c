@@ -677,6 +677,8 @@ static struct SceneDefinition SCENES[] = {
 	{"kostki_animacja02_cwierc_obrotu_zapetlic", .audio = {STOP_MUSIC}, .repeats = 4, .freezes = {{23, "", .audio = {MUSIC, "odlot"}}}, .bg = "ekran_startowy_tlo_przyciete"}, //
 	{"kostki_animacja03_waz", .audio = {ENSURE_MUSIC, "odlot"}, .bg = "ekran_startowy_tlo_przyciete"}, //
 	{">logo", .audio = {STOP_LOOP, "LOWEST ENDK RESZT L 07 13 36"}}, //
+	{">headphones"}, //
+	{">blank"}, //
 	{"wedrowka_rodzinki_po_trawce", .audio = {MUSIC, "wedrowka_lapis"}, .freezes = {{30, .footnote = 9}}}, //
 	{"rodzinka_jak_wiewiorki", .freezes = {{20, "DSCF8146_maska", .audio = {MUSIC, "wedrowka2_lapis"}}}}, //
 	{"sowka_wchodzi_na_drzewo", .speed = 0.98}, //
