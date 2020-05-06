@@ -804,6 +804,9 @@
       window.addEventListener('blur', function() {
         document.querySelector('.blocker').classList.add('active');
       });
+      if (!document.hasFocus()) {
+        document.querySelector('.blocker').classList.add('active');
+      }
 
       var Module = {
         preRun: [],
