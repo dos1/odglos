@@ -18,7 +18,7 @@ static struct SceneDefinition ANIMS[] = {
 };
 
 static char* ANIMS_EMPTY[] = {
-	"naparstki_PUSTE_01_kapelusz",
+	NULL,
 	"naparstki_PUSTE_02_jaszczurka",
 	"naparstki_PUSTE_03_paski",
 	"naparstki_PUSTE_04_dzwoneczek",
@@ -73,7 +73,7 @@ struct GamestateResources {
 int Gamestate_ProgressCount = 20;
 
 static void GoForward(struct Game* game, struct GamestateResources* data) {
-	Enqueue(game, (struct SceneDefinition){"naparstki_10_latarnia_zbija_wszystko", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{15, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {22, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {27, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {32, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {36, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {40, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {44, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {51, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {55, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {60, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {65, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {69, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {74, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {80, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {85, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {90, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}}, .freezes = {{93, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
+	Enqueue(game, (struct SceneDefinition){"naparstki_10_latarnia_zbija_wszystko", .audio = {SOUND, "K STUD 01 39 48-001"}, .sounds = {{14, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {19, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {23, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {27, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {31, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {35, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {39, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {44, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {48, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {53, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {58, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {62, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {67, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {72, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {77, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}, {82, {SOUND, "K OLD P 04 47 86", .volume = 2.0}}}, .freezes = {{85, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
 	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc1", .audio = {SOUND, "K STUD 01 36 84-001"}, .freezes = {{25, "naparstki2", .links = {{{1.0, -1.0, -1.0}, .skip = true}, {{0.0, -1.0, -1.0}, .ignore = true}}}}});
 	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc2", .audio = {SOUND, "BIG BOING S LIST FX 00 10 32-001 "}, .freezes = {{25, "naparstki2", .links = {{{-1.0, -1.0, 1.0}, .skip = true}, {{-1.0, -1.0, 0.0}, .ignore = true}}}}});
 	Enqueue(game, (struct SceneDefinition){"naparstki_10a_latarnia_pusta_sowka_piana_czesc3", .audio = {SOUND, "piana_lapis", .stop_music = true}});
