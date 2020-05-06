@@ -114,6 +114,8 @@ void ShowMenu(struct Game* game) {
 	EM_ASM({
 		window.ODGLOS.showMenu();
 	});
+	game->data->mouseX = -1.0;
+	game->data->mouseY = -1.0;
 #endif
 }
 
