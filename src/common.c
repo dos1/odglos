@@ -235,7 +235,9 @@ void Compositor(struct Game* game) {
 
 		al_draw_scaled_rotated_bitmap(menu, 25, 28, game->clip_rect.x + game->clip_rect.w * 1227.0 / 1280.0, game->clip_rect.y + game->clip_rect.h * 669.0 / 720.0, game->clip_rect.w / (double)game->viewport.width / LIBSUPERDERPY_IMAGE_SCALE, game->clip_rect.h / (double)game->viewport.height / LIBSUPERDERPY_IMAGE_SCALE, 0.0, 0);
 #endif
+	}
 
+	if (game->data->pause || (game->data->cursor && !game->data->footnote)) {
 		if (!game->data->touch) {
 			al_draw_scaled_rotated_bitmap(hover ? (game->data->hover_back ? game->data->cursorback : game->data->cursorhover) : game->data->cursorbmp, game->data->hover_back ? 50 : 9, game->data->hover_back ? 30 : 4, game->data->mouseX * game->clip_rect.w + game->clip_rect.x, game->data->mouseY * game->clip_rect.h + game->clip_rect.y, game->clip_rect.w / (double)game->viewport.width * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, game->clip_rect.h / (double)game->viewport.height * 0.69 / LIBSUPERDERPY_IMAGE_SCALE, 0, 0);
 		}
