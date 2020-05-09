@@ -29,7 +29,7 @@ void PreLogic(struct Game* game, double delta) {
 #else
 		game->data->footnote = false; // not implemented yet
 #endif
-		if (!game->data->footnote && game->data->audio.paused) {
+		if (!game->data->footnote && game->data->audio.paused && !game->data->pause) {
 			ResumeAudio(game);
 		}
 	} else {
