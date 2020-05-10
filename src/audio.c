@@ -3,13 +3,56 @@
 #include <libsuperderpy.h>
 
 static ALLEGRO_SAMPLE* GetCachedSound(struct Game* game, const char* path) {
-	for (int i = 0; i < game->data->audio.cached; i++) {
+	for (int i = 0; i < game->data->audio.cached_no; i++) {
 		if (strcmp(game->data->audio.cache[i].name, path) == 0) {
 			return game->data->audio.cache[i].sample;
 		}
 	}
 	FatalError(game, true, "Could not find sound %s in cache", path);
 	return NULL;
+}
+
+static int AddToSoundCache(ALLEGRO_FS_ENTRY* entry, void* data) {
+	struct Game* game = data;
+
+	if (al_get_fs_entry_mode(entry) & ALLEGRO_FILEMODE_ISFILE) {
+		game->data->audio.cache[game->data->audio.cached_no].name = strdup(al_get_fs_entry_name(entry));
+		game->data->audio.cached_no++;
+	}
+	return ALLEGRO_FOR_EACH_FS_ENTRY_OK;
+}
+
+void SetupSoundCache(struct Game* game) {
+	ALLEGRO_FS_ENTRY* entry = al_create_fs_entry(GetDataFilePath(game, "sounds"));
+	al_for_each_fs_entry(entry, AddToSoundCache, game);
+	al_destroy_fs_entry(entry);
+}
+
+bool CacheNextSound(struct Game* game) {
+	if (game->data->audio.cached == game->data->audio.cached_no) {
+		return false;
+	}
+	game->data->audio.cache[game->data->audio.cached].sample = al_load_sample(game->data->audio.cache[game->data->audio.cached].name);
+	game->data->audio.cached++;
+	return true;
+}
+
+void CacheSounds(struct Game* game, void (*progress)(struct Game*)) {
+	int i = 0;
+	while (CacheNextSound(game)) {
+		i++;
+		if (progress && i % 25 == 0) {
+			progress(game);
+		}
+	}
+}
+
+void DestroySoundCache(struct Game* game) {
+	for (int i = 0; i < game->data->audio.cached_no; i++) {
+		free(game->data->audio.cache[i].name);
+		al_destroy_sample(game->data->audio.cache[i].sample);
+	}
+	game->data->audio.cached_no = 0;
 }
 
 static void CollectSounds(struct Game* game) {

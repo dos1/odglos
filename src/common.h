@@ -150,6 +150,7 @@ struct CommonResources {
 			ALLEGRO_SAMPLE* sample;
 			char* name;
 		} cache[256];
+		int cached_no;
 		int cached;
 	} audio;
 };
@@ -195,6 +196,10 @@ void ShowMenu(struct Game* game);
 SPRITESHEET_STREAM_DESCTRUCTOR(DestroyStream);
 SPRITESHEET_STREAM(AnimationStream);
 
+void SetupSoundCache(struct Game* game);
+bool CacheNextSound(struct Game* game);
+void CacheSounds(struct Game* game, void (*progress)(struct Game*));
+void DestroySoundCache(struct Game* game);
 void PlayMusic(struct Game* game, char* name, float volume);
 void StopMusic(struct Game* game);
 void EnsureMusic(struct Game* game, char* name, float volume);

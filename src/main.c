@@ -72,6 +72,7 @@ int main(int argc, char** argv) {
 	StartInitialGamestate(game, false);
 #endif
 
+	SetupSoundCache(game);
 	al_hide_mouse_cursor(game->display);
 
 	return libsuperderpy_run(game);
