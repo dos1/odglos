@@ -79,7 +79,6 @@ static int CacheSound(ALLEGRO_FS_ENTRY* entry, void* data) {
 	struct Game* game = d->game;
 	void (*progress)(struct Game*) = d->progress;
 
-	PrintConsole(game, "%s", al_get_fs_entry_name(entry));
 	if (al_get_fs_entry_mode(entry) & ALLEGRO_FILEMODE_ISFILE) {
 		game->data->audio.cache[game->data->audio.cached].name = strdup(al_get_fs_entry_name(entry));
 		game->data->audio.cache[game->data->audio.cached].sample = al_load_sample(game->data->audio.cache[game->data->audio.cached].name);
