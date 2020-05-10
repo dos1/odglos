@@ -2,6 +2,16 @@
 #include "defines.h"
 #include <libsuperderpy.h>
 
+static ALLEGRO_SAMPLE* GetCachedSound(struct Game* game, const char* path) {
+	for (int i = 0; i < game->data->audio.cached; i++) {
+		if (strcmp(game->data->audio.cache[i].name, path) == 0) {
+			return game->data->audio.cache[i].sample;
+		}
+	}
+	FatalError(game, true, "Could not find sound %s in cache", path);
+	return NULL;
+}
+
 static void CollectSounds(struct Game* game) {
 	if (game->data->audio.paused) {
 		return;
@@ -10,10 +20,8 @@ static void CollectSounds(struct Game* game) {
 		if (game->data->audio.sounds[i].sample_instance) {
 			if (!al_get_sample_instance_playing(game->data->audio.sounds[i].sample_instance)) {
 				al_destroy_sample_instance(game->data->audio.sounds[i].sample_instance);
-				al_destroy_sample(game->data->audio.sounds[i].sample);
 				free(game->data->audio.sounds[i].name);
 				game->data->audio.sounds[i].sample_instance = NULL;
-				game->data->audio.sounds[i].sample = NULL;
 				game->data->audio.sounds[i].name = NULL;
 			}
 		}
@@ -22,13 +30,11 @@ static void CollectSounds(struct Game* game) {
 
 void PlayMusic(struct Game* game, char* name, float volume) {
 	ALLEGRO_SAMPLE_INSTANCE* old_sample_instance = game->data->audio.music;
-	ALLEGRO_SAMPLE* old_sample = game->data->audio.music_sample;
 	char* old_name = game->data->audio.music_name;
 	char path[255] = {};
 	snprintf(path, 255, "sounds/%s.flac", name);
 	PrintConsole(game, "Starting music: %s", name);
-	game->data->audio.music_sample = al_load_sample(GetDataFilePath(game, path));
-	game->data->audio.music = al_create_sample_instance(game->data->audio.music_sample);
+	game->data->audio.music = al_create_sample_instance(GetCachedSound(game, GetDataFilePath(game, path)));
 	game->data->audio.music_name = strdup(name);
 	al_attach_sample_instance_to_mixer(game->data->audio.music, game->audio.music);
 	al_set_sample_instance_playmode(game->data->audio.music, ALLEGRO_PLAYMODE_LOOP);
@@ -37,7 +43,6 @@ void PlayMusic(struct Game* game, char* name, float volume) {
 	al_play_sample_instance(game->data->audio.music);
 	if (old_sample_instance) {
 		al_destroy_sample_instance(old_sample_instance);
-		al_destroy_sample(old_sample);
 		free(old_name);
 	}
 }
@@ -45,10 +50,8 @@ void PlayMusic(struct Game* game, char* name, float volume) {
 void StopMusic(struct Game* game) {
 	if (game->data->audio.music) {
 		al_destroy_sample_instance(game->data->audio.music);
-		al_destroy_sample(game->data->audio.music_sample);
 		free(game->data->audio.music_name);
 		game->data->audio.music = NULL;
-		game->data->audio.music_sample = NULL;
 		game->data->audio.music_name = NULL;
 	}
 	PrintConsole(game, "Music stopped.");
@@ -76,8 +79,7 @@ void PlaySound(struct Game* game, char* name, float volume) {
 	game->data->audio.sounds[i].name = strdup(name);
 	snprintf(path, 255, "sounds/%s.flac", name);
 	PrintConsole(game, "Starting sound: %s", name);
-	game->data->audio.sounds[i].sample = al_load_sample(GetDataFilePath(game, path));
-	game->data->audio.sounds[i].sample_instance = al_create_sample_instance(game->data->audio.sounds[i].sample);
+	game->data->audio.sounds[i].sample_instance = al_create_sample_instance(GetCachedSound(game, GetDataFilePath(game, path)));
 	al_attach_sample_instance_to_mixer(game->data->audio.sounds[i].sample_instance, game->audio.fx);
 	al_set_sample_instance_playmode(game->data->audio.sounds[i].sample_instance, ALLEGRO_PLAYMODE_ONCE);
 	al_set_sample_instance_gain(game->data->audio.sounds[i].sample_instance, volume);
@@ -89,10 +91,8 @@ void StopSound(struct Game* game, char* name) {
 	for (int i = 0; i < 32; i++) {
 		if (game->data->audio.sounds[i].name && strcmp(name, game->data->audio.sounds[i].name) == 0) {
 			al_destroy_sample_instance(game->data->audio.sounds[i].sample_instance);
-			al_destroy_sample(game->data->audio.sounds[i].sample);
 			free(game->data->audio.sounds[i].name);
 			game->data->audio.sounds[i].sample_instance = NULL;
-			game->data->audio.sounds[i].sample = NULL;
 			game->data->audio.sounds[i].name = NULL;
 			return;
 		}
@@ -118,8 +118,7 @@ void PlayLoop(struct Game* game, char* name, float volume, bool persist) {
 	game->data->audio.loops[i].name = strdup(name);
 	snprintf(path, 255, "sounds/%s.flac", name);
 	PrintConsole(game, "Starting loop: %s", name);
-	game->data->audio.loops[i].sample = al_load_sample(GetDataFilePath(game, path));
-	game->data->audio.loops[i].sample_instance = al_create_sample_instance(game->data->audio.loops[i].sample);
+	game->data->audio.loops[i].sample_instance = al_create_sample_instance(GetCachedSound(game, GetDataFilePath(game, path)));
 	game->data->audio.loops[i].persist = persist;
 	al_attach_sample_instance_to_mixer(game->data->audio.loops[i].sample_instance, game->audio.fx);
 	al_set_sample_instance_playmode(game->data->audio.loops[i].sample_instance, ALLEGRO_PLAYMODE_LOOP);
@@ -132,10 +131,8 @@ void StopLoop(struct Game* game, char* name) {
 	for (int i = 0; i < 32; i++) {
 		if (game->data->audio.loops[i].name && strcmp(name, game->data->audio.loops[i].name) == 0) {
 			al_destroy_sample_instance(game->data->audio.loops[i].sample_instance);
-			al_destroy_sample(game->data->audio.loops[i].sample);
 			free(game->data->audio.loops[i].name);
 			game->data->audio.loops[i].sample_instance = NULL;
-			game->data->audio.loops[i].sample = NULL;
 			game->data->audio.loops[i].name = NULL;
 			return;
 		}
@@ -147,10 +144,8 @@ void StopLoops(struct Game* game) {
 		if (game->data->audio.loops[i].sample_instance) {
 			if (!game->data->audio.loops[i].persist) {
 				al_destroy_sample_instance(game->data->audio.loops[i].sample_instance);
-				al_destroy_sample(game->data->audio.loops[i].sample);
 				free(game->data->audio.loops[i].name);
 				game->data->audio.loops[i].sample_instance = NULL;
-				game->data->audio.loops[i].sample = NULL;
 				game->data->audio.loops[i].name = NULL;
 			}
 		}
@@ -161,10 +156,8 @@ void StopSounds(struct Game* game) {
 	for (int i = 0; i < 32; i++) {
 		if (game->data->audio.sounds[i].sample_instance) {
 			al_destroy_sample_instance(game->data->audio.sounds[i].sample_instance);
-			al_destroy_sample(game->data->audio.sounds[i].sample);
 			free(game->data->audio.sounds[i].name);
 			game->data->audio.sounds[i].sample_instance = NULL;
-			game->data->audio.sounds[i].sample = NULL;
 			game->data->audio.sounds[i].name = NULL;
 		}
 	}

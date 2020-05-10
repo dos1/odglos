@@ -581,5 +581,11 @@ void DestroyGameData(struct Game* game) {
 	StopLoops(game);
 	StopSounds(game);
 
+	for (int i = 0; i < game->data->audio.cached; i++) {
+		free(game->data->audio.cache[i].name);
+		al_destroy_sample(game->data->audio.cache[i].sample);
+	}
+	game->data->audio.cached = 0;
+
 	free(game->data);
 }

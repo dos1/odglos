@@ -132,23 +132,25 @@ struct CommonResources {
 
 	struct {
 		ALLEGRO_SAMPLE_INSTANCE* music;
-		ALLEGRO_SAMPLE* music_sample;
 		double music_pos;
 		char* music_name;
 		struct {
 			ALLEGRO_SAMPLE_INSTANCE* sample_instance;
-			ALLEGRO_SAMPLE* sample;
 			double pos;
 			char* name;
 			bool persist;
 		} loops[32];
 		struct {
 			ALLEGRO_SAMPLE_INSTANCE* sample_instance;
-			ALLEGRO_SAMPLE* sample;
 			double pos;
 			char* name;
 		} sounds[32];
 		bool paused;
+		struct {
+			ALLEGRO_SAMPLE* sample;
+			char* name;
+		} cache[256];
+		int cached;
 	} audio;
 };
 
