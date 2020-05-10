@@ -33,10 +33,6 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 		464, 341, game->viewport.width / 1280.0, game->viewport.height / 720.0, 0, 0);
 	ResetClippingRectangle();
 
-#ifdef __EMSCRIPTEN__
-	SetHTMLLoadingValue(game, progress);
-#endif
-
 	if (game->data->download.pack[game->data->download.requested].loaded) {
 		MountDataPacks(game);
 		StopCurrentGamestate(game);

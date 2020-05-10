@@ -78,6 +78,7 @@ static void DownloadOnError(unsigned handle, void* d, int error, const char* err
 static void DownloadOnProgress(unsigned handle, void* d, int loaded, int total) {
 	struct LoadingData* data = d;
 	data->game->data->download.pack[data->number].progress = loaded / (double)total;
+	SetHTMLLoadingValue(data->game, GetDownloadProgress(data->game));
 }
 #endif
 
