@@ -10,7 +10,7 @@ struct GamestateResources {
 	bool hidden;
 };
 
-int Gamestate_ProgressCount = 7;
+int Gamestate_ProgressCount = IS_EMSCRIPTEN ? 1 : 7;
 
 static bool HandleDispatch(struct Game* game, struct GamestateResources* data) {
 	if (!Dispatch(game)) {
@@ -74,7 +74,9 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->player = CreatePlayer(game);
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 
+#ifndef __EMSCRIPTEN
 	CacheSounds(game, progress);
+#endif
 	return data;
 }
 

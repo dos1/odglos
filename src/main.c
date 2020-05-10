@@ -73,6 +73,19 @@ int main(int argc, char** argv) {
 #endif
 
 	SetupSoundCache(game);
+#ifdef __EMSCRIPTEN__
+	PrintConsole(game, "Caching sounds...");
+	int i = 0;
+	while (CacheNextSound(game)) {
+		i++;
+		if (i == 10) {
+			emscripten_sleep(0);
+			i = 0;
+		}
+	}
+	PrintConsole(game, "Sounds cache ready.");
+#endif
+
 	al_hide_mouse_cursor(game->display);
 
 	return libsuperderpy_run(game);
