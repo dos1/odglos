@@ -62,6 +62,17 @@ void PostLogic(struct Game* game, double delta) {
 	DrawSceneToolbox(game);
 }
 
+float GetLoadingProgress(struct Game* game) {
+	float val = GetDownloadProgress(game);
+	val *= 0.7;
+	val += (game->data->audio.cached / (float)game->data->audio.cached_no) * 0.1;
+	val += game->loading.progress * 0.1;
+	if (game->data->dark_loading) {
+		val += 0.1;
+	}
+	return val;
+}
+
 #ifdef __EMSCRIPTEN__
 void HideHTMLLoading(struct Game* game) {
 	EM_ASM({

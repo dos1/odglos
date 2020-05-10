@@ -63,6 +63,8 @@ int main(int argc, char** argv) {
 	LoadGamestate(game, "armata");
 #endif
 
+	SetupSoundCache(game);
+
 	RequestPack(game, game->data->sceneid + 1);
 	StartDownloading(game);
 
@@ -72,13 +74,13 @@ int main(int argc, char** argv) {
 	StartInitialGamestate(game, false);
 #endif
 
-	SetupSoundCache(game);
 #ifdef __EMSCRIPTEN__
 	PrintConsole(game, "Caching sounds...");
 	int i = 0;
 	while (CacheNextSound(game)) {
 		i++;
 		if (i == 10) {
+			SetHTMLLoadingValue(game, GetLoadingProgress(game));
 			emscripten_sleep(0);
 			i = 0;
 		}

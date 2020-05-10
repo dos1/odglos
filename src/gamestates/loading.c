@@ -27,12 +27,6 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 #ifdef __EMSCRIPTEN__
 		progress = 1.0;
 #endif
-	} else {
-#ifdef __EMSCRIPTEN__
-		progress *= 0.2;
-		progress += 0.2;
-		val = progress;
-#endif
 	}
 	al_draw_tinted_scaled_bitmap(data->bg, al_map_rgba_f(val, val, val, val), 0, 0, al_get_bitmap_width(data->bg), al_get_bitmap_height(data->bg), 0, 0, game->viewport.width, game->viewport.height, 0);
 
@@ -43,6 +37,10 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	al_draw_tinted_scaled_rotated_bitmap(data->fg, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0, 0,
 		464, 341, game->viewport.width / 1280.0, game->viewport.height / 720.0, 0, 0);
 	ResetClippingRectangle();
+
+#ifdef __EMSCRIPTEN__
+	SetHTMLLoadingValue(game, GetLoadingProgress(game));
+#endif
 };
 
 void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
