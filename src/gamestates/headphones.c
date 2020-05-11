@@ -33,9 +33,11 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	al_scale_transform(&transform, 0.5, 0.5);
 	PushTransform(game, &transform);
 
+	al_hold_bitmap_drawing(true);
 	al_draw_text(data->font, al_map_rgb(255, 255, 255), 850 + 120, 1280, ALLEGRO_ALIGN_LEFT, "For the best experience, please put your");
-	al_draw_text(data->bold, al_map_rgb(255, 255, 255), 1666 + 120, 1280, ALLEGRO_ALIGN_LEFT, "headphones");
 	al_draw_text(data->font, al_map_rgb(255, 255, 255), 1933 + 120, 1280, ALLEGRO_ALIGN_LEFT, "on.");
+	al_draw_text(data->bold, al_map_rgb(255, 255, 255), 1666 + 120, 1280, ALLEGRO_ALIGN_LEFT, "headphones");
+	al_hold_bitmap_drawing(false);
 
 	PopTransform(game);
 }

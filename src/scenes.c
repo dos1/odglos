@@ -530,11 +530,13 @@ static void DrawCredits(struct Game* game, int frame, void** data) {
 		credits[3] = "Financed by the Ministry of Culture and National Heritage of the Republic of Poland as part of the multi-annual programme NIEPODLEGŁA 2017–2022.";
 	}
 
+	al_hold_bitmap_drawing(true);
 	for (int i = 0; i < 13; i++) {
 		if (credits[i]) {
 			al_draw_multiline_text(game->data->creditsfont, al_map_rgb(255, 255, 255), 1440, 356 + i * 56, 1000, 56, ALLEGRO_ALIGN_LEFT, credits[i]);
 		}
 	}
+	al_hold_bitmap_drawing(false);
 
 	if (frame >= 85 && frame < 100) {
 		al_draw_bitmap(game->data->banner, 1440, 356 + 620, 0);
