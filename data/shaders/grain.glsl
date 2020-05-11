@@ -61,7 +61,7 @@ void main() {
     #endif
 
     float t = time * float(SPEED);
-    float seed = dot(uv * 1000.0, vec2(12.9898, 78.233));
+    float seed = dot(uv * 10.0, vec2(12.9898, 78.233));
     float noise = fract(sin(seed) * 43758.5453 + fract(t));
     noise = gaussian(noise, float(MEAN), float(VARIANCE) * float(VARIANCE));
 
