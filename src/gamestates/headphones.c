@@ -26,7 +26,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 
 void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	// Draw everything to the screen here.
-	al_draw_scaled_rotated_bitmap(data->sowka, 0, 0, 290 * 1280.0 / 1920.0, 760 * 1280.0 / 1920.0, 1280.0 / 1920.0, 1280.0 / 1920.0, 0, 0);
+	al_draw_scaled_rotated_bitmap(data->sowka, 0, 0, 300 * 1280.0 / 1920.0, 760 * 1280.0 / 1920.0, 1280.0 / 1920.0, 1280.0 / 1920.0, 0, 0);
 
 	ALLEGRO_TRANSFORM transform;
 	al_identity_transform(&transform);
@@ -34,9 +34,9 @@ void Gamestate_Draw(struct Game* game, struct GamestateResources* data) {
 	PushTransform(game, &transform);
 
 	al_hold_bitmap_drawing(true);
-	al_draw_text(data->font, al_map_rgb(255, 255, 255), 850 + 120, 1280, ALLEGRO_ALIGN_LEFT, "For the best experience, please put your");
-	al_draw_text(data->font, al_map_rgb(255, 255, 255), 1933 + 120, 1280, ALLEGRO_ALIGN_LEFT, "on.");
-	al_draw_text(data->bold, al_map_rgb(255, 255, 255), 1666 + 120, 1280, ALLEGRO_ALIGN_LEFT, "headphones");
+	al_draw_text(data->font, al_map_rgb(255, 255, 255), 850 + 140, 1280, ALLEGRO_ALIGN_LEFT, "For the best experience, please put your");
+	al_draw_text(data->font, al_map_rgb(255, 255, 255), 1933 + 140, 1280, ALLEGRO_ALIGN_LEFT, "on.");
+	al_draw_text(data->bold, al_map_rgb(255, 255, 255), 1666 + 140, 1280, ALLEGRO_ALIGN_LEFT, "headphones");
 	al_hold_bitmap_drawing(false);
 
 	PopTransform(game);
