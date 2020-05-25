@@ -346,7 +346,7 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	data->left.j = 0;
 	data->right.i = 3;
 	data->right.j = 3;
-	data->mode = false;
+	data->mode = true;
 	data->hint = 255;
 	data->counter = 0;
 	game->data->skip_available = true;
