@@ -340,7 +340,7 @@ void Gamestate_Unload(struct Game* game, struct GamestateResources* data) {
 }
 
 void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
-	PlayMusic(game, "silence", 1.0);
+	EnsureMusic(game, "silence", 1.0);
 	ShowMouse(game);
 	data->left.i = 0;
 	data->left.j = 0;

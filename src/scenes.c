@@ -805,7 +805,7 @@ static struct SceneDefinition SCENES[] = {
 	{"sowka_wchodzi_do_miski_ciemniejsze", .audio = {STOP_MUSIC}, .sounds = {{9, {SOUND, "tv_lapis"}}}, .freezes = {{0, "DSCF1595_maska", .audio = {MUSIC, "chill"}}}, .checkpoint = true, .pack = 3}, //
 	{"duza_sowka_na_drewnianym_kole", .audio = {SOUND, "K RESZT FX 03 27 28-001"}, .speed = 0.8, .sounds = {{12, {STOP_MUSIC}}}, .freezes = {{13, "IMG_1010_maska", .audio = {SOUND, "dryndryn"}}}}, //
 
-	{"animacja_poczatkowa", .audio = {SOUND, "pergola_trickstar"}, .repeats = 2, .callback = Pergola, .checkpoint = true}, //
+	{"animacja_poczatkowa", .audio = {MUSIC, "silence"}, .sounds = {{0, {SOUND, "pergola_trickstar"}}}, .repeats = 2, .callback = Pergola, .checkpoint = true}, //
 	{">pergola"}, //
 	{"pergola_animacja_koncowa2", .callback = Pergola2, .audio = {MUSIC, "pergola2_trickstar", .volume = 1.25}}, //
 	{"pergola_animacja_koncowa6", .callback = Pergola}, //
