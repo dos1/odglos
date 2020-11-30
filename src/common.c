@@ -35,16 +35,16 @@ void PreLogic(struct Game* game, double delta) {
 	} else {
 		if (game->data->cursor) {
 			if (game->data->w) {
-				game->data->mouseY -= 0.5 * delta;
+				game->data->mouseY -= 0.6 * delta * game->data->w_scale;
 			}
 			if (game->data->a) {
-				game->data->mouseX -= 0.33 * delta;
+				game->data->mouseX -= 0.33 * delta * game->data->a_scale;
 			}
 			if (game->data->s) {
-				game->data->mouseY += 0.5 * delta;
+				game->data->mouseY += 0.6 * delta * game->data->s_scale;
 			}
 			if (game->data->d) {
-				game->data->mouseX += 0.33 * delta;
+				game->data->mouseX += 0.33 * delta * game->data->d_scale;
 			}
 		}
 		if (game->data->w || game->data->a || game->data->s || game->data->d) {
@@ -411,32 +411,40 @@ static void HandlePointerEmulation(struct Game* game, ALLEGRO_EVENT* ev) {
 	if (ev->type == ALLEGRO_EVENT_JOYSTICK_AXIS && ev->joystick.stick == 0) {
 #endif
 		if (ev->joystick.axis == 1) {
-			if (ev->joystick.pos < -0.25) {
+			if (ev->joystick.pos < -0.1) {
 				data->w = true;
+				data->w_scale = pow(ev->joystick.pos, 2) * 3;
 			} else {
 				data->w = false;
+				data->w_scale = 1;
 			}
-			if (ev->joystick.pos > 0.25) {
+			if (ev->joystick.pos > 0.1) {
 				data->s = true;
+				data->s_scale = pow(ev->joystick.pos, 2) * 3;
 			} else {
 				data->s = false;
+				data->s_scale = 1;
 			}
 		}
 		if (ev->joystick.axis == 0) {
-			if (ev->joystick.pos < -0.25) {
+			if (ev->joystick.pos < -0.1) {
 				data->a = true;
+				data->a_scale = pow(ev->joystick.pos, 2) * 3;
 			} else {
 				data->a = false;
+				data->a_scale = 1;
 			}
-			if (ev->joystick.pos > 0.25) {
+			if (ev->joystick.pos > 0.1) {
 				data->d = true;
+				data->d_scale = pow(ev->joystick.pos, 2) * 4;
 			} else {
 				data->d = false;
+				data->d_scale = 1;
 			}
 		}
 	}
 
-	if (((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button == 0)) ||
+	if (((ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN) && (ev->joystick.button < 10)) ||
 		((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ENTER))) {
 		ev->type = ALLEGRO_EVENT_MOUSE_BUTTON_DOWN;
 		ev->mouse.button = 1;
@@ -577,6 +585,10 @@ struct CommonResources* CreateGameData(struct Game* game) {
 	data->logo = al_load_bitmap(GetDataFilePath(game, "holypangolin.png"));
 	data->queue_pos = 0;
 	data->queue_handled = 0;
+	data->w_scale = 1;
+	data->a_scale = 1;
+	data->s_scale = 1;
+	data->d_scale = 1;
 	return data;
 }
 

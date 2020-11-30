@@ -115,10 +115,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	if (game->data->footnote) { return; }
 
 	if (game->data->cursor &&
-		(((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_SPACE)) ||
-			(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) ||
-			(ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) ||
-			(ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
+		((ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN))) {
 		ALLEGRO_COLOR color = CheckMask(game, data->mask);
 		int nr = round(((color.r * 255) + (color.g * 255) + (color.b * 255)) / 40.0);
 		if (nr < 17 && nr >= data->enabled - 1) {

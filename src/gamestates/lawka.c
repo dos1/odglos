@@ -140,9 +140,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	ALLEGRO_COLOR color = CheckMask(game, data->mask);
 
 	if (game->data->cursor && IsOnCharacter(game, data->button, game->viewport.width * game->data->mouseX, game->viewport.height * game->data->mouseY, true)) {
-		if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) ||
-			(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) ||
-			(ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
+		if ((ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN)) {
 			data->delay = 0;
 			data->position = 0;
 			data->play = 16;
@@ -151,9 +149,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	}
 
 	if (game->data->cursor && game->data->hover && data->play == 16 && !data->success) {
-		if (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) ||
-			(ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) ||
-			(ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)) {
+		if ((ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN)) {
 			int pos = round(color.r * 255 / 10.0);
 			PrintConsole(game, "%d", pos);
 			if (pos > 15) {

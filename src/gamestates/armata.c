@@ -69,7 +69,7 @@ void Gamestate_ProcessEvent(struct Game* game, struct GamestateResources* data, 
 	ALLEGRO_COLOR color = CheckMask(game, GetAnimationFrame(data->anim));
 	game->data->hover = color.a > 0.5;
 
-	if (game->data->hover && (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
+	if (game->data->hover && ((ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN))) {
 		data->clicked = true;
 		HideMouse(game);
 		PlayMusic(game, "odwilz_trickstar5", 1.0);

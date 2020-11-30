@@ -297,7 +297,7 @@ void ProcessPlayerEvent(struct Game* game, struct Player* player, ALLEGRO_EVENT*
 		CheckHover(game, player);
 	}
 
-	if (game->data->hover && (((ev->type == ALLEGRO_EVENT_KEY_DOWN) && (ev->keyboard.keycode == ALLEGRO_KEY_ESCAPE)) || (ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN) || (ev->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN))) {
+	if (game->data->hover && ((ev->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) || (ev->type == ALLEGRO_EVENT_TOUCH_BEGIN))) {
 		if (player->frozen && !player->linked) {
 			HandleAudio(game, player->scene.freezes[player->freezeno].audio);
 

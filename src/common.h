@@ -112,6 +112,7 @@ struct CommonResources {
 	bool force_anim_reload;
 
 	bool w, a, s, d;
+	double w_scale, a_scale, s_scale, d_scale;
 
 	bool dark_loading;
 
