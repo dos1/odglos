@@ -33,17 +33,19 @@ void PreLogic(struct Game* game, double delta) {
 			ResumeAudio(game);
 		}
 	} else {
-		if (game->data->w) {
-			game->data->mouseY -= 0.5 * delta;
-		}
-		if (game->data->a) {
-			game->data->mouseX -= 0.33 * delta;
-		}
-		if (game->data->s) {
-			game->data->mouseY += 0.5 * delta;
-		}
-		if (game->data->d) {
-			game->data->mouseX += 0.33 * delta;
+		if (game->data->cursor) {
+			if (game->data->w) {
+				game->data->mouseY -= 0.5 * delta;
+			}
+			if (game->data->a) {
+				game->data->mouseX -= 0.33 * delta;
+			}
+			if (game->data->s) {
+				game->data->mouseY += 0.5 * delta;
+			}
+			if (game->data->d) {
+				game->data->mouseX += 0.33 * delta;
+			}
 		}
 		if (game->data->w || game->data->a || game->data->s || game->data->d) {
 			game->data->touch = false;
