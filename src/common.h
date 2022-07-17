@@ -166,6 +166,7 @@ struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename
 bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp);
 void DestroyAnimation(struct AnimationDecoder* anim);
 ALLEGRO_BITMAP* GetAnimationFrame(struct AnimationDecoder* anim);
+ALLEGRO_BITMAP* GetAnimationFrameMem(struct AnimationDecoder* anim);
 float GetAnimationFrameDuration(struct AnimationDecoder* anim);
 int GetAnimationFrameNo(struct AnimationDecoder* anim);
 const char* GetAnimationName(struct AnimationDecoder* anim);
