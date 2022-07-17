@@ -39,7 +39,11 @@ struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename
 
 	anim->game = game;
 
+#ifdef O_CLOEXEC
 	int fd = open(filename, O_RDONLY | O_CLOEXEC);
+#else
+	int fd = open(filename, O_RDONLY);
+#endif
 
 	if (fd == -1) {
 		ALLEGRO_FILE* file = al_fopen(filename, "r");
