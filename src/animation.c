@@ -2,7 +2,11 @@
 #include "defines.h"
 #include <libsuperderpy.h>
 
-#ifndef __SWITCH__
+#if defined(__SWITCH__) || defined(__vita__)
+#define NO_MMAP
+#endif
+
+#ifndef NO_MMAP
 #include <sys/mman.h>
 #endif
 #include <sys/stat.h>
@@ -57,7 +61,7 @@ struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename
 		anim->data.size = s.st_size;
 
 		anim->buf = NULL;
-#ifndef __SWITCH__
+#ifndef NO_MMAP
 		anim->buf = mmap(0, anim->data.size, PROT_READ, MAP_SHARED, fd, 0);
 #endif
 
@@ -117,7 +121,7 @@ void ResetAnimation(struct AnimationDecoder* anim, bool reset_bitmap) {
 		anim->first = true;
 		anim->bitmap = al_create_bitmap(anim->width, anim->height);
 		anim->swap = al_create_bitmap(anim->width, anim->height);
-		//PrintConsole(anim->game, "[AnimationStream] Initialized: %s", anim->name);
+		// PrintConsole(anim->game, "[AnimationStream] Initialized: %s", anim->name);
 	}
 	WebPAnimDecoderReset(anim->decoder);
 
@@ -231,8 +235,8 @@ bool IsAnimationComplete(struct AnimationDecoder* anim) {
 }
 
 void DestroyAnimation(struct AnimationDecoder* anim) {
-	//PrintConsole(anim->game, "[AnimationStream] Destroying: %s", anim->name);
-#ifndef __SWITCH__
+	// PrintConsole(anim->game, "[AnimationStream] Destroying: %s", anim->name);
+#ifndef NO_MMAP
 	if (anim->mmaped) {
 		munmap(anim->buf, anim->data.size);
 		anim->data.bytes = NULL;
