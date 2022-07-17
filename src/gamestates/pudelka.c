@@ -299,7 +299,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	data->right.character->shared = true;
 	data->right.character->spritesheets = data->left.character->spritesheets;
 
-	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/pudelka_od_cioci_maska.mask"));
+	data->mask = LoadMemoryBitmap(GetDataFilePath(game, "masks/pudelka_od_cioci_maska.mask"));
 	progress(game);
 
 	data->balls[0] = NULL;
@@ -405,10 +405,10 @@ void Gamestate_Start(struct Game* game, struct GamestateResources* data) {
 	SetCharacterPosition(game, data->right.character, 0, 0, 0);
 	SwitchAnimation(game, data, data->center.character, "pudelka_poczatek");
 	EnqueueAnimation(game, data, data->center.character, "pudelko_2_czer_r");
-	//data->left.character->pos = 1;
-	//data->left.character->delta = 120;
-	//data->right.character->pos = 2;
-	//data->right.character->delta = 33;
+	// data->left.character->pos = 1;
+	// data->left.character->delta = 120;
+	// data->right.character->pos = 2;
+	// data->right.character->delta = 33;
 
 	data->left.character->callback = HandleLeft;
 	data->left.character->callback_data = data;

@@ -25,7 +25,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 
 	if (data->clicked) {
 		if (!UpdateAnimation(data->anim, delta * 1.0)) {
-			//ResetAnimation(data->anim);
+			// ResetAnimation(data->anim);
 			data->finished = true;
 		}
 	}
@@ -95,13 +95,13 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	progress(game);
 	data->dol = al_load_bitmap(GetDataFilePath(game, "armata/armata_dol.png"));
 	progress(game);
-	data->maska = al_load_bitmap(GetDataFilePath(game, "armata/armata_gora_1_maska.png"));
+	data->maska = LoadMemoryBitmap(GetDataFilePath(game, "armata/armata_gora_1_maska.png"));
 	progress(game);
 
 	data->makieta = CreateCharacter(game, "makieta");
 	RegisterStreamedSpritesheet(game, data->makieta, "makieta", AnimationStream, DestroyStream, CreateAnimation(game, GetDataFilePath(game, "sprites/makieta/makieta.awebp"), false));
 
-	//RegisterSpritesheet(game, data->makieta, "makieta");
+	// RegisterSpritesheet(game, data->makieta, "makieta");
 	LoadSpritesheets(game, data->makieta, progress);
 
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar

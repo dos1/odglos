@@ -41,7 +41,7 @@ void Gamestate_Logic(struct Game* game, struct GamestateResources* data, double 
 
 	if (GetAnimationFrameNo(data->animation) != data->current) {
 		data->current = GetAnimationFrameNo(data->animation);
-		//PrintConsole(game, "%d", data->current);
+		// PrintConsole(game, "%d", data->current);
 		if (data->loaded_frame < data->current) {
 			data->bmps[data->current] = al_clone_bitmap(GetAnimationFrame(data->animation));
 			data->loaded_frame = data->current;
@@ -203,7 +203,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 	SelectSpritesheet(game, data->button, "button");
 	LoadSpritesheets(game, data->button, progress);
 
-	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/lawka_w_parku_maski.mask"));
+	data->mask = LoadMemoryBitmap(GetDataFilePath(game, "masks/lawka_w_parku_maski.mask"));
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 
 	data->loaded_frame = 0;

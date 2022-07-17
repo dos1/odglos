@@ -173,7 +173,7 @@ void* Gamestate_Load(struct Game* game, void (*progress)(struct Game*)) {
 		progress(game);
 	}
 
-	data->mask = al_load_bitmap(GetDataFilePath(game, "masks/naparstki.mask"));
+	data->mask = LoadMemoryBitmap(GetDataFilePath(game, "masks/naparstki.mask"));
 	progress(game); // report that we progressed with the loading, so the engine can move a progress bar
 	return data;
 }

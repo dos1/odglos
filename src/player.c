@@ -127,7 +127,7 @@ void LoadPlayerAnimation(struct Game* game, struct Player* player, struct SceneD
 
 	player->loaded = true;
 	player->finished = false;
-	//PrintConsole(game, "Loaded: %s", path);
+	// PrintConsole(game, "Loaded: %s", path);
 }
 
 static bool CheckColor(ALLEGRO_COLOR color, ALLEGRO_COLOR link) {
@@ -161,7 +161,7 @@ static void CheckHover(struct Game* game, struct Player* player) {
 			}
 		}
 	} else {
-		ALLEGRO_BITMAP* bitmap = GetAnimationFrame(player->anim);
+		ALLEGRO_BITMAP* bitmap = GetAnimationFrameMem(player->anim);
 		int x = Clamp(0.0, 1.0, game->data->mouseX) * (game->viewport.width - 1);
 		int y = Clamp(0.0, 1.0, game->data->mouseY) * (game->viewport.height - 1);
 		x -= player->x;
@@ -203,7 +203,7 @@ bool UpdatePlayer(struct Game* game, struct Player* player, double delta) {
 				if (player->scene.freezes[player->freezeno].mask && player->scene.freezes[player->freezeno].mask[0] != 0) {
 					char path[255] = {0};
 					snprintf(path, 255, "masks/%s.mask", player->scene.freezes[player->freezeno].mask);
-					player->mask = al_load_bitmap(GetDataFilePath(game, path));
+					player->mask = LoadMemoryBitmap(GetDataFilePath(game, path));
 				}
 			}
 			PrintConsole(game, "Freeze: [%d] %s (frame: %d)", player->freezeno, player->scene.freezes[player->freezeno].mask, frame);
