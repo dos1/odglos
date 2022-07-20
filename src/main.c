@@ -17,6 +17,11 @@ static _Noreturn void derp(int sig) {
 int main(int argc, char** argv) {
 	signal(SIGSEGV, derp);
 
+#ifdef __vita__
+	scePowerSetArmClockFrequency(444);
+	scePowerSetBusClockFrequency(222);
+#endif
+
 	srand(time(NULL));
 
 	al_set_org_name(LIBSUPERDERPY_VENDOR);

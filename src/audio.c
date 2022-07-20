@@ -8,8 +8,17 @@ static ALLEGRO_SAMPLE* GetCachedSound(struct Game* game, const char* path) {
 			return game->data->audio.cache[i].sample;
 		}
 	}
+
+#ifndef __vita__
 	FatalError(game, true, "Could not find sound %s in cache", path);
 	return NULL;
+#else
+	PrintConsole(game, "Could not find sound %s in cache", path);
+
+	game->data->audio.cache[game->data->audio.cached_no].name = strdup(path);
+	game->data->audio.cache[game->data->audio.cached_no].sample = al_load_sample(game->data->audio.cache[game->data->audio.cached_no].name);
+	return game->data->audio.cache[game->data->audio.cached_no++].sample;
+#endif
 }
 
 static int AddToSoundCache(ALLEGRO_FS_ENTRY* entry, void* data) {
