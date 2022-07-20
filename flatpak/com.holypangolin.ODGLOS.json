@@ -1,62 +1,31 @@
 {
 "app-id": "com.holypangolin.ODGLOS",
 "runtime": "org.freedesktop.Platform",
-"runtime-version": "19.08",
+"runtime-version": "21.08",
 "sdk": "org.freedesktop.Sdk",
 "command": "odglos",
 "rename-icon": "odglos",
 "rename-desktop-file": "odglos.desktop",
 "finish-args": [
-   "--socket=x11",
    "--socket=wayland",
+   "--socket=fallback-x11",
    "--socket=pulseaudio",
    "--device=dri",
-   "--share=ipc"
+   "--share=ipc",
+   "--env=SDL_MOUSE_AUTO_CAPTURE=0"
 ],
 "cleanup": ["/include", "/lib/pkgconfig", "/lib/*.a", "/lib/*.la", "/share/aclocal", "/share/doc", "/bin/test_physfs"],
 "modules": [
   {
-    "name": "opus",
-    "sources": [
-      {
-        "type": "archive",
-        "url": "https://dosowisko.net/libsuperderpy/deps/opus-1.3.1.tar.gz",
-        "sha256": "65b58e1e25b2a114157014736a3d9dfeaad8d41be1c8179866f144a2fb44ff9d"
-      }
-    ]
-  },
-  {
-    "name": "opusfile",
-    "sources": [
-      {
-        "type": "archive",
-        "url": "https://dosowisko.net/libsuperderpy/deps/opusfile-0.11.tar.gz",
-        "sha256": "74ce9b6cf4da103133e7b5c95df810ceb7195471e1162ed57af415fabf5603bf"
-      }
-    ]
-  },
-  {
-    "name": "allegro5",
+    "name": "odglos",
     "buildsystem": "cmake-ninja",
     "build-options": {
-       "config-opts": ["-DALLEGRO_SDL=ON", "-DGL_BUILD_TYPE=gles2+", "-DWANT_DEMO=OFF", "-DWANT_EXAMPLES=OFF", "-DWANT_TESTS=OFF"]
+       "config-opts": ["-DCMAKE_BUILD_TYPE=RelWithDebInfo", "-DLIBSUPERDERPY_EMBEDDED_ALLEGRO=ON", "-DGL_BUILD_TYPE=gles2+", "-DWANT_DEMO=OFF", "-DWANT_EXAMPLES=OFF", "-DALLEGRO_SDL=ON"]
     },
     "sources": [
       {
-        "type": "archive",
-        "url": "https://dosowisko.net/libsuperderpy/deps/allegro-5.2.6.0-p1.tar.gz",
-        "sha512": "682f5b0df80ee820b19217f0d898460b8061c5b8148204175fa94dc27d10210a8175466e87302812dc33d342b844ae8fcb03901a6371ef537b530ea7b8433499"
-      }
-    ]
-  },
-  {
-    "name": "odglos",
-    "buildsystem": "cmake-ninja",
-    "sources": [
-      {
         "type": "dir",
-        "path": "..",
-        "skip": ["stuff", "data/stuff", "utils/output"]
+        "path": ".."
       }
     ]
   }
