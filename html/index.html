@@ -760,8 +760,16 @@
         setLoadingValue: function(value) {
           Module.drawProgress(window.ODGLOS.preloadingValue + (1.0 - window.ODGLOS.preloadingValue) * value);
         },
+        getConfigValue: function(key) {
+          try {
+            return window.localStorage.getItem(key);
+          } catch (e) {
+            console.error(e);
+            return null;
+          }
+        },
         showFootnote: function(x, force) {
-          if (!force && (x > 0 && !window.localStorage.getItem('[odglos] footnote'+x))) {
+          if (!force && (x > 0 && !window.ODGLOS.getConfigValue('[odglos] footnote'+x))) {
             return;
           }
           if (window.ODGLOS.disableFootnotes && !window.ODGLOS.menu) {
@@ -784,7 +792,7 @@
           for (var i=1; i<10; i++) {
             var button = document.querySelector('.menu .button'+i);
             button.classList.remove('hidden');
-            if (!window.localStorage.getItem('[odglos] footnote'+i)) {
+            if (!window.ODGLOS.getConfigValue('[odglos] footnote'+i)) {
               button.classList.add('hidden');
             }
           }
@@ -798,7 +806,11 @@
         },
         resetProgress: function() {
           if (window.confirm('Are you sure you want to reset your progress and start over?')) {
-            window.localStorage.clear();
+            try {
+              window.localStorage.clear();
+            } catch (e) {
+              console.error(e);
+            }
             window.location.reload();
           }
         },
