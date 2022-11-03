@@ -162,6 +162,10 @@ void ResetAnimation(struct AnimationDecoder* anim, bool reset_bitmap) {
 	UpdateAnimation(anim, 0);
 }
 
+void SkipAnimationFrame(struct AnimationDecoder* anim) {
+	UpdateAnimation(anim, anim->duration / 1000.0);
+}
+
 bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp) {
 	if (!anim->initialized) {
 		ResetAnimation(anim, true);

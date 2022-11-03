@@ -123,6 +123,11 @@ void LoadPlayerAnimation(struct Game* game, struct Player* player, struct SceneD
 	}
 
 	ResetAnimation(player->anim, true);
+
+	for (int i = 0; i < player->scene.skip; i++) {
+		SkipAnimationFrame(player->anim);
+	}
+
 	HandleAudio(game, player->scene.audio);
 
 	player->loaded = true;

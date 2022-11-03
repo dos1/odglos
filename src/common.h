@@ -61,6 +61,7 @@ struct SceneDefinition {
 	int repeats;
 	int pack;
 	int length;
+	int skip;
 	ALLEGRO_COLOR color;
 	bool checkpoint;
 	bool (*callback)(struct Game*, int, int*, int*, double*, struct Character*, void**);
@@ -164,6 +165,7 @@ void DrawSceneToolbox(struct Game* game);
 
 struct AnimationDecoder* CreateAnimation(struct Game* game, const char* filename, bool repeat);
 bool UpdateAnimation(struct AnimationDecoder* anim, float timestamp);
+void SkipAnimationFrame(struct AnimationDecoder* anim);
 void DestroyAnimation(struct AnimationDecoder* anim);
 ALLEGRO_BITMAP* GetAnimationFrame(struct AnimationDecoder* anim);
 ALLEGRO_BITMAP* GetAnimationFrameMem(struct AnimationDecoder* anim);
